@@ -17,8 +17,10 @@ const constants = {
         TASK_ANALYSIS_SCOPE: "任务分析范围",
 
         USER_SELECT: '人员'
+    },
 
-
+    MSG: {
+        FORM_REQUIRED: '请将表单录入完整,再提交!'
     }
 
 

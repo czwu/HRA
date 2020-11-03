@@ -1,6 +1,6 @@
 <template>
   <view class="container" :class="screenOrientation" @click="pageClick">
-    <view class="uni-column">
+    <view class="uni-column" style="padding-top: 60px">
       <view class="uni-row i-header">
         <view style="width: 20px"></view>
         <text class="icon iconfont" style="color: #007aff" @click="back"
@@ -98,91 +98,81 @@
             >音频</view
           >
         </view>
-        <scroll-view
-          scroll-y="true"
-          class="sv"
-          :style="{ height: scrollHeight + 'px' }"
-        >
-          <view class="uni-row f-content">
-            <view class="content-item uni-row" v-show="activeIndex == 1">
-              <view
-                class="file-item file-add picture"
-                @click="addPhoto"
-                v-show="!viewMode"
-              >
-                <text class="icon iconfont">&#xe607;</text>
-              </view>
-              <view
-                class="file-item"
-                v-for="photo in photos"
-                v-bind:key="photo.guid"
-              >
-                <text
-                  class="icon iconfont iconclose"
-                  v-show="!viewMode"
-                  @click="removeFile(photo)"
-                />
-                <image
-                  :src="photo.path"
-                  @click="previewImg(photo)"
-                  style="width: 200px; height: 150px"
-                  mode="aspectFill"
-                ></image>
-              </view>
-            </view>
-            <view class="content-item uni-row" v-show="activeIndex == 2">
-              <view
-                class="file-item file-add video"
-                @click="addVideo"
-                v-show="!viewMode"
-              >
-                <text class="icon iconfont">&#xe652;</text>
-              </view>
-              <view
-                class="file-item"
-                v-for="video in videos"
-                v-bind:key="video.guid"
-              >
 
-                <video
-                  :src="video.path"
-                  style="width: 200px; height: 150px"
-                ></video>
-                                <text
-                  class="icon iconfont iconclose"
-                  v-show="!viewMode"
-                  @click="removeFile(video)"
-                />
-              </view>
+        <view class="uni-row f-content">
+          <view class="content-item uni-row" v-show="activeIndex == 1">
+            <view
+              class="file-item file-add picture"
+              @click="addPhoto"
+              v-show="!viewMode"
+            >
+              <text class="icon iconfont">&#xe607;</text>
             </view>
-            <view class="content-item uni-row" v-show="activeIndex == 3">
-              <view
-                class="file-item-audio file-add audio"
-                @click="popupAudio"
+            <view
+              class="file-item"
+              v-for="photo in photos"
+              v-bind:key="photo.guid"
+            >
+              <text
+                class="remove-btn"
                 v-show="!viewMode"
+                @click="removeFile(photo)"
+                >✕</text
               >
-                <text class="icon iconfont">&#xe6f0;</text>
-              </view>
-              <view
-                class="file-item-audio"
-                v-for="audio in audios"
-                v-bind:key="audio.guid"
-              >
-                <text
-                  class="icon iconfont iconclose"
-                  v-show="!viewMode"
-                  @click="removeFile(audio)"
-                />
-                <audio
-                  :src="audio.path"
-                  :author="author"
-                  :controls="true"
-                  :name="formatTime(audio.time)"
-                ></audio>
-              </view>
+              <image
+                :src="photo.path"
+                @click="previewImg(photo)"
+                style="width: 200px; height: 150px"
+                mode="aspectFill"
+              ></image>
             </view>
           </view>
-        </scroll-view>
+          <view class="content-item uni-row" v-show="activeIndex == 2">
+            <view
+              class="file-item file-add video"
+              @click="addVideo"
+              v-show="!viewMode"
+            >
+              <text class="icon iconfont">&#xe652;</text>
+            </view>
+            <view
+              class="file-item uni-col"
+              v-for="video in videos"
+              v-bind:key="video.guid"
+            >
+              <video :src="video.path" style="width: 200px; height: 150px" class="video">
+                <cover-view class="video-remove"  @click="removeFile(video)" v-show="!viewMode">✕ </cover-view>
+              </video>
+            </view>
+          </view>
+          <view class="content-item uni-row" v-show="activeIndex == 3">
+            <view
+              class="file-item-audio file-add audio"
+              @click="popupAudio"
+              v-show="!viewMode"
+            >
+              <text class="icon iconfont">&#xe6f0;</text>
+            </view>
+            <view
+              class="file-item-audio"
+              v-for="audio in audios"
+              v-bind:key="audio.guid"
+            >
+              <text
+                class="remove-btn"
+                v-show="!viewMode"
+                @click="removeFile(audio)"
+                >✕</text
+              >
+              <audio
+                :src="audio.path"
+                :author="author"
+                :controls="true"
+                :name="formatTime(audio.time)"
+              ></audio>
+            </view>
+          </view>
+        </view>
       </view>
     </view>
     <view class="popup pop-menu" v-show="popMenuVisible" :style="popStyle">
@@ -231,6 +221,8 @@ export default {
       popMenuVisible: false,
       author: util.getUserName(),
       popStyle: {
+        position: "fixed",
+        zIndex: 11,
         top: "10px",
         right: "50px",
       },
@@ -260,17 +252,6 @@ export default {
   },
   onReady() {
     let _this = this;
-    uni.getSystemInfo({
-      success(res) {
-        let wHeight = res.windowHeight;
-        let titleH = uni.createSelectorQuery().select(".sv");
-        titleH
-          .boundingClientRect((data) => {
-            _this.scrollHeight = wHeight - data.top - 30;
-          })
-          .exec();
-      },
-    });
   },
   onLoad(option) {
     let self = this;
@@ -513,6 +494,39 @@ export default {
       recorderManager.stop();
       done();
     },
+    removeFile(item) {
+      fileService.remove(item.guid).then(() => {
+        //在文件列表上移除该文件
+        this.removeFileFormList(item);
+        //获取终端保存的文件清单,并且通过path比对,找到相对应的文件,然后在终端上删除
+        uni.getSavedFileList({
+          success: function (res) {
+            if (res.fileList.length > 0) {
+              let delFiles = res.fileList.filter(
+                (f) => f.filePath == item.path
+              );
+              if (delFiles.length) {
+                uni.removeSavedFile({
+                  filePath: delFiles[0].filePath,
+                  complete: function (res) {
+                    console.log("成功在终端移除文件");
+                  },
+                });
+              }
+            }
+          },
+        });
+      });
+    },
+    removeFileFormList(item) {
+      if (item.type == 1) {
+        this.photos = this.photos.filter((d) => d.guid != item.guid);
+      } else if (item.type == 2) {
+        this.videos = this.videos.filter((d) => d.guid != item.guid);
+      } else if (item.type == 3) {
+        this.audios = this.audios.filter((d) => d.guid != item.guid);
+      }
+    },
     previewImg(photo) {
       let list = [];
       this.photos.forEach((pic) => {
@@ -532,10 +546,15 @@ export default {
 
 <style lang="scss" scoped>
 .i-header {
+  z-index: 1;
   height: 56px;
   line-height: 56px;
   border-bottom: 1px solid #f0f0f0;
-
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background: #fff;
   > .i-header-text {
     font-size: 16px;
     padding: 0 10px;
@@ -642,28 +661,42 @@ export default {
   .file-item {
     box-sizing: border-box;
     position: relative;
-    overflow: hidden;
     width: 200px;
     height: 150px;
     text-align: center;
     line-height: 140px;
     border: 1px solid #007aff;
-    margin-right: 15px;
-    margin-bottom: 15px;
+    margin-right: 20px;
+    margin-bottom: 20px;
+    overflow: hidden;
     .iconfont {
       font-size: 50px;
       color: #007aff;
     }
-    > .iconclose {
-      line-height: 20px;
+    .remove-btn {
+      line-height: 18px;
+      padding: 2px 5px 5px;
+      display: block;
       font-size: 18px;
-      color: #000;
-      background: #fff;
+      color: rgb(231, 80, 10);
+      background: rgba(190, 223, 224, 0.8);
       position: absolute;
       top: 0;
       right: 0;
       display: block;
-      z-index: 9999;
+      z-index: 1000;
+    }
+    .video-remove {
+      display: block;
+      height:26px;
+      padding:0 5px;
+      width:26px;
+      font-size: 18px;
+      color: rgb(231, 80, 10);
+      background: rgba(190, 223, 224, 0.8);
+      position: absolute;
+      top: -2px;
+      right: -5px;
     }
   }
   .file-add {
@@ -684,14 +717,16 @@ export default {
         color: #007aff;
       }
     }
-    > .iconclose {
-      line-height: 20px;
+    > .remove-btn {
+      line-height: 18px;
+      padding: 2px 5px 5px;
+      display: block;
       font-size: 18px;
-      color: #666;
-      background: #fff;
+      color: rgb(231, 80, 10);
+      background: rgba(113, 115, 116, 0.4);
       position: absolute;
-      top: 2px;
-      right: 2px;
+      top: 0;
+      right: 0;
       display: block;
       z-index: 2000;
     }
@@ -711,4 +746,5 @@ export default {
     color: #007aff;
   }
 }
+
 </style>

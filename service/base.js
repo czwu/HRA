@@ -300,6 +300,7 @@ export default class BaseService {
         sqlPartValues = sqlPartValues.join(",")
 
         let sql = `INSERT INTO  ${this.tableName} (${sqlPartNames}) VALUES(${sqlPartValues})`;
+        console.log(sql)
         return sql
     }
 
@@ -431,6 +432,7 @@ export default class BaseService {
         })
     }
 
+
     genGuid() {
         return this.guidPrefix + util.uuid(16);
     }
@@ -484,7 +486,6 @@ export default class BaseService {
             }
         })
     }
-
 
 
 

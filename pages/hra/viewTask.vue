@@ -1,10 +1,12 @@
 <template>
-  <view class="container" @click="pageClick" :class="screenOrientation">
-    <uni-tab-bar :class="screenOrientation" index="2"></uni-tab-bar>
+  <view class="container" @click="pageClick">
     <view class="uni-column">
       <view class="uni-row i-header">
+        <text class="icon iconfont" style="color: #007aff" @click="back"
+          >&#xe600;</text
+        >
         <view class="uni-grow"></view>
-        <text class="i-header-text">分析任务</text>
+        <text class="i-header-text">{{ title }}</text>
         <view class="uni-grow"></view>
         <view
           class
@@ -14,8 +16,8 @@
           <text class="icon iconfont">&#xe66e;</text>
         </view>
       </view>
-      <view class="uni-grow content-panel">
-        <view class="i-list" v-if="tasks.length">
+      <view class="uni-grow content-panel" >
+        <view class="i-list" v-if="datas.length">
           <scroll-view
             scroll-y="true"
             class="sv"
@@ -23,8 +25,8 @@
           >
             <view
               class="i-list-item uni-row"
-              v-for="task in tasks"
-              v-bind:key="task.guid"
+              v-for="data in datas"
+              v-bind:key="data.guid"
             >
               <text class="icon iconfont item-icon">&#xe66f;</text>
               <view
@@ -32,51 +34,31 @@
                 style="padding: 10px 0 10px 20px"
               >
                 <view class="list-item-content">
-                  <text @click="viewTask(task)">{{ task.name }}</text>
-                  <text style="padding: 0 5px" @click="viewTask(task)"
-                    >({{ task.code }})</text
+                  <text @click="viewData(data)">{{ data.code }}</text>
+                  <text style="padding: 0 5px" @click="viewData(data)"
+                    >({{ data.human_error_code }})</text
                   >
                   <text
                     class="color-text color-text-num"
-                    @click="viewTask(task)"
-                    >{{ task.stage }}</text
+                    @click="viewData(data)"
+                    >{{ data.device_type }}</text
                   >
-                  <text
-                    class="color-text color-text-num"
-                    @click="viewTask(task)"
-                    >{{ task.level }}</text
-                  >
-                  <text
-                    class="color-text color-text-num"
-                    @click="viewTask(task)"
-                    >{{ task.working_condition_type }}</text
-                  >
-                  <text
-                    class="color-text color-text-htype"
-                    @click="viewTask(task)"
-                    >{{ task.htype }}</text
-                  >
-                  <text
-                    class="color-text color-text-scope"
-                    @click="viewTask(task)"
-                    >{{ task.analysis_scope }}</text
-                  >
-                  <view class="uni-grow" @click="viewTask(task)"></view>
-                  <view style="padding: 0 15px" @click="viewTask(task)">
+                  <view class="uni-grow" @click="viewData(data)"></view>
+                  <view style="padding: 0 15px" @click="viewData(data)">
                     <text class="icon iconfont">&#xe601;</text>
                   </view>
-                  <view @click.stop="showPopMenus('2', task, $event)">
+                  <view @click.stop="showPopMenus('2', data, $event)">
                     <text class="icon iconfont">&#xe66e;</text>
                   </view>
                 </view>
                 <view class="desc">
-                  <text class="color-text-desc">{{ task.desc }}</text>
+                  <text class="color-text-desc">{{ data.device_funciton }}</text>
                 </view>
               </view>
             </view>
           </scroll-view>
         </view>
-        <view class="no-content" @click="toAddTask()" v-if="!tasks.length">
+        <view class="no-content" @click="toAddData()" v-if="!datas.length">
           <view>
             <image
               class="add-img"
@@ -85,7 +67,7 @@
             />
           </view>
           <view>
-            <text class="add-text">点击这里添加任务</text>
+            <text class="add-text">点击这里添加文件</text>
           </view>
         </view>
       </view>
@@ -109,14 +91,14 @@ import uniPopup from "@/components/uni-popup/uni-popup.vue";
 import uniPopupMessage from "@/components/uni-popup/uni-popup-message.vue";
 import uniPopupDialog from "@/components/uni-popup/uni-popup-dialog.vue";
 import util from "../../common/util";
-import taskService from "../../service/hra/task";
-import { mapState, mapActions } from "vuex";
+import typeAService from "../../service/hra/typeA";
 export default {
   data() {
     return {
       popMenuVisible: false,
-      scrollHeight: 500,
+      scrollHeight: 0,
       scrollTop: 0,
+      title: "分析任务",
       allMenus: [
         { name: "新建任务", type: "1", icon: "iconadd" },
         { name: "导入", type: "1", icon: "iconimport2" },
@@ -135,7 +117,7 @@ export default {
         value: "",
         placeholder: "",
       },
-      tasks: [],
+      datas: [],
     };
   },
   components: {
@@ -143,38 +125,46 @@ export default {
     uniPopupMessage,
     uniPopupDialog,
   },
-  onShow(){
-    this.loadTasks()
-  },
-  computed: {
-    ...mapState({
-      screenOrientation: "screenOrientation",
-    }),
-  },
+  computed: {},
   mounted() {
-    let _this = this;
-    uni.getSystemInfo({
-      success(res) {
-        let wHeight = res.windowHeight;
-        let titleH = uni.createSelectorQuery().select(".content-panel");
-        titleH
-          .boundingClientRect((data) => {
-            _this.scrollHeight = wHeight - data.top - 90;
-          })
-          .exec();
-      }
-    });
-    this.loadTasks();
+    this.initScroll();
   },
-  methods: {
+  onShow(){
+    uni.getStorage({
+      key: "currTask",
+      success: (val) => {
+        if (val.data) {
+          this.mainTask = val.data;
+          this.loadTaskChildren();
+        }
+      },
+    });
+  },
+  methods: { 
+    initScroll() {
+      let _this = this;
+      uni.getSystemInfo({
+        success(res) {
+          let wHeight = res.windowHeight;
+          let titleH = uni.createSelectorQuery().select(".content-panel");
+          titleH
+            .boundingClientRect((data) => {
+              _this.scrollHeight = wHeight - data.top - 90;
+            })
+            .exec();
+        },
+      });
+    },
     scroll(e) {
       this.scrollTop = parseInt(e.detail.scrollTop);
       this.popMenuVisible = false;
     },
-    loadTasks() {
-      return taskService.queryAll().then((datas) => {
-        this.tasks = datas;
-      });
+    loadTaskChildren() {
+      return typeAService
+        .query({ task_id: this.mainTask.guid })
+        .then((datas) => {
+          this.datas = datas;
+        });
     },
     remove(obj) {
       uni.showModal({
@@ -182,8 +172,8 @@ export default {
         content: "是否确认删除该任务?",
         success: (res) => {
           if (res.confirm) {
-            taskService.remove(obj.guid).then(() => {
-              this.loadTasks();
+            typeAService.remove(obj.guid).then(() => {
+              this.loadTaskChildren();
               uni.showToast({
                 title: "删除成功!",
                 duration: 2000,
@@ -194,16 +184,17 @@ export default {
       });
     },
     copy(data) {
-      let guid = taskService.genGuid();
-      taskService.copy(data, "name", guid).then((newData) => {
-        this.loadTasks();
+      let guid = typeAService.genGuid();
+      typeAService.copy(data, "code", guid).then((newData) => {
+        this.loadTaskChildren();
       });
     },
-    viewTask(data) {
-      uni.setStorageSync("currTask", data);
-      let url = data.htype == 'A类' || data.htype == 'C类' ? '/pages/hra/viewTask' : '/pages/hra/viewTaskCorrelation';
-      uni.navigateTo({
-        url
+    viewData(data) {
+
+    },
+    back() {
+      uni.switchTab({
+        url: "/pages/hra/index",
       });
     },
     showPopMenus(type, data, event) {
@@ -218,14 +209,14 @@ export default {
         this.popMenuVisible = false;
       }, 10);
     },
-    toAddTask() {
+    toAddData() {
       uni.setStorageSync("editData", "");
-      uni.navigateTo({ url: "/pages/hra/addTask" });
+      uni.navigateTo({ url: "/pages/hra/addTypeA?task_id="+this.mainTask.guid });
     },
     menuClick(menu) {
       if (menu.type == "1") {
         if (menu.name == "新建任务") {
-          this.toAddTask();
+          this.toAddData();
         } else if (menu.name == "导入") {
           uni.showToast({
             title: "该功能暂未实现!",
@@ -238,7 +229,7 @@ export default {
           this.remove(this.data4PopMenu);
         } else if (menu.name == "编辑") {
           uni.setStorageSync("editData", this.data4PopMenu);
-          uni.navigateTo({ url: "/pages/hra/addTask" });
+          uni.navigateTo({ url: "/pages/hra/addTypeA?task_id="+this.mainTask.guid });
         } else if (menu.name == "拷贝") {
           this.copy(this.data4PopMenu);
         }

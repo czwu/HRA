@@ -6,6 +6,27 @@
   "description": "HRA",
   "glyphs": [
     {
+      "icon_id": "4945754",
+      "name": "Voice",
+      "font_class": "Voice",
+      "unicode": "e668",
+      "unicode_decimal": 58984
+    },
+    {
+      "icon_id": "5821122",
+      "name": "task",
+      "font_class": "task",
+      "unicode": "e66f",
+      "unicode_decimal": 58991
+    },
+    {
+      "icon_id": "8034982",
+      "name": "video",
+      "font_class": "video",
+      "unicode": "e88f",
+      "unicode_decimal": 59535
+    },
+    {
       "icon_id": "13209522",
       "name": "附 件",
       "font_class": "fujian",

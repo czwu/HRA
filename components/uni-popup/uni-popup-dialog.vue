@@ -1,10 +1,19 @@
 <template>
   <view class="uni-popup-dialog">
     <view class="uni-dialog-title">
-      <text class="uni-dialog-title-text" :class="['uni-popup__'+dialogType]">{{title}}</text>
+      <text
+        class="uni-dialog-title-text"
+        :class="['uni-popup__' + dialogType]"
+        >{{ title }}</text
+      >
+      <view class="close-btn" v-if="nobtn" @click="close"  >
+        ✕
+      </view>
     </view>
     <view class="uni-dialog-content">
-      <text class="uni-dialog-content-text" v-if="mode === 'base'">{{content}}</text>
+      <text class="uni-dialog-content-text" v-if="mode === 'base'">{{
+        content
+      }}</text>
       <input
         v-else
         class="uni-dialog-input"
@@ -15,7 +24,7 @@
       />
     </view>
     <slot></slot>
-    <view class="uni-dialog-button-group">
+    <view class="uni-dialog-button-group" v-if="!nobtn" >
       <view class="uni-dialog-button" @click="close">
         <text class="uni-dialog-button-text">取消</text>
       </view>
@@ -52,53 +61,57 @@ export default {
   props: {
     value: {
       type: [String, Number],
-      default: ""
+      default: "",
     },
     placeholder: {
       type: [String, Number],
-      default: "请输入内容"
+      default: "请输入内容",
     },
     /**
      * 对话框主题 success/warning/info/error	  默认 success
      */
     type: {
       type: String,
-      default: "error"
+      default: "error",
+    },
+    nobtn: {
+      type: Boolean,
+      default: false,
     },
     /**
      * 对话框模式 base/input
      */
     mode: {
       type: String,
-      default: "base"
+      default: "base",
     },
     /**
      * 对话框标题
      */
     title: {
       type: String,
-      default: "提示"
+      default: "提示",
     },
     /**
      * 对话框内容
      */
     content: {
       type: String,
-      default: ""
+      default: "",
     },
     /**
      * 拦截取消事件 ，如果拦截取消事件，必须监听close事件，执行 done()
      */
     beforeClose: {
       type: Boolean,
-      default: false
-    }
+      default: false,
+    },
   },
   data() {
     return {
       dialogType: "error",
       focus: false,
-      val: ""
+      val: "",
     };
   },
   inject: ["popup"],
@@ -113,7 +126,7 @@ export default {
     },
     value(val) {
       this.val = val;
-    }
+    },
   },
   created() {
     // 对话框遮罩不可点击
@@ -153,14 +166,14 @@ export default {
         return;
       }
       this.popup.close();
-    }
-  }
+    },
+  },
 };
 </script>
 
 <style lang="scss" scoped>
 .uni-popup-dialog {
-  width: 300px;
+  min-width: 300px;
   border-radius: 15px;
   background-color: #fff;
 }
@@ -250,5 +263,17 @@ export default {
 
 .uni-popup__info {
   color: #909399;
+}
+.uni-popup__custom {
+  text-align: left;
+}
+.close-btn{
+  position:absolute; 
+  top:0px;
+  right:15px;
+  padding:10px;
+  font-size:18px;
+  color:#666;
+  font-weight: bold;;
 }
 </style>

@@ -56,6 +56,22 @@
             }
         },
         {
+            "path": "pages/hra/viewTask",
+            "style": {
+                "app-plus": {
+                    "titleNView": false
+                }
+            }
+        },
+        {
+            "path": "pages/hra/addTypeA",
+            "style": {
+                "app-plus": {
+                    "titleNView": false
+                }
+            }
+        },
+        {
             "path": "pages/isv/index",
             "style": {
                 "app-plus": {

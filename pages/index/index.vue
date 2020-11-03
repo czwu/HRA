@@ -1,7 +1,7 @@
 <template>
   <view class="container" :class="screenOrientation">
     <uni-tab-bar type="base" :class="screenOrientation"></uni-tab-bar>
-    <view class="uni-grow" style="overflow:auto">
+    <view class="uni-grow" style="overflow: auto">
       <view class="page-section swiper">
         <view class="page-section-spacing">
           <swiper
@@ -11,18 +11,29 @@
             :interval="interval"
             :duration="duration"
           >
-            <swiper-item v-for="(img,index) in imgs" v-bind:key="index">
+            <swiper-item v-for="(img, index) in imgs" v-bind:key="index">
               <view class="swiper-item">
-                <image style="width: 100%;" :src="img" mode="aspectFill" />
+                <image style="width: 100%" :src="img" mode="aspectFill" />
               </view>
             </swiper-item>
           </swiper>
         </view>
       </view>
       <view class="uni-row project-list">
-        <view class="project uni-column" v-for="(project,index) in projects" :key="index">
-          <image class="project-img" :src="project.img" mode="widthFix" @click="select(project)" />
-          <view class="project-text" @click="select(project)">{{project.name}}</view>
+        <view
+          class="project uni-column"
+          v-for="(project, index) in projects"
+          :key="index"
+        >
+          <image
+            class="project-img"
+            :src="project.img"
+            mode="widthFix"
+            @click="select(project)"
+          />
+          <view class="project-text" @click="select(project)">{{
+            project.name
+          }}</view>
         </view>
       </view>
     </view>
@@ -32,7 +43,7 @@
 <script>
 import projectService from "../../service/project";
 import util from "../../common/util";
-import { mapState } from "vuex";
+import { mapState, mapActions } from "vuex";
 export default {
   data() {
     return {
@@ -48,6 +59,9 @@ export default {
       projects: [],
     };
   },
+  onLoad(){
+    this.loadDicts()
+  },
   created() {
     this.reload();
   },
@@ -56,6 +70,9 @@ export default {
   },
 
   methods: {
+    ...mapActions({
+      loadDicts: "loadDicts",
+    }),
     select(project) {
       util.setProjectId(project.code);
       uni.switchTab({
@@ -69,8 +86,7 @@ export default {
         });
         this.projects = datas;
       });
-	  
-    }, 
+    },
   },
 };
 </script>

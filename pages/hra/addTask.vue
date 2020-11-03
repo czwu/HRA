@@ -1,26 +1,31 @@
 <template>
   <view class="container">
-    <comp-page mode="page" :form="form" :title="title"></comp-page>
+    <comp-page
+      :service="service"
+      :title="title"
+      tabsrc="/pages/hra/index"
+    ></comp-page>
   </view>
 </template>
-
 <script>
 import util from "../../common/util";
 import taskService from "../../service/hra/task";
 export default {
   data() {
     return {
-      form: taskService.form,
-      title: "任务",
+      service: taskService,
+      title: "新建任务",
     };
   },
-  created() {
-    this.init();
+  onLoad() {
+    uni.getStorage({
+      key: "editData",
+      success: (val) => {
+        if (val.data) {
+          this.title = val.data.name;
+        }
+      },
+    });
   },
-  methods: {
-    init() {},
-    back() {},
-    save() {},
-  }
 };
 </script>

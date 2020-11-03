@@ -1749,3 +1749,17 @@ checkbox-group label {
     left: 0;
     transform: translateY(50%);
 }
+
+::-webkit-scrollbar {
+    width: 5px;
+    height: 5px;
+    background-color: #fff;
+}
+
+
+/*定义滑块 内阴影+圆角*/
+
+::-webkit-scrollbar-thumb {
+    border-radius: 5px;
+    background-color: rgba(121, 110, 110, 0.3);
+}

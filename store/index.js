@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import userService from '../service/user'
+import dictService from '../service/dict'
 import groupService from '../service/person/group'
 import deptService from '../service/person/dept'
 import jobService from '../service/person/job'
@@ -22,7 +23,8 @@ const store = new Vuex.Store({
         fileLevel: 0,
         catalogIndexMap: {},
         currCatalog: null,
-        tasks: []
+        tasks: [],
+        dicts: null,
     },
     mutations: {
         login(state, user) {
@@ -65,6 +67,9 @@ const store = new Vuex.Store({
         },
         setTasks(state, tasks) {
             state.tasks = tasks
+        },
+        setDicts(state, data) {
+            state.dicts = data
         }
     },
     getters: {
@@ -100,6 +105,9 @@ const store = new Vuex.Store({
         },
         tasks(state) {
             return state.tasks;
+        },
+        dicts(state) {
+            return state.dicts;
         }
 
     },
@@ -175,9 +183,32 @@ const store = new Vuex.Store({
 
         loadTasks({ commit, state }) {
             return taskService.queryAll().then(datas => {
+                console.log('tasks', datas)
                 commit("setTasks", datas);
             })
         },
+
+        loadDicts({ commit, state }) {
+            return dictService.queryAll().then(datas => {
+                var dicts = {
+                    length: 0
+                }
+                datas.forEach(data => {
+                    let type = data.type;
+                    if (!dicts[type]) {
+                        dicts[type] = [data]
+                        dicts.length++;
+                    } else {
+                        dicts[type].push(data)
+                    }
+                });
+
+                //数据字典加载成功
+                console.info('---------------------------------数据字典加载成功--------------------------', dicts.length)
+                commit("setDicts", dicts);
+            })
+        },
+
 
     }
 })
