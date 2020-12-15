@@ -123,9 +123,7 @@ export default {
       this.scrollTop = parseInt(e.detail.scrollTop);
     },
     cancel() {
-      uni.switchTab({
-        url: "/pages/filesys/index",
-      });
+      uni.navigateBack();
     },
     move() {
       let parent = this.src.pop();

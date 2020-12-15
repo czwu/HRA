@@ -1,7 +1,7 @@
 import util from '../common/util.js'
 import constants from '../common/constants.js'
 export default class BaseService {
-    constructor({ tableName, columns, datas, guidPrefix, feature = {}, form = {} } = {}) {
+    constructor({ tableName, columns, datas, guidPrefix, feature = {}, form = {}, rebuild } = {}) {
         if (!tableName) {
             console.error('表名称不能为空!')
         }
@@ -15,17 +15,38 @@ export default class BaseService {
         this.guidPrefix = guidPrefix || 'ID_'
         this.feature = feature;
         this.form = form;
-        this.isTableExists(tableName, bool => {
-            if (!bool) {
-                this.createTable().then(e => {
-                    try {
-                        this.initTable()
-                    } catch (e) {
-                        console.error("initTable ERROR:", e)
+        this.columnMap = {};
+        this.columns.forEach(col => {
+            this.columnMap[col.name] = col;
+        })
+        if (rebuild) {
+            this.dropTable().then(() => {
+                this.isTableExists(tableName, bool => {
+                    if (!bool) {
+                        this.createTable().then(e => {
+                            try {
+                                this.initTable()
+                            } catch (e) {
+                                console.error("initTable ERROR:", e)
+                            }
+                        })
                     }
                 })
-            }
-        })
+            })
+        } else {
+            this.isTableExists(tableName, bool => {
+                if (!bool) {
+                    this.createTable().then(e => {
+                        try {
+                            this.initTable()
+                        } catch (e) {
+                            console.error("initTable ERROR:", e)
+                        }
+                    })
+                }
+            })
+        }
+
     }
 
     //判断数据库是否开启
@@ -81,11 +102,28 @@ export default class BaseService {
 
     }
 
+    dropTable() {
+        return new Promise((resolve, reject) => {
+            plus.sqlite.executeSql({
+                name: constants.db_name,
+                sql: 'drop table ' + this.tableName,
+                success(e) {
+                    console.info("drop table Successful!", tableName, e)
+                    resolve(e);
+                },
+                fail(e) {
+                    console.error("drop table Failed!", tableName, e)
+                    reject(e);
+                }
+            })
+        })
+    }
+
     //如表不存在,则建表
     createTable() {
         let tempSql = [];
         this.columns.forEach(col => {
-            tempSql.push(`${col.name} ${col.type} ${col.ext}`)
+            tempSql.push(`${col.name} ${col.type} ${col.ext || ''}`)
         })
         let sql = `
         create table if not exists ${this.tableName}(
@@ -129,30 +167,34 @@ export default class BaseService {
         let insertSql = `INSERT INTO ${this.tableName}  `
 
         if (initData && initData.length) {
-            for (let i = 0; i < initData[0].length; i++) {
-                console.log(columns[i].name)
-                sqlPartNames.push(columns[i].name)
-            }
-            insertSql += ` (${sqlPartNames.join(",")}) `
-            initData.forEach((data, i) => {
-                //解析待插入的数据 如果是数组格式 比如 [值1,值2,值3,值4], 这种格式的数据,必须与列明配置顺序一致
-                if (Array.isArray(data)) {
-                    if (i == 0) {
-                        insertSql += " SELECT "
-                        let valSql = []
-                        data.forEach((val, j) => {
-                            valSql.push(` '${val}' as '${columns[j].name}' `)
-                        })
-                        insertSql += valSql.join(",")
-                    } else {
-                        let valSql = []
-                        data.forEach((val, j) => {
-                            valSql.push(` '${val}' `)
-                        })
-                        insertSql += ' UNION SELECT ' + valSql.join(",")
-                    }
+            if (Array.isArray(initData[0])) {
+                for (let i = 0; i < initData[0].length; i++) {
+                    console.log(columns[i].name)
+                    sqlPartNames.push(columns[i].name)
                 }
-            })
+                insertSql += ` (${sqlPartNames.join(",")}) `
+                initData.forEach((data, i) => {
+                    //解析待插入的数据 如果是数组格式 比如 [值1,值2,值3,值4], 这种格式的数据,必须与列明配置顺序一致
+                    if (Array.isArray(data)) {
+                        if (i == 0) {
+                            insertSql += " SELECT "
+                            let valSql = []
+                            data.forEach((val, j) => {
+                                valSql.push(` '${val}' as '${columns[j].name}' `)
+                            })
+                            insertSql += valSql.join(",")
+                        } else {
+                            let valSql = []
+                            data.forEach((val, j) => {
+                                valSql.push(` '${val}' `)
+                            })
+                            insertSql += ' UNION SELECT ' + valSql.join(",")
+                        }
+                    }
+                })
+            } else {
+                this.insertList(initData, 'multi')
+            }
         } else {
             return;
         }
@@ -177,6 +219,7 @@ export default class BaseService {
      * 查询所有数据
      */
     queryAll() {
+        let self = this;
         try {
             var sql = `SELECT * FROM ${ this.tableName } WHERE 1=1`;
             //如果数据表有删除标记列,则需要过滤掉已删除(软删除)的数据
@@ -200,6 +243,7 @@ export default class BaseService {
                     name: constants.db_name,
                     sql: sql,
                     success(e) {
+                        self.listLength = e.length;
                         resolve(e);
                     },
                     fail(e) {
@@ -218,8 +262,10 @@ export default class BaseService {
     /**
      * 带有绝对值的条件查询 
      * @param {} conditions  具体查询条件 {name:"zhangan", dept:"dept1"}
+     * @param {} customQueryCond  自定义查询条件 parent_id = (select guid from table2 and table2.name='dd')
      */
-    query(conditions) {
+    query(conditions, customQueryCond) {
+        let self = this;
         try {
             var projectId = util.getProjectId()
             var sql = `SELECT * FROM ${ this.tableName } WHERE `;
@@ -236,12 +282,23 @@ export default class BaseService {
                 condSql.push(` project_id = '${projectId}'  `)
             }
             sql += condSql.join(' AND ')
+                //如果有设置排序方式,则按设定拼写sql,否则默认按照created_at升序排列
+            if (customQueryCond) {
+                sql += 'AND ' + customQueryCond
+            }
+            if (this.feature.orderby) {
+                sql += this.feature.orderby;
+            } else if (this.columns.filter(col => col.name == 'created_at').length > 0) {
+                //默认按照created_at升序排列
+                sql += ' order by created_at asc'
+            }
             console.log('query ->  Sql:', sql)
             return new Promise((resolve, reject) => {
                 plus.sqlite.selectSql({
                     name: constants.db_name,
                     sql: sql,
                     success(e) {
+                        self.listLength = e.length;
                         resolve(e);
                     },
                     fail(e) {
@@ -284,8 +341,14 @@ export default class BaseService {
         let sqlPartNames = [],
             sqlPartValues = [];
         for (let name in data) {
-            sqlPartNames.push(name)
-            sqlPartValues.push(`'${data[name]}'`)
+            if (this.columnMap[name]) {
+                sqlPartNames.push(name)
+                let val = data[name];
+                if (!val && val !== 0) {
+                    val = ''
+                }
+                sqlPartValues.push(`'${val}'`)
+            }
         }
         if (this.columns.filter(col => col.name == 'created_at').length > 0) {
             sqlPartNames.push('created_at', 'created_by', 'updated_at', 'updated_by')
@@ -300,7 +363,6 @@ export default class BaseService {
         sqlPartValues = sqlPartValues.join(",")
 
         let sql = `INSERT INTO  ${this.tableName} (${sqlPartNames}) VALUES(${sqlPartValues})`;
-        console.log(sql)
         return sql
     }
 
@@ -323,37 +385,47 @@ export default class BaseService {
     }
 
     /**
-     * 一次型插入多条数据
+     * 一次型插入多条数据 默认模式为union , 但union模式有个限制,插入的时候,value必须完整, 如果没有完整的值,推荐使用 multi 模式
      * NSERT INTO 'tableName'
         SELECT 'data1' AS 'column1', 'data2' AS 'column2'
         UNION SELECT 'data3', 'data4'
         UNION SELECT 'data5', 'data6'
         UNION SELECT 'data7', 'data8'
      */
-    insertList(datas) {
+    insertList(datas, mode = 'union') {
         //根据初始化数据格式 与 列配置 初始化生成插入SQL
-        let colNames = [];
-        let insertSql = `INSERT INTO ${this.tableName}  `
+        let insertSql = [];
+        if (mode == 'union') {
+            let colNames = [];
+            insertSql = `INSERT INTO ${this.tableName}  `
 
-        for (let colName in datas[0]) {
-            colNames.push(colName)
-        }
-        datas.forEach((data, i) => {
-            if (i == 0) {
-                insertSql += " SELECT "
-                let valSql = [];
-                colNames.forEach(colName => {
-                    valSql.push(` '${data[colName]}' as '${colName}' `)
-                })
-                insertSql += valSql.join(",")
-            } else {
-                let valSql = []
-                colNames.forEach(colName => {
-                    valSql.push(` '${data[colName]}' `)
-                })
-                insertSql += ' UNION SELECT ' + valSql.join(",")
+            for (let colName in datas[0]) {
+                if (this.columnMap[colName]) {
+                    colNames.push(colName)
+                }
             }
-        })
+            datas.forEach((data, i) => {
+                if (i == 0) {
+                    insertSql += " SELECT "
+                    let valSql = [];
+                    colNames.forEach(colName => {
+                        valSql.push(` '${data[colName]}' as '${colName}' `)
+                    })
+                    insertSql += valSql.join(",")
+                } else {
+                    let valSql = []
+                    colNames.forEach(colName => {
+                        valSql.push(` '${data[colName]}' `)
+                    })
+                    insertSql += ' UNION SELECT ' + valSql.join(",")
+                }
+            })
+        } else {
+            datas.forEach(data => {
+                insertSql.push(this.genInsertSql(data));
+            });
+        }
+
         console.log('insertList ->', insertSql)
         return new Promise((resolve, reject) => {
             plus.sqlite.executeSql({
@@ -369,18 +441,31 @@ export default class BaseService {
             })
         })
     }
-    update(data) {
+
+    genUpdateSql(data) {
         let time = parseInt(Date.now() / 1000),
             userName = util.getUserName();
         let sqlPart = [];
         for (let name in data) {
-            if (name != 'guid') {
-                sqlPart.push(` ${name} = '${data[name]}'`)
+            if (name != 'guid' && this.columnMap[name]) {
+                let val = data[name];
+                if (!val && val !== 0) {
+                    val = ''
+                }
+                sqlPart.push(` ${name} = '${val}'`)
             }
         }
-        sqlPart = sqlPart.join(",")
-        let sql = `UPDATE ${this.tableName} SET ${sqlPart}, updated_at = ${time}, updated_by = '${userName}' WHERE GUID = '${data.guid}'`;
-        console.log('update ->  Sql:', sql)
+        sqlPart = sqlPart.join(",");
+        let sql = `UPDATE ${this.tableName} SET ${sqlPart} WHERE GUID = '${data.guid}'`;
+        if (this.columns.filter(col => col.name == 'updated_at').length > 0) {
+            sql = `UPDATE ${this.tableName} SET ${sqlPart}, updated_at = ${time}, updated_by = '${userName}' WHERE GUID = '${data.guid}'`;
+        }
+        console.log('update ->  Sql:', sql);
+        return sql;
+    }
+
+    update(data) {
+        var sql = this.genUpdateSql(data);
         return new Promise((resolve, reject) => {
             plus.sqlite.executeSql({
                 name: constants.db_name,
@@ -394,7 +479,26 @@ export default class BaseService {
                 }
             })
         })
+    }
 
+    updateList(datas) {
+        var sqls = [];
+        datas.forEach(data => {
+            sqls.push(this.genUpdateSql(data));
+        });
+        return new Promise((resolve, reject) => {
+            plus.sqlite.executeSql({
+                name: constants.db_name,
+                sql: sqls,
+                success(e) {
+                    resolve(e);
+                },
+                fail(e) {
+                    console.error("update Failed!", e)
+                    reject(e);
+                }
+            })
+        })
     }
 
     remove(guid) {
@@ -402,20 +506,81 @@ export default class BaseService {
             delFileSql,
             delSql, guidSqlPart = "('" + guid + "')",
             userName = util.getUserName();
-        if (Array.isArray(guid)) {
-            guidSqlPart = []
-            guid.forEach(id => {
-                guidSqlPart.push(`'${id}'`)
-            })
-            guidSqlPart = guidSqlPart.join(",")
-            delSql = `UPDATE ${this.tableName} SET delete_flag = 1, updated_at = ${time}, updated_by = '${userName}' WHERE GUID in (${guidSqlPart})`;
+        if (this.columns.filter(col => col.name == 'delete_flag').length > 0) {
+            if (Array.isArray(guid)) {
+                guidSqlPart = []
+                guid.forEach(id => {
+                    guidSqlPart.push(`'${id}'`)
+                })
+                guidSqlPart = guidSqlPart.join(",")
+                delSql = `UPDATE ${this.tableName} SET delete_flag = 1, updated_at = ${time}, updated_by = '${userName}' WHERE GUID in (${guidSqlPart})`;
+            } else {
+                delSql = `UPDATE ${this.tableName} SET delete_flag = 1, updated_at = ${time}, updated_by = '${userName}' WHERE GUID = '${guid}'`;
+            }
         } else {
-            delSql = `UPDATE ${this.tableName} SET delete_flag = 1, updated_at = ${time}, updated_by = '${userName}' WHERE GUID = '${guid}'`;
+            if (Array.isArray(guid)) {
+                guidSqlPart = []
+                guid.forEach(id => {
+                    guidSqlPart.push(`'${id}'`)
+                })
+                guidSqlPart = guidSqlPart.join(",")
+                delSql = `DELETE FROM ${this.tableName} WHERE GUID in (${guidSqlPart})`;
+            } else {
+                delSql = `DELETE FROM ${this.tableName} WHERE GUID = '${guid}'`;
+            }
         }
         //如果该表关联了文件信息,则删除数据的同时需要删除文件
         if (this.feature.fileSuggest) {
             delFileSql = `UPDATE TFile SET delete_flag = 1  where foreign_id in (${guidSqlPart})`
         }
+        console.log('delete ->  Sql:', delSql, delFileSql)
+        return new Promise((resolve, reject) => {
+            plus.sqlite.executeSql({
+                name: constants.db_name,
+                sql: delFileSql ? [delSql, delFileSql] : delSql,
+                success(e) {
+                    resolve(e);
+                },
+                fail(e) {
+                    console.error(e)
+                    reject(e);
+                }
+            })
+        })
+    }
+
+    clearData() {
+        let sql = `DELETE FROM ${this.tableName}`
+        return new Promise((resolve, reject) => {
+            this.executeSql(sql, resolve, reject)
+        })
+    }
+
+    //根据条件删除
+    removeBy(conditions) {
+
+        let time = Date.now(),
+            delFileSql,
+            delSql,
+            userName = util.getUserName();
+        var condSql = [];
+        try {
+            for (let cond in conditions) {
+                condSql.push(` ${cond} = '${conditions[cond]}'`)
+            }
+            if (this.columns.filter(col => col.name == 'delete_flag').length > 0) {
+                delSql = `UPDATE ${this.tableName} SET delete_flag = 1, updated_at = ${time}, updated_by = '${userName}' WHERE   ${condSql.join(' and ')} `;
+            } else {
+                delSql = `DELETE FROM ${this.tableName}  WHERE  ${condSql.join(' and ')}`;
+            }
+            //如果该表关联了文件信息,则删除数据的同时需要删除文件
+            if (this.feature.fileSuggest) {
+                delFileSql = `UPDATE TFile SET delete_flag = 1  where foreign_id in ( select guid from ${this.tableName}  WHERE  ${condSql.join(' and ')})`
+            }
+        } catch (e) {
+            console.error(e)
+        }
+
         console.log('delete ->  Sql:', delSql, delFileSql)
         return new Promise((resolve, reject) => {
             plus.sqlite.executeSql({
@@ -440,7 +605,9 @@ export default class BaseService {
     copy(copydata, field = 'name', guid) {
         let data = this.cloneDataProcess4Copy(copydata)
         data.guid = guid || this.genGuid();
-        data[field] = data[field].split('_copy_')[0] + '_copy_' + util.uuid(4)
+        if (data[field]) {
+            data[field] = data[field].split('_copy_')[0] + '_copy_' + util.uuid(4)
+        }
         return this.insert(data)
     }
 

@@ -16,12 +16,37 @@ const constants = {
 
         TASK_ANALYSIS_SCOPE: "任务分析范围",
 
-        USER_SELECT: '人员'
+        USER_SELECT: '人员',
+
     },
 
     MSG: {
         FORM_REQUIRED: '请将表单录入完整,再提交!'
-    }
+    },
+    //区分信息类型 
+    INFO_TYPE: {
+        DEVICE: 'device', //设备信息
+        OBJECT: "object", //操作对象
+        WARNING: 'warning', //报警信息
+        DIRECTIVE: 'directive', //指示
+        PLAIN: 'plain', //工作计划
+        VERIFY: 'verify', //验证
+        INSPECTION: 'inspection', //巡检
+        TRAINING: 'training', //培训
+        ACCESSIBILITY: 'accessibility' //可达性
+    },
+
+    TAST_TYPE: {
+        A: 'A类',
+        AC: 'A类相关性',
+        C: 'C类',
+        CC: 'C类相关性'
+    },
+
+    HEIGHT_TOOLS: ['钢平台', '梯子', '脚手架'],
+    HANDLE_SPACE: ['够', '不够', '较危险'],
+
+    DOC_BASE: '/storage/emulated/0/HRA_DOC'
 
 
 }

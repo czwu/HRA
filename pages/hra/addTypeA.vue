@@ -10,13 +10,12 @@ export default {
   data() {
     return {
       service: typeAService,
-      title: "新建文件",
+      title: "新建设备信息",
       taskId: "",
     };
   },
   onLoad(option) {
     this.taskId = option.task_id;
-    console.error('task', this.taskId)
     uni.getStorage({
       key: "editData",
       success: (val) => {

@@ -1,12 +1,17 @@
 <template>
   <view class="container" @click="pageClick" :class="screenOrientation">
-    <uni-tab-bar></uni-tab-bar>
     <view class="uni-flex uni-column uni-grow">
       <view class="uni-row i-header">
-        <text class="icon iconfont" style="color:#007aff;" @click="back">&#xe600;</text>
-        <text class="i-header-text">{{job.name}}</text>
+        <text class="icon iconfont" style="color: #007aff" @click="back"
+          >&#xe600;</text
+        >
+        <text class="i-header-text">{{ job.name }}</text>
         <view class="uni-grow"></view>
-        <view class style="transform:rotate(90deg);" @click.stop="showPopMenus('1',null,$event)">
+        <view
+          class
+          style="transform: rotate(90deg)"
+          @click.stop="showPopMenus('1', null, $event)"
+        >
           <text class="icon iconfont">&#xe66e;</text>
         </view>
       </view>
@@ -16,30 +21,46 @@
           <scroll-view
             scroll-y="true"
             class="sv"
-            :style="{height:scrollHeight+'px'}"
+            :style="{ height: scrollHeight + 'px' }"
             @scroll="scroll"
           >
-            <view class="i-list-item uni-row" v-for="person in persons" v-bind:key="person.guid">
+            <view
+              class="i-list-item uni-row"
+              v-for="person in persons"
+              v-bind:key="person.guid"
+            >
               <view class="item-icon"></view>
-              <view class="uni-column uni-grow" style="padding:10px 0 10px 20px">
+              <view
+                class="uni-column uni-grow"
+                style="padding: 10px 0 10px 20px"
+              >
                 <view class="list-item-content">
-                  <text @click="viewPerson(person)">{{person.name}}</text>
-                  <text style="padding:0 5px" @click="viewPerson(person)">({{person.code}})</text>
-                  <text class="color-text color-text-job" @click="viewPerson(person)">{{person.job}}</text>
+                  <text @click="viewPerson(person)">{{ person.name }}</text>
+                  <text style="padding: 0 5px" @click="viewPerson(person)"
+                    >({{ person.code }})</text
+                  >
+                  <text
+                    class="color-text color-text-job"
+                    @click="viewPerson(person)"
+                    >{{ person.job }}</text
+                  >
                   <text
                     class="color-text color-text-age"
                     @click="viewPerson(person)"
-                  >{{person.age}}岁</text>
+                    >{{ person.age }}岁</text
+                  >
                   <text
                     class="color-text color-text-year"
                     @click="viewPerson(person)"
-                  >工作{{person.workSeniority}}年</text>
+                    >工作{{ person.work_seniority }}年</text
+                  >
                   <text
                     class="color-text color-text-jobyear"
                     @click="viewPerson(person)"
-                  >该岗位工作{{person.jobSeniority}}年</text>
+                    >该岗位工作{{ person.job_seniority }}年</text
+                  >
                   <view class="uni-grow" @click="viewPerson(person)"></view>
-                  <view style="padding:0 15px" @click="viewPerson(person)">
+                  <view style="padding: 0 15px" @click="viewPerson(person)">
                     <text class="icon iconfont">&#xe601;</text>
                   </view>
                   <view @click.stop="showPopMenus('2', person, $event)">
@@ -47,19 +68,27 @@
                   </view>
                 </view>
                 <view class="desc">
-                  <text class="color-text-desc">{{person.duty}}</text>
+                  <text class="color-text-desc">{{ person.duty }}</text>
                 </view>
               </view>
             </view>
+            <view
+              class="no-content"
+              @click="toAddPerson()"
+              v-if="!persons.length"
+            >
+              <view>
+                <image
+                  class="add-img"
+                  src="/static/images/img_new.png"
+                  mode="widthFix"
+                />
+              </view>
+              <view>
+                <text class="add-text">点击这里添加人员</text>
+              </view>
+            </view>
           </scroll-view>
-          <view class="no-content" @click="toAddPerson()" v-if="!persons.length">
-            <view>
-              <image class="add-img" src="/static/images/img_new.png" mode="widthFix" />
-            </view>
-            <view>
-              <text class="add-text">点击这里添加人员</text>
-            </view>
-          </view>
         </view>
       </view>
     </view>
@@ -71,7 +100,7 @@
         @click="menuClick(menu)"
       >
         <view class="iconfont" :class="menu.icon"></view>
-        <text style="padding-left:10px">{{menu.name}}</text>
+        <text style="padding-left: 10px">{{ menu.name }}</text>
       </view>
     </view>
   </view>
@@ -169,7 +198,7 @@ export default {
       this.activeTab = tab;
     },
     back() {
-      uni.switchTab({ url: "/pages/person/jobs" });
+      uni.navigateBack();
     },
     remove(obj) {
       uni.showModal({
@@ -218,7 +247,7 @@ export default {
     },
     toAddPerson() {
       uni.setStorageSync("editData", "");
-      uni.navigateTo({ url: "/pages/person/addPerson" });
+      uni.navigateTo({ url: "/pages/person/addPerson?jobId="+this.job.guid });
     },
     menuClick(menu) {
       if (menu.type == "1") {
@@ -236,7 +265,7 @@ export default {
           this.remove(this.data4PopMenu);
         } else if (menu.name == "编辑") {
           uni.setStorageSync("editData", this.data4PopMenu);
-          uni.navigateTo({ url: "/pages/person/addPerson" });
+          uni.navigateTo({ url: "/pages/person/addPerson?jobId="+this.job.guid });
         } else if (menu.name == "拷贝") {
           this.copy(this.data4PopMenu);
         }

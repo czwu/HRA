@@ -16,7 +16,7 @@
           <text class="icon iconfont">&#xe66e;</text>
         </view>
       </view>
-      <view class="uni-grow content-panel" >
+      <view class="uni-grow content-panel">
         <view class="i-list" v-if="datas.length">
           <scroll-view
             scroll-y="true"
@@ -33,18 +33,31 @@
                 class="uni-column uni-grow"
                 style="padding: 10px 0 10px 20px"
               >
-                <view class="list-item-content">
-                  <text @click="viewData(data)">{{ data.code }}</text>
-                  <text style="padding: 0 5px" @click="viewData(data)"
+                <view class="list-item-content" @click="viewData(data)">
+                  <text>{{
+                    data.system ? data.human_error_code : data.code
+                  }}</text>
+                  <text style="padding: 0 5px" v-if="!data.system"
                     >({{ data.human_error_code }})</text
                   >
                   <text
                     class="color-text color-text-num"
-                    @click="viewData(data)"
-                    >{{ data.device_type }}</text
+                    v-if="data.device_type"
+                    >{{ data.device_type || data.system }}</text
                   >
-                  <view class="uni-grow" @click="viewData(data)"></view>
-                  <view style="padding: 0 15px" @click="viewData(data)">
+                  <text
+                    class="color-text color-text-num"
+                    style="margin-left: 15px"
+                    v-if="data.system"
+                    >{{ data.system }}</text
+                  >
+                  <text
+                    class="color-text color-text-2"
+                    v-show="data.accident"
+                    >{{ data.accident }}</text
+                  >
+                  <view class="uni-grow"></view>
+                  <view style="padding: 0 15px">
                     <text class="icon iconfont">&#xe601;</text>
                   </view>
                   <view @click.stop="showPopMenus('2', data, $event)">
@@ -52,7 +65,9 @@
                   </view>
                 </view>
                 <view class="desc">
-                  <text class="color-text-desc">{{ data.device_funciton }}</text>
+                  <text class="color-text-desc">{{
+                    data.device_funciton || data.human_error_desc
+                  }}</text>
                 </view>
               </view>
             </view>
@@ -67,7 +82,7 @@
             />
           </view>
           <view>
-            <text class="add-text">点击这里添加文件</text>
+            <text class="add-text">{{ addText }}</text>
           </view>
         </view>
       </view>
@@ -92,6 +107,7 @@ import uniPopupMessage from "@/components/uni-popup/uni-popup-message.vue";
 import uniPopupDialog from "@/components/uni-popup/uni-popup-dialog.vue";
 import util from "../../common/util";
 import typeAService from "../../service/hra/typeA";
+import typeCService from "../../service/hra/typeC";
 export default {
   data() {
     return {
@@ -99,6 +115,7 @@ export default {
       scrollHeight: 0,
       scrollTop: 0,
       title: "分析任务",
+      service: null,
       allMenus: [
         { name: "新建任务", type: "1", icon: "iconadd" },
         { name: "导入", type: "1", icon: "iconimport2" },
@@ -118,6 +135,7 @@ export default {
         placeholder: "",
       },
       datas: [],
+      addText: "点击这里添加数据",
     };
   },
   components: {
@@ -129,18 +147,20 @@ export default {
   mounted() {
     this.initScroll();
   },
-  onShow(){
+  onShow() {
     uni.getStorage({
       key: "currTask",
       success: (val) => {
         if (val.data) {
           this.mainTask = val.data;
+          this.service =
+            this.mainTask.htype == "A类" ? typeAService : typeCService;
           this.loadTaskChildren();
         }
       },
     });
   },
-  methods: { 
+  methods: {
     initScroll() {
       let _this = this;
       uni.getSystemInfo({
@@ -160,7 +180,7 @@ export default {
       this.popMenuVisible = false;
     },
     loadTaskChildren() {
-      return typeAService
+      return this.service
         .query({ task_id: this.mainTask.guid })
         .then((datas) => {
           this.datas = datas;
@@ -172,7 +192,7 @@ export default {
         content: "是否确认删除该任务?",
         success: (res) => {
           if (res.confirm) {
-            typeAService.remove(obj.guid).then(() => {
+            this.service.remove(obj.guid).then(() => {
               this.loadTaskChildren();
               uni.showToast({
                 title: "删除成功!",
@@ -184,18 +204,17 @@ export default {
       });
     },
     copy(data) {
-      let guid = typeAService.genGuid();
-      typeAService.copy(data, "code", guid).then((newData) => {
+      let guid = this.service.genGuid();
+      this.service.copy(data, "code", guid).then((newData) => {
         this.loadTaskChildren();
       });
     },
     viewData(data) {
-
+      uni.setStorageSync("currData", data);
+      uni.navigateTo({ url: data.system ? "/pages/hra/typeCInfo":"/pages/hra/typeAInfo" });
     },
     back() {
-      uni.switchTab({
-        url: "/pages/hra/index",
-      });
+       uni.navigateBack();
     },
     showPopMenus(type, data, event) {
       this.popMenus = this.allMenus.filter((menu) => menu.type == type);
@@ -211,7 +230,15 @@ export default {
     },
     toAddData() {
       uni.setStorageSync("editData", "");
-      uni.navigateTo({ url: "/pages/hra/addTypeA?task_id="+this.mainTask.guid });
+      let url = "";
+      if (this.mainTask.htype == "A类") {
+        url = "/pages/hra/addTypeA?task_id=" + this.mainTask.guid;
+      } else {
+        url = "/pages/hra/addTypeC?task_id=" + this.mainTask.guid;
+      }
+      uni.navigateTo({
+        url,
+      });
     },
     menuClick(menu) {
       if (menu.type == "1") {
@@ -229,7 +256,15 @@ export default {
           this.remove(this.data4PopMenu);
         } else if (menu.name == "编辑") {
           uni.setStorageSync("editData", this.data4PopMenu);
-          uni.navigateTo({ url: "/pages/hra/addTypeA?task_id="+this.mainTask.guid });
+          let url=""
+          if (this.mainTask.htype == "A类") {
+            url = "/pages/hra/addTypeA?task_id=" + this.mainTask.guid;
+          } else {
+            url = "/pages/hra/addTypeC?task_id=" + this.mainTask.guid;
+          }
+          uni.navigateTo({
+            url
+          });
         } else if (menu.name == "拷贝") {
           this.copy(this.data4PopMenu);
         }
@@ -265,15 +300,15 @@ export default {
   line-height: 25px;
   padding-right: 20px;
   border-bottom: 1px solid #f8f8f8;
-  .icon.iconfont.item-icon{
-    font-size:26px;
+  .icon.iconfont.item-icon {
+    font-size: 26px;
     line-height: 46px;
-    color:rgb(100, 196, 175);
-    display:block;
-    width:46px;
-    height:46px;
-    margin-top:13px;
-    background: #E8F6F3;
+    color: rgb(100, 196, 175);
+    display: block;
+    width: 46px;
+    height: 46px;
+    margin-top: 13px;
+    background: #e8f6f3;
     text-align: center;
     border-radius: 24px;
   }

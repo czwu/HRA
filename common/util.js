@@ -1,5 +1,5 @@
 let userName = 'tuwei';
-let projectId = 'PROJECT_001'
+let projectId = 'JIE49483KFJD223'
 
 export default {
     /**
@@ -81,6 +81,33 @@ export default {
                 this.nodeEach(node.children, fn)
             }
         })
+    },
+
+    getElSize(selector) { //得到元素的size
+        return new Promise((resolve, rej) => {
+            uni.createSelectorQuery().select(selector).fields({
+                size: true,
+                scrollOffset: true
+            }, (data) => {
+                resolve(data);
+            }).exec();
+        });
+    },
+
+    getScrollHeight(selector) {
+        return new Promise((resolve, rej) => {
+            uni.getSystemInfo({
+                success(res) {
+                    let wHeight = res.windowHeight;
+                    let titleH = uni.createSelectorQuery().select(selector);
+                    titleH
+                        .boundingClientRect((data) => {
+                            resolve(wHeight - data.top - 30)
+                        })
+                        .exec();
+                },
+            });
+        });
     }
 
 }

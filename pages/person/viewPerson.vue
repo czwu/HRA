@@ -28,11 +28,11 @@
           </view>
           <view class="uni-row row-item uni-grow">
             <view class="uni-input-label">工作年限</view>
-            <view class="uni-input">{{person.workSeniority}}</view>
+            <view class="uni-input">{{person.work_seniority}}</view>
           </view>
           <view class="uni-row row-item uni-grow">
             <view class="uni-input-label">岗位工作年限</view>
-            <view class="uni-input">{{person.jobSeniority}}</view>
+            <view class="uni-input">{{person.job_seniority}}</view>
           </view>
           <view class="uni-row row-item uni-grow">
             <view class="uni-input-label">职责</view>
@@ -104,7 +104,7 @@ export default {
   },
   methods: {
     back() {
-      uni.switchTab({ url: "/pages/person/persons" });
+      uni.navigateBack();
     },
     edit() {
       uni.navigateTo({ url: "/pages/person/addPerson" });

@@ -10,6 +10,7 @@
               :class="item.css"
               v-for="item in tools"
               v-bind:key="item.name"
+              v-show="item.name.indexOf(mode) === 0"
               @click="toolClick(item.name)"
             >
               <view
@@ -92,7 +93,6 @@
                 >
                   <audio
                     :src="audio.path"
-                    :author="author"
                     :controls="true"
                     :name="formatTime(audio.time)"
                   >
@@ -178,6 +178,7 @@ export default {
       activeIndex: 0,
       title: "更多操作",
       viewMode: false,
+      mode: "",
     };
   },
   components: {
@@ -186,8 +187,8 @@ export default {
   },
   created() {
     var self = this;
-    recorderManager.onStop(function (res) {
-      console.log("recorder stop" + JSON.stringify(res));
+    recorderManager.onStop((res) => {
+      console.log("recorder stop" + JSON.stringify(res), self.foreign_id);
       clearInterval(self.audioTimer);
       self.audioTimer = null;
       self.audioTime = 0;
@@ -319,7 +320,8 @@ export default {
         },
       });
     },
-    popup(foreign_id, field) {
+    popup(foreign_id, field, mode) {
+      this.mode = mode || "";
       this.activeIndex = 0;
       this.foreign_id = foreign_id;
       this.field = field;

@@ -2,9 +2,9 @@
   <view class="container" :class="screenOrientation">
     <view class="uni-column">
       <view class="uni-flex uni-row i-header">
-        <view class="search-panel uni-grow">
+        <view class="search-panel uni-grow uni-row">
           <input
-            class="search-input"
+            class="search-input uni-grow"
             confirm-type="search"
             placeholder="搜索"
             v-model.trim="searchVal"
@@ -115,9 +115,7 @@ export default {
       this.scrollTop = parseInt(e.detail.scrollTop);
     },
     cancel() {
-      uni.switchTab({
-        url: "/pages/filesys/index",
-      });
+      uni.navigateBack();
     },
     searchFile() {
       if (!this.searchVal) {
@@ -166,64 +164,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.i-header {
-  height: 56px;
-  line-height: 56px;
-  border-bottom: 1px solid #f0f0f0;
-  padding: 0 15px;
-  .icon.iconfont {
-    color: #007aff;
-    font-size: 20px;
-    font-weight: bold;
-  }
-  .search-panel {
-    height: 56px;
-    line-height: 56px;
-    margin-right: 20px;
-    .icon.iconfont.iconclose {
-      position: absolute;
-      right: 6px;
-      top: 2px;
-      color: #bbb;
-      font-weight: 100;
-    }
-    .icon.iconfont.icon-search1 {
-      position: absolute;
-      left: 6px;
-      top: 3px;
-      color: #bbb;
-    }
-    position: relative;
-    .search-input {
-      font-size: 16px;
-      border: 1px solid #eee;
-      height: 30px;
-      background: #eee;
-      margin-top: 13px;
-      padding: 0 30px 0 30px;
-      border-radius: 20px;
-    }
-  }
-}
-
-.i-list {
-  padding-left: 20px;
-}
-
-.i-list-item {
-  height: 72px;
-  line-height: 72px;
-  border-bottom: 1px solid #f8f8f8;
-  padding-right: 20px;
-}
-
-.list-item-content {
-  font-size: 16px;
-  color: #666;
-  font-weight: bold;
-  display: flex;
-  flex-direction: row;
-}
 .row-top {
   line-height: 30px;
 }
@@ -262,16 +202,5 @@ text.custom {
   font-size: 22px;
   color: #007aff;
 }
-.color-text {
-  margin: auto 15px;
-  font-weight: 300;
-  line-height: 15px;
-  height: 15px;
-  vertical-align: baseline;
-  color: #359dff;
-  background: rgba(232, 244, 255, 1);
-  font-size: 11px;
-  padding: 2px 12px;
-  border-radius: 10px;
-}
+
 </style>

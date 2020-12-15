@@ -6,6 +6,104 @@
   "description": "HRA",
   "glyphs": [
     {
+      "icon_id": "4116746",
+      "name": "密码",
+      "font_class": "mima",
+      "unicode": "e626",
+      "unicode_decimal": 58918
+    },
+    {
+      "icon_id": "7187989",
+      "name": "用户名",
+      "font_class": "yonghuming",
+      "unicode": "e60b",
+      "unicode_decimal": 58891
+    },
+    {
+      "icon_id": "2943007",
+      "name": "人物访谈",
+      "font_class": "renwufangtan",
+      "unicode": "e63e",
+      "unicode_decimal": 58942
+    },
+    {
+      "icon_id": "6533796",
+      "name": "关于",
+      "font_class": "guanyu",
+      "unicode": "e60e",
+      "unicode_decimal": 58894
+    },
+    {
+      "icon_id": "11598529",
+      "name": "设 置",
+      "font_class": "shezhi",
+      "unicode": "e60a",
+      "unicode_decimal": 58890
+    },
+    {
+      "icon_id": "12274188",
+      "name": "Project selection",
+      "font_class": "Projectselection",
+      "unicode": "e722",
+      "unicode_decimal": 59170
+    },
+    {
+      "icon_id": "17371731",
+      "name": "目录普查",
+      "font_class": "mulupucha",
+      "unicode": "e6a7",
+      "unicode_decimal": 59047
+    },
+    {
+      "icon_id": "18002221",
+      "name": "调试",
+      "font_class": "tiaoshi",
+      "unicode": "e6ba",
+      "unicode_decimal": 59066
+    },
+    {
+      "icon_id": "9055769",
+      "name": "icon_数据下载",
+      "font_class": "icon-xiazai",
+      "unicode": "e687",
+      "unicode_decimal": 59015
+    },
+    {
+      "icon_id": "9724859",
+      "name": "数据上传",
+      "font_class": "shujushangchuan",
+      "unicode": "e6a6",
+      "unicode_decimal": 59046
+    },
+    {
+      "icon_id": "10039836",
+      "name": "问题",
+      "font_class": "question",
+      "unicode": "e62c",
+      "unicode_decimal": 58924
+    },
+    {
+      "icon_id": "4956551",
+      "name": "链接",
+      "font_class": "lianjie",
+      "unicode": "e60d",
+      "unicode_decimal": 58893
+    },
+    {
+      "icon_id": "10888500",
+      "name": "日期",
+      "font_class": "riqi",
+      "unicode": "e608",
+      "unicode_decimal": 58888
+    },
+    {
+      "icon_id": "16264096",
+      "name": "时间",
+      "font_class": "shijian",
+      "unicode": "e6b1",
+      "unicode_decimal": 59057
+    },
+    {
       "icon_id": "4945754",
       "name": "Voice",
       "font_class": "Voice",

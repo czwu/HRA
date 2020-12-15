@@ -2,13 +2,12 @@
   <view class="container" @click="pageClick" :class="screenOrientation">
     <uni-tab-bar :class="screenOrientation" index="2"></uni-tab-bar>
     <view class="uni-column">
-      <view class="uni-row i-header">
+      <view class="uni-row i-header" >
         <view class="uni-grow"></view>
         <text class="i-header-text">分析任务</text>
         <view class="uni-grow"></view>
         <view
-          class
-          style="transform: rotate(90deg)"
+          style="transform: rotate(90deg);"
           @click.stop="showPopMenus('1', null, $event)"
         >
           <text class="icon iconfont">&#xe66e;</text>
@@ -25,6 +24,7 @@
               class="i-list-item uni-row"
               v-for="task in tasks"
               v-bind:key="task.guid"
+              @click="viewTask(task)"
             >
               <text class="icon iconfont item-icon">&#xe66f;</text>
               <view
@@ -33,36 +33,24 @@
               >
                 <view class="list-item-content">
                   <text @click="viewTask(task)">{{ task.name }}</text>
-                  <text style="padding: 0 5px" @click="viewTask(task)"
-                    >({{ task.code }})</text
-                  >
-                  <text
-                    class="color-text color-text-num"
-                    @click="viewTask(task)"
-                    >{{ task.stage }}</text
-                  >
-                  <text
-                    class="color-text color-text-num"
-                    @click="viewTask(task)"
-                    >{{ task.level }}</text
-                  >
-                  <text
-                    class="color-text color-text-num"
-                    @click="viewTask(task)"
-                    >{{ task.working_condition_type }}</text
-                  >
-                  <text
-                    class="color-text color-text-htype"
-                    @click="viewTask(task)"
-                    >{{ task.htype }}</text
-                  >
-                  <text
-                    class="color-text color-text-scope"
-                    @click="viewTask(task)"
-                    >{{ task.analysis_scope }}</text
-                  >
-                  <view class="uni-grow" @click="viewTask(task)"></view>
-                  <view style="padding: 0 15px" @click="viewTask(task)">
+                  <text style="padding: 0 5px">({{ task.code }})</text>
+                  <text class="color-text color-text-num">{{
+                    task.stage
+                  }}</text>
+                  <text class="color-text color-text-num">{{
+                    task.level
+                  }}</text>
+                  <text class="color-text color-text-num">{{
+                    task.working_condition_type
+                  }}</text>
+                  <text class="color-text color-text-htype">{{
+                    task.htype
+                  }}</text>
+                  <text class="color-text color-text-scope">{{
+                    task.analysis_scope
+                  }}</text>
+                  <view class="uni-grow"></view>
+                  <view style="padding: 0 15px">
                     <text class="icon iconfont">&#xe601;</text>
                   </view>
                   <view @click.stop="showPopMenus('2', task, $event)">
@@ -109,6 +97,7 @@ import uniPopup from "@/components/uni-popup/uni-popup.vue";
 import uniPopupMessage from "@/components/uni-popup/uni-popup-message.vue";
 import uniPopupDialog from "@/components/uni-popup/uni-popup-dialog.vue";
 import util from "../../common/util";
+import constants from "../../common/constants";
 import taskService from "../../service/hra/task";
 import { mapState, mapActions } from "vuex";
 export default {
@@ -143,8 +132,8 @@ export default {
     uniPopupMessage,
     uniPopupDialog,
   },
-  onShow(){
-    this.loadTasks()
+  onShow() {
+    this.loadTasks();
   },
   computed: {
     ...mapState({
@@ -162,7 +151,7 @@ export default {
             _this.scrollHeight = wHeight - data.top - 90;
           })
           .exec();
-      }
+      },
     });
     this.loadTasks();
   },
@@ -201,10 +190,11 @@ export default {
     },
     viewTask(data) {
       uni.setStorageSync("currTask", data);
-      let url = data.htype == 'A类' || data.htype == 'C类' ? '/pages/hra/viewTask' : '/pages/hra/viewTaskCorrelation';
-      uni.navigateTo({
-        url
-      });
+      let url =
+        data.htype == constants.TAST_TYPE.A || data.htype == constants.TAST_TYPE.C
+          ? "/pages/hra/viewTask?type=" + data.htype
+          : "/pages/hra/viewTaskCorrelation?type=" + data.htype;
+      uni.navigateTo({ url: url });
     },
     showPopMenus(type, data, event) {
       this.popMenus = this.allMenus.filter((menu) => menu.type == type);
@@ -274,15 +264,15 @@ export default {
   line-height: 25px;
   padding-right: 20px;
   border-bottom: 1px solid #f8f8f8;
-  .icon.iconfont.item-icon{
-    font-size:26px;
+  .icon.iconfont.item-icon {
+    font-size: 26px;
     line-height: 46px;
-    color:rgb(100, 196, 175);
-    display:block;
-    width:46px;
-    height:46px;
-    margin-top:13px;
-    background: #E8F6F3;
+    color: rgb(100, 196, 175);
+    display: block;
+    width: 46px;
+    height: 46px;
+    margin-top: 13px;
+    background: #e8f6f3;
     text-align: center;
     border-radius: 24px;
   }

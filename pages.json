@@ -8,6 +8,22 @@
             }
         },
         {
+            "path": "pages/index/mine",
+            "style": {
+                "app-plus": {
+                    "titleNView": false
+                }
+            }
+        },
+        {
+            "path": "pages/index/config",
+            "style": {
+                "app-plus": {
+                    "titleNView": false
+                }
+            }
+        },
+        {
             "path": "pages/filesys/index",
             "style": {
                 "app-plus": {
@@ -25,6 +41,14 @@
         },
         {
             "path": "pages/filesys/selectFolder",
+            "style": {
+                "app-plus": {
+                    "titleNView": false
+                }
+            }
+        },
+        {
+            "path": "pages/filesys/selectFile",
             "style": {
                 "app-plus": {
                     "titleNView": false
@@ -64,7 +88,87 @@
             }
         },
         {
+            "path": "pages/hra/viewTaskCorrelation",
+            "style": {
+                "app-plus": {
+                    "titleNView": false
+                }
+            }
+        },
+        {
             "path": "pages/hra/addTypeA",
+            "style": {
+                "app-plus": {
+                    "titleNView": false
+                }
+            }
+        },
+        {
+            "path": "pages/hra/addTypeC",
+            "style": {
+                "app-plus": {
+                    "titleNView": false
+                }
+            }
+        },
+        {
+            "path": "pages/hra/typeAInfo",
+            "style": {
+                "app-plus": {
+                    "titleNView": false
+                }
+            }
+        },
+        {
+            "path": "pages/hra/typeCInfo",
+            "style": {
+                "app-plus": {
+                    "titleNView": false
+                }
+            }
+        },
+        {
+            "path": "pages/hra/addTypeAC",
+            "style": {
+                "app-plus": {
+                    "titleNView": false
+                }
+            }
+        },
+        {
+            "path": "pages/hra/addTypeCC",
+            "style": {
+                "app-plus": {
+                    "titleNView": false
+                }
+            }
+        },
+        {
+            "path": "pages/hra/related",
+            "style": {
+                "app-plus": {
+                    "titleNView": false
+                }
+            }
+        },
+        {
+            "path": "pages/hra/relatedC",
+            "style": {
+                "app-plus": {
+                    "titleNView": false
+                }
+            }
+        },
+        {
+            "path": "pages/hra/selectEvent",
+            "style": {
+                "app-plus": {
+                    "titleNView": false
+                }
+            }
+        },
+        {
+            "path": "pages/hra/viewTypeAC",
             "style": {
                 "app-plus": {
                     "titleNView": false
@@ -80,7 +184,95 @@
             }
         },
         {
+            "path": "pages/isv/version",
+            "style": {
+                "app-plus": {
+                    "titleNView": false
+                }
+            }
+        },
+        {
+            "path": "pages/isv/score",
+            "style": {
+                "app-plus": {
+                    "titleNView": false
+                }
+            }
+        },
+        {
+            "path": "pages/isv/steps",
+            "style": {
+                "app-plus": {
+                    "titleNView": false
+                }
+            }
+        },
+        {
+            "path": "pages/isv/addStep",
+            "style": {
+                "app-plus": {
+                    "titleNView": false
+                }
+            }
+        },
+        {
+            "path": "pages/isv/selectRegulation",
+            "style": {
+                "app-plus": {
+                    "titleNView": false
+                }
+            }
+        },
+        {
+            "path": "pages/isv/addIssue",
+            "style": {
+                "app-plus": {
+                    "titleNView": false
+                }
+            }
+        },
+        {
             "path": "pages/effect/index",
+            "style": {
+                "app-plus": {
+                    "titleNView": false
+                }
+            }
+        },
+        {
+            "path": "pages/effect/addBasic",
+            "style": {
+                "app-plus": {
+                    "titleNView": false
+                }
+            }
+        },
+        {
+            "path": "pages/effect/scenes",
+            "style": {
+                "app-plus": {
+                    "titleNView": false
+                }
+            }
+        },
+        {
+            "path": "pages/effect/addScene",
+            "style": {
+                "app-plus": {
+                    "titleNView": false
+                }
+            }
+        },
+        {
+            "path": "pages/effect/performance",
+            "style": {
+                "app-plus": {
+                    "titleNView": false
+                }
+            }
+        },
+        {
+            "path": "pages/effect/toe",
             "style": {
                 "app-plus": {
                     "titleNView": false
@@ -152,9 +344,20 @@
             }
         },
         {
+            "path": "pages/investigation/index",
+            "style": {
+                "app-plus": {
+                    "titleNView": false
+                }
+            }
+        },
+        {
             "path": "pages/index/login",
             "style": {
-                "navigationBarTitleText": "HRA Login"
+                "navigationBarTitleText": "HRA Login",
+                "app-plus": {
+                    "titleNView": false
+                }
             }
         },
         {
@@ -171,24 +374,16 @@
         "selectedColor": "#5677FC",
         "backgroundColor": "#FFFFFF",
         "list": [{
-                "text": "index",
-                "pagePath": "pages/index/index"
+                "text": "mine",
+                "pagePath": "pages/index/mine"
+            },
+            {
+                "text": "config",
+                "pagePath": "pages/index/config"
             },
             {
                 "text": "groups",
                 "pagePath": "pages/person/groups"
-            },
-            {
-                "text": "persons",
-                "pagePath": "pages/person/persons"
-            },
-            {
-                "text": "jobs",
-                "pagePath": "pages/person/jobs"
-            },
-            {
-                "text": "types",
-                "pagePath": "pages/person/types"
             },
             {
                 "text": "filesys",
@@ -207,12 +402,8 @@
                 "pagePath": "pages/effect/index"
             },
             {
-                "text": "可达性",
-                "pagePath": "pages/defauit/index"
-            },
-            {
-                "text": "SQL",
-                "pagePath": "pages/index/sql"
+                "text": "问题普查",
+                "pagePath": "pages/investigation/index"
             }
         ]
     },
@@ -222,12 +413,12 @@
         "navigationBarBackgroundColor": "#007AFF",
         "backgroundColor": "#FFFFFF"
     },
-    "condition": { //模式配置，仅开发期间生效
-        "current": 0, //当前激活的模式(list 的索引项)
+    "condition": {
+        "current": 0,
         "list": [{
-            "name": "", //模式名称
-            "path": "", //启动页面，必选
-            "query": "" //启动参数，在页面的onLoad函数里面得到
+            "name": "",
+            "path": "",
+            "query": ""
         }]
     }
 }

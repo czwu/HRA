@@ -1,7 +1,7 @@
 import constants from '../../common/constants'
 import BaseService from '../base'
 
-
+let files = []
 let config = {
     tableName: "TFile",
     columns: [
@@ -10,8 +10,9 @@ let config = {
         { name: "type", type: "INT", ext: "DEFAULT 0" }, // 0:相关文件 1:图片 2:视频 3:音频,  9:其他
         { name: "path", type: "VARCHAR(255)", ext: "" },
         { name: "field", type: "VARCHAR(50)", ext: "" }, //如果一条记录中,多个字段需要 图片 视频 音频功能,则需要设定 field,指定字段来做区分
+        { name: "name", type: "VARCHAR(50)", ext: "" },
         { name: "time", type: "INT", ext: "" },
-        { name: "project_id", type: "INT", ext: "" },
+        { name: "project_id", type: "VARCHAR(50)", ext: "" },
         { name: "delete_flag", type: "INT", ext: " DEFAULT 0 " }
     ],
     datas: [],
@@ -19,6 +20,8 @@ let config = {
 }
 
 class FileService extends BaseService {
+
+
     remove(guid) {
         let delSql, guidSqlPart = "('" + guid + "')";
         if (Array.isArray(guid)) {
@@ -46,6 +49,8 @@ class FileService extends BaseService {
             })
         })
     }
+
+
 }
 const fileService = new FileService(config)
 export default fileService

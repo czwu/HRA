@@ -3,14 +3,15 @@ import BaseService from './base'
 let config = {
     tableName: "TProject",
     columns: [
-        { name: "projectid", type: "INT", ext: "PRIMARY KEY" },
-        { name: "code", type: "VARCHAR(50)", ext: "" },
+        { name: "guid", type: "VARCHAR(50)", ext: "PRIMARY KEY" },
+        { name: "projectid", type: "INT" },
+        { name: "code", type: "VARCHAR(50)" },
         { name: "name", type: "VARCHAR(50)", ext: "NOT NULL" }
     ],
     datas: [
-        [100, 'PROJECT_001', '福清核电站'],
-        [101, 'PROJECT_002', '田湾核电站'],
-        [102, 'PROJECT_003', '徐大堡核电站']
+        ['JIE49483KFJD223', 100, 'PROJECT_001', '福清核电站'],
+        ['JIE49483KFJD224', 101, 'PROJECT_002', '田湾核电站'],
+        ['JIE49483KFJD225', 102, 'PROJECT_003', '徐大堡核电站']
     ]
 }
 const projectInstance = new BaseService(config)

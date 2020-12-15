@@ -3,7 +3,6 @@
     <comp-page
       :service="service"
       :title="title"
-      tabsrc="/pages/hra/index"
     ></comp-page>
   </view>
 </template>

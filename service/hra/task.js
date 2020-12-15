@@ -18,7 +18,7 @@ let config = {
         { name: "participants", type: "VARCHAR(255)", ext: " DEFAULT 0 " }, //任务参与人员
         { name: "deadline_at", type: "VARCHAR(50)", ext: "" }, //任务截止时间
         { name: "remark", type: "VARCHAR(255)", ext: "" }, //备注
-        { name: "project_id", type: "INT", ext: "" }, //所属项目ID
+        { name: "project_id", type: "VARCHAR(50)", ext: "" }, //所属项目ID
         { name: "created_at", type: "INT", ext: "" }, //任务创建时间
         { name: "created_by", type: "VARCHAR(50)", ext: "" }, //创建人
         { name: "updated_at", type: "INT", ext: "" }, //修改人

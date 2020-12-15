@@ -77,7 +77,7 @@
 			},
 			confirmButtonText: {
 				type: String,
-				default: '确定'
+				default: '完成'
 			},
 			confirmButtonClass: {
 				type: String,
@@ -363,30 +363,32 @@
 			flex-direction: column;
 
 			.time-picker-tool {
-				height: 50rpx;
+				height: 46px;
 				display: flex;
 				align-items: center;
 				justify-content: space-between;
-				font-size: 18rpx;
+				font-size: 18px;
 
 				.cancel-btn {
-					padding: 0 28rpx;
+					padding: 0 28px;
 					box-sizing: border-box;
 					color: #969799;
+					font-size: 16px;
 				}
 
 				.tool-title {
 					font-weight: 500;
-					font-size: 18rpx;
+					font-size: 16px;
 					overflow: hidden;
 					white-space: nowrap;
 					text-overflow: ellipsis;
 				}
 
 				.confirm-btn {
-					padding: 0 28rpx;
+					padding: 0 28px;
 					box-sizing: border-box;
-					color: #576b95;
+					color: #3b6edb;
+					font-size: 16px;
 				}
 			}
 
@@ -394,7 +396,7 @@
 				width: 100%;
 				flex: 1;
 				.item {
-					font-size:18rpx;
+					font-size:30rpx;
 					display: flex;
 					align-items: center;
 					justify-content: center;

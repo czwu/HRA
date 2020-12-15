@@ -141,7 +141,7 @@ const store = new Vuex.Store({
                 groupService.queryAll().then((groups) => {
                     deptService.queryAll().then((depts) => {
                         groups.forEach((group) => {
-                            group.depts = depts.filter((dept) => dept.groupGuid == group.guid);
+                            group.depts = depts.filter((dept) => dept.group_guid == group.guid);
                         });
                         commit("setPersonGroups", groups);
                         resolve(groups)
@@ -149,13 +149,13 @@ const store = new Vuex.Store({
                 }, e => reject(e));
             });
         },
-        loadPersonJobs({ commit, state }, deptGuid) {
-            return jobService.query({ deptGuid }).then(datas => {
+        loadPersonJobs({ commit, state }, dept_guid) {
+            return jobService.query({ dept_guid }).then(datas => {
                 commit("setPersonJobs", datas);
             })
         },
-        loadPersons({ commit, state }, jobGuid) {
-            return personService.query({ jobGuid }).then(datas => {
+        loadPersons({ commit, state }, job_guid) {
+            return personService.query({ job_guid }).then(datas => {
                 commit("setPersons", datas);
             })
         },
@@ -170,11 +170,11 @@ const store = new Vuex.Store({
                     }
                 })
                 datas.forEach(catalog => {
-                    if (catalog.parentGuid && catalogIndexMap[catalog.parentGuid]) {
-                        catalogIndexMap[catalog.parentGuid].children.push(catalog)
+                    if (catalog.parent_id && catalogIndexMap[catalog.parent_id]) {
+                        catalogIndexMap[catalog.parent_id].children.push(catalog)
                     }
                 })
-                catalogIndexMap.roots = datas.filter(c => !c.parentGuid)
+                catalogIndexMap.roots = datas.filter(c => !c.parent_id)
                 commit("setCatalogIndexMap", catalogIndexMap);
                 //返回根文件夹或文件
                 commit("setCatalogs", state.currCatalog ? catalogIndexMap[state.currCatalog.guid].children : catalogIndexMap.roots);

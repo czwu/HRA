@@ -1,24 +1,34 @@
 <template>
   <view class="container" @click="pageClick" :class="screenOrientation">
-    <uni-tab-bar></uni-tab-bar>
     <view class="uni-column">
       <view class="uni-row i-header">
         <text class="icon iconfont" @click="back">&#xe600;</text>
         <text class="i-header-text">类别管理</text>
         <view class="uni-grow"></view>
-        <text class="icon iconfont" style="font-weight:300" @click="addGroup">&#xe670;</text>
+        <text class="icon iconfont" style="font-weight: 300" @click="addGroup"
+          >&#xe670;</text
+        >
       </view>
       <view class="uni-grow">
         <view class="i-list">
-          <view class="i-list-item uni-row" v-for="type in personGroups" v-bind:key="type.guid">
+          <view
+            class="i-list-item uni-row"
+            v-for="type in personGroups"
+            v-bind:key="type.guid"
+          >
             <view class="uni-column uni-grow">
               <view class="list-item-content">
                 <view class="item-icon"></view>
-                <text style="padding-left:15px">{{type.name}}</text>
+                <text style="padding-left: 15px">{{ type.name }}</text>
                 <text v-show="type.custom" class="custom">(自定义)</text>
                 <view class="uni-grow"></view>
-                <view @click.stop="showPopMenus('2', type, $event)" v-show="type.custom">
-                  <text class="icon iconfont" style="font-weight:bold">&#xe66e;</text>
+                <view
+                  @click.stop="showPopMenus('2', type, $event)"
+                  v-show="type.custom"
+                >
+                  <text class="icon iconfont" style="font-weight: bold"
+                    >&#xe66e;</text
+                  >
                 </view>
               </view>
             </view>
@@ -34,7 +44,7 @@
         @click="menuClick(menu)"
       >
         <view class="iconfont" :class="menu.icon"></view>
-        <text style="padding-left:10px">{{menu.name}}</text>
+        <text style="padding-left: 10px">{{ menu.name }}</text>
       </view>
     </view>
     <uni-popup ref="popup" type="center">
@@ -100,7 +110,7 @@ export default {
       loadPersonGroups: "loadPersonGroups",
     }),
     back() {
-      uni.switchTab({ url: "/pages/person/groups" });
+      uni.navigateBack();
     },
 
     showPopMenus(type, data, event) {
@@ -126,9 +136,9 @@ export default {
             groupService.remove(guid).then(() => {
               this.loadPersonGroups();
               uni.showToast({
-                  title: "删除成功!",
-                  duration: 2000,
-                });
+                title: "删除成功!",
+                duration: 2000,
+              });
             });
           }
         },

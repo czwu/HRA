@@ -5,14 +5,18 @@
       <view class="i-tab-header uni-row">
         <view
           class="i-tab-item"
-          v-for=" group  in personGroups"
+          v-for="group in personGroups"
           :key="group.guid"
-          :class="{active:activeTab.guid == group.guid}"
+          :class="{ active: activeTab.guid == group.guid }"
           @click="switchTab(group)"
-        >{{group.name}}</view>
+          >{{ group.name }}</view
+        >
 
         <view class="uni-grow"></view>
-        <view style="transform:rotate(90deg);" @click.stop="showPopMenus('1',null,$event)">
+        <view
+          style="transform: rotate(90deg)"
+          @click.stop="showPopMenus('1', null, $event)"
+        >
           <text class="icon iconfont">&#xe66e;</text>
         </view>
       </view>
@@ -21,7 +25,7 @@
           <scroll-view
             scroll-y="true"
             class="sv"
-            :style="{height:scrollHeight+'px'}"
+            :style="{ height: scrollHeight + 'px' }"
             @scroll="scroll"
           >
             <view
@@ -31,12 +35,17 @@
             >
               <view class="list-item-content uni-row uni-grow">
                 <view class="item-icon"></view>
-                <text style="margin-left:20px" @click="goDept(data)">{{data.name}}</text>
+                <text style="margin-left: 20px" @click="goDept(data)">{{
+                  data.name
+                }}</text>
                 <view class="uni-grow" @click="goDept(data)"></view>
                 <view @click="goDept(data)">
                   <text class="icon iconfont">&#xe601;</text>
                 </view>
-                <view style="margin-left:15px" @click.stop="showPopMenus('2', data, $event)">
+                <view
+                  style="margin-left: 15px"
+                  @click.stop="showPopMenus('2', data, $event)"
+                >
                   <text class="icon iconfont">&#xe66e;</text>
                 </view>
               </view>
@@ -49,7 +58,11 @@
           v-if="activeTab.depts && !activeTab.depts.length"
         >
           <view>
-            <image class="add-img" src="/static/images/img_new.png" mode="widthFix" />
+            <image
+              class="add-img"
+              src="/static/images/img_new.png"
+              mode="widthFix"
+            />
           </view>
           <view>
             <text class="add-text">点击这里添加部门</text>
@@ -60,13 +73,13 @@
     <view class="popup pop-menu" v-show="popMenuVisible" :style="popStyle">
       <view
         class="pop-menu-item uni-row"
-        :class="{'border-bottom':menu.border}"
+        :class="{ 'border-bottom': menu.border }"
         v-for="menu in popMenus"
         v-bind:key="menu.name"
         @click="menuClick(menu)"
       >
         <view class="menu iconfont" :class="menu.icon"></view>
-        <text style="padding-left:10px">{{menu.name}}</text>
+        <text style="padding-left: 10px">{{ menu.name }}</text>
       </view>
     </view>
     <uni-popup ref="popup" type="center">
@@ -121,7 +134,7 @@ export default {
         { name: "新建部门", type: "1", icon: "iconadd" },
         { name: "导入", type: "1", icon: "iconimport2" },
         { name: "编辑", type: "2", icon: "iconccedit" },
-        { name: "拷贝", type: "2", icon: "iconcopy" },
+        // { name: "拷贝", type: "2", icon: "iconcopy" },
         { name: "删除", type: "2", icon: "iconsystem-manage-remove red" },
       ],
       popStyle: {
@@ -203,24 +216,27 @@ export default {
         content: msg,
         success: (res) => {
           if (res.confirm) {
-            deptService.remove(obj.guid).then(() => {
-              this.loadPersonGroups().then((groups) => {
-                this.resetActiveTab(groups);
-                uni.showToast({
-                  title: "删除成功!",
-                  duration: 2000,
+            deptService.remove(obj.guid).then(
+              () => {
+                this.loadPersonGroups().then((groups) => {
+                  this.resetActiveTab(groups);
+                  uni.showToast({
+                    title: "删除成功!",
+                    duration: 2000,
+                  });
                 });
-              });
-            },(e)=>{
-              console.error(e)
-            });
+              },
+              (e) => {
+                console.error(e);
+              }
+            );
           }
         },
       });
     },
     goDept(data) {
       uni.setStorageSync("currDept", data);
-      uni.switchTab({
+      uni.navigateTo({
         url: "/pages/person/jobs",
       });
     },
@@ -275,7 +291,7 @@ export default {
           //新增分类
           let dept = {
             guid: util.genDeptId(),
-            groupGuid: this.activeTab.guid,
+            group_guid: this.activeTab.guid,
             name: name,
           };
           deptService.insert(dept).then(() => {
@@ -306,7 +322,7 @@ export default {
             icon: "none",
           });
         } else if (menu.name == "类别管理") {
-          uni.switchTab({
+          uni.navigateTo({
             url: "/pages/person/types",
           });
         }
@@ -332,24 +348,22 @@ export default {
 .i-tab-header {
   overflow: hidden;
   border-bottom: 1px solid #f0f0f0;
-  padding: 0 17px 0 20px;
+  padding: 0 10px 0 20px;
   > view {
     height: 56px;
     line-height: 56px;
     box-sizing: border-box;
   }
 }
-.i-tab-content {
-  padding: 0 20px;
-}
+
 .i-tab-item {
-  font-size: 18px;
+  font-size: 16px;
   color: #444;
   box-sizing: border-box;
-  height: 60px;
+  height: 54px;
+  line-height: 54px;
   text-align: left;
   margin-right: 20px;
-  line-height: 60px;
   position: relative;
   &.active {
     color: #007aff;
@@ -367,6 +381,7 @@ export default {
     text-align: center;
   }
 }
+
 .list-item-content {
   font-size: 16px;
   color: #666;

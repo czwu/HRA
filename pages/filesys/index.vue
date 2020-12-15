@@ -10,33 +10,33 @@
           v-show="!!currCatalog"
           >&#xe600;</text
         >
-        <view style="width: 250px" v-show="!currCatalog"></view>
-        <view class="uni-grow" v-show="!currCatalog"></view>
+        <view style="width: 200px" v-show="!currCatalog" class="uni-grow"></view>
         <text class="i-header-text">{{
           currCatalog ? currCatalog.name : "文件体系"
         }}</text>
-        <view class="uni-grow"></view>
-        <view class="search-panel" v-show="!currCatalog">
-          <input
-            class="search-input"
-            confirm-type="search"
-            placeholder="搜索"
-            v-model.trim="searchVal"
-            @submit="searchFile()"
-          />
-          <text class="icon iconfont icon-search1" @click="searchFile"></text>
-          <text
-            class="icon iconfont iconclose"
-            @click="searchVal = ''"
-            v-show="searchVal.trim().length"
-          ></text>
-        </view>
-        <view
-          class
-          style="transform: rotate(90deg)"
-          @click.stop="showPopMenus('1', null, $event)"
-        >
-          <text class="icon iconfont">&#xe66e;</text>
+        <view class="uni-grow uni-row" style="width: 250px">
+          <view class="uni-grow"></view>
+          <view class="search-panel" v-show="!currCatalog">
+            <input
+              class="search-input"
+              confirm-type="search"
+              placeholder="搜索"
+              v-model.trim="searchVal"
+              @submit="searchFile()"
+            />
+            <text class="icon iconfont icon-search1" @click="searchFile"></text>
+            <text
+              class="icon iconfont iconclose"
+              @click="searchVal = ''"
+              v-show="searchVal.trim().length"
+            ></text>
+          </view>
+          <view
+            style="transform: rotate(270deg)"
+            @click.stop="showPopMenus('1', null, $event)"
+          >
+            <text class="icon iconfont">&#xe66e;</text>
+          </view>
         </view>
       </view>
       <uni-breadcrumb
@@ -57,24 +57,29 @@
               v-for="catalog in catalogs"
               v-bind:key="catalog.guid"
             >
-              <view class="uni-column uni-grow">
+              <view class="uni-column uni-grow" @click="openCatalog(catalog)">
                 <view class="list-item-content">
                   <text
                     class="icon iconfont"
                     :style="
                       catalog.leaf
-                        ? 'color:#78a5c5;font-size:26px'
-                        : 'color:#bfa456;font-size:22px'
+                        ? 'color:#78a5c5;font-size:24px;margin-left:6px'
+                        : 'color:#bfa456;font-size:24px;'
                     "
                     >{{ catalog.leaf ? "&#xe762;" : "&#xe712;" }}</text
                   >
-                  <text style="padding-left: 15px" @click="openCatalog(catalog)"
-                    >{{ catalog.name }}
+                  <text style="padding-left: 15px">{{ catalog.name }} </text>
+                  <text
+                    v-if="catalog.leaf && catalog.code"
+                    style="padding: 0 5px"
+                  >
+                    ({{ catalog.type }})
                   </text>
-                  <text v-if="catalog.leaf && catalog.code" style="padding:0 5px" > ({{ catalog.type }}) </text>
-                  <text class="color-text" v-if="catalog.leaf">{{catalog.type }}</text>
-                  <view class="uni-grow" @click="openCatalog(catalog)"></view>
-                  <view @click="openCatalog(catalog)" v-show="!catalog.leaf">
+                  <text class="color-text" v-if="catalog.leaf">{{
+                    catalog.type
+                  }}</text>
+                  <view class="uni-grow"></view>
+                  <view v-show="!catalog.leaf">
                     <text class="icon iconfont">&#xe601;</text>
                   </view>
                   <view
@@ -246,7 +251,9 @@ export default {
     });
     this.loadCatalogs();
   },
-  onShow() {},
+  onShow() {
+    this.loadCatalogs();
+  },
   computed: {
     ...mapState({
       screenOrientation: "screenOrientation",
@@ -351,7 +358,7 @@ export default {
           console.log(catalogService.genGuid());
           let catalog = {
             guid: catalogService.genGuid(),
-            parentGuid: this.currCatalog ? this.currCatalog.guid : "",
+            parent_id: this.currCatalog ? this.currCatalog.guid : "",
             name: name,
           };
           catalogService.insert(catalog).then((e) => {
@@ -421,8 +428,8 @@ export default {
     },
     backCatalog() {
       this.breadItems.pop();
-      if (this.currCatalog && this.currCatalog.parentGuid) {
-        let catalog = this.catalogIndexMap[this.currCatalog.parentGuid];
+      if (this.currCatalog && this.currCatalog.parent_id) {
+        let catalog = this.catalogIndexMap[this.currCatalog.parent_id];
         this.$store.commit("setCurrCatalog", catalog);
         this.$store.commit("setCatalogs", catalog.children);
       } else {
@@ -445,102 +452,4 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.i-header {
-  height: 56px;
-  line-height: 56px;
-  border-bottom: 1px solid #f0f0f0;
-  padding: 0 15px;
-
-  > .i-header-text {
-    font-size: 18px;
-    padding: 0 20px;
-  }
-
-  .icon.iconfont {
-    color: #007aff;
-    font-size: 20px;
-    font-weight: bold;
-  }
-  .search-panel {
-    height: 56px;
-    line-height: 56px;
-    margin-right: 20px;
-    .icon.iconfont.iconclose {
-      position: absolute;
-      right: 6px;
-      top: 2px;
-      color: #bbb;
-      font-weight: 100;
-    }
-    .icon.iconfont.icon-search1 {
-      position: absolute;
-      left: 6px;
-      top: 3px;
-      color: #bbb;
-    }
-    position: relative;
-  }
-  .search-input {
-    font-size: 16px;
-    border: 1px solid #eee;
-    height: 30px;
-    background: #eee;
-    margin-top: 13px;
-    padding: 0 30px 0 30px;
-    width: 200px;
-    border-radius: 20px;
-  }
-}
-
-.i-list {
-  padding-left: 20px;
-}
-
-.i-list-item {
-  height: 72px;
-  line-height: 72px;
-  border-bottom: 1px solid #f8f8f8;
-  padding-right: 20px;
-}
-
-.list-item-content {
-  font-size: 16px;
-  color: #666;
-  font-weight: bold;
-  display: flex;
-  flex-direction: row;
-}
-
-.icon.iconfont {
-  vertical-align: middle;
-  font-size: 20px;
-  font-weight: bold;
-  color: #b2b2b2;
-
-  &:hover {
-    color: #007aff;
-  }
-}
-
-text.custom {
-  margin: 0 20px;
-  font-weight: 300;
-  color: rgb(131, 193, 243);
-}
-
-.iconadd_file {
-  font-size: 17px;
-}
-.color-text {
-  margin: auto 15px;
-  font-weight: 300;
-  line-height: 15px;
-  height: 15px;
-  vertical-align: baseline;
-  color: #359dff;
-  background: rgba(232, 244, 255, 1);
-  font-size: 11px;
-  padding: 2px 12px;
-  border-radius: 10px;
-}
 </style>

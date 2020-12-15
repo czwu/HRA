@@ -20,6 +20,7 @@
         v-model="val"
         type="text"
         :placeholder="placeholder"
+        :maxlength="30"
         :focus="focus"
       />
     </view>

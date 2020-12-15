@@ -2,37 +2,33 @@
   <view class="container" :class="screenOrientation" @click="pageClick">
     <view class="uni-column" style="padding-top: 60px">
       <view class="uni-row i-header">
-        <view style="width: 20px"></view>
-        <text class="icon iconfont" style="color: #007aff" @click="back"
-          >&#xe600;</text
-        >
-        <view
-          class="uni-grow"
-          style="text-align: center; font-size: 18px; color: #666"
-          >{{ title }}</view
-        >
         <text
-          class="icon iconfont"
+          class="icon iconfont iconright1"
+          style="color: #007aff"
+          @click="back"
+        />
+        <view class="uni-grow" style="padding-left: 20px">{{ title }}</view>
+        <text
+          class="icon iconfont iconsure"
           style="color: #007aff"
           v-show="!viewMode"
           @click="save"
-          >&#xe656;</text
-        >
+        />
         <text
-          class="icon iconfont"
+          class="icon iconfont iconelipsis"
           v-show="viewMode"
           @click.stop="showPopMenus($event)"
-          >&#xe66e;</text
-        >
-        <view style="width: 20px"></view>
+        />
       </view>
       <form>
+        
         <view class="uni-row form-padding">
           <view class="uni-row row-item uni-grow">
             <view class="uni-input-label">文件名称</view>
             <input
               class="uni-input"
               name="input"
+              type="text"
               v-model="file.name"
               placeholder="请输入"
             />
@@ -42,41 +38,53 @@
             <input
               class="uni-input"
               name="input"
+              type="text"
               v-model="file.code"
-              placeholder="请输入"
+              confirm-type="next"
             />
           </view>
           <view class="uni-row row-item uni-grow">
             <view class="uni-input-label">类别</view>
-            <input
-              class="uni-input"
-              name="input"
-              v-model="file.type"
-              placeholder="请输入"
-            />
+            <comp-tag type="文件类别" @change="onTypeChange" :value="file.type"> </comp-tag>
           </view>
           <view class="uni-row row-item uni-grow" style="width: 100%">
             <view class="uni-input-label">相关文件</view>
-            <view class="uni-grow"></view>
+            <view class="uni-grow">
+              <view
+                class="link-file"
+                v-for="(item, key) in linkFiles"
+                v-bind:key="key"
+              >
+                <text class="file-text" @click="openFile(item)">
+                  {{ item | fileSplit }}</text
+                >
+                <text
+                  class="remove-btn"
+                  v-show="!viewMode"
+                  @click="removeLinkFile(item)"
+                  >✕</text
+                >
+              </view>
+            </view>
             <text
-              class="icon iconfont"
-              style="color: #007aff; font-size: 26px; padding-right: 10px"
+              class="icon iconfont iconlianjie"
+              style="padding-right: 10px"
               v-show="!viewMode"
-              @click="uploadFile"
-              >&#xe616;</text
-            >
+              @click="selectFile"
+            ></text>
           </view>
           <view class="uni-row row-item uni-grow">
             <view class="uni-input-label">备注</view>
             <input
               class="uni-input"
               name="input"
-              v-model="file.desc"
+              v-model="file.remark"
               placeholder="请输入"
             />
           </view>
         </view>
       </form>
+
       <view class="uni-column f-layout">
         <view class="uni-row f-header">
           <view
@@ -140,8 +148,17 @@
               v-for="video in videos"
               v-bind:key="video.guid"
             >
-              <video :src="video.path" style="width: 200px; height: 150px" class="video">
-                <cover-view class="video-remove"  @click="removeFile(video)" v-show="!viewMode">✕ </cover-view>
+              <video
+                :src="video.path"
+                style="width: 200px; height: 150px"
+                class="video"
+              >
+                <cover-view
+                  class="video-remove"
+                  @click="removeFile(video)"
+                  v-show="!viewMode"
+                  >✕
+                </cover-view>
               </video>
             </view>
           </view>
@@ -201,6 +218,7 @@
         </view>
       </uni-popup-dialog>
     </uni-popup>
+    <tki-file-manager ref="filemanager" @result="resultPath"></tki-file-manager>
   </view>
 </template>
 
@@ -208,6 +226,7 @@
 import uniPopup from "@/components/uni-popup/uni-popup.vue";
 import uniPopupDialog from "@/components/uni-popup/uni-popup-dialog.vue";
 import util from "../../common/util";
+import fileManage from "../../common/fileManage";
 import CatalogService from "../../service/filesys/catalog";
 import fileService from "../../service/filesys/file";
 import { mapState, mapActions } from "vuex";
@@ -216,7 +235,11 @@ const innerAudioContext = uni.createInnerAudioContext();
 innerAudioContext.autoplay = true;
 export default {
   data() {
+    let newGuid = CatalogService.genGuid();
     return {
+      inited: false,
+      service: CatalogService,
+      loadParam: { guid: newGuid },
       backFilterPage: false,
       popMenuVisible: false,
       author: util.getUserName(),
@@ -230,20 +253,16 @@ export default {
       viewMode: false,
       activeIndex: 1,
       scrollHeight: 0,
-      file: {
-        name: "",
-        code: "",
-        type: "",
-        desc: "",
-      },
+      file: {},
       photos: [],
       videos: [],
       audios: [],
-      newGUId: CatalogService.genGuid(),
+      newGUId: newGuid,
       cancelAu: false,
       audioTimer: null, //定时器
       audioTime: 0, //录音计时
       popMenus: [],
+      linkFiles: [],
     };
   },
   components: {
@@ -257,7 +276,6 @@ export default {
     let self = this;
     this.backFilterPage = option.backFilterPage;
     recorderManager.onStop(function (res) {
-      console.log("recorder stop" + JSON.stringify(res));
       clearInterval(self.audioTimer);
       self.audioTimer = null;
       self.audioTime = 0;
@@ -303,10 +321,45 @@ export default {
     ...mapActions({
       loadCatalogs: "loadCatalogs",
     }),
+    selectFile() {
+      this.$refs.filemanager._openFile();
+    },
+    removeLinkFile(path) {
+      this.linkFiles = this.linkFiles.filter((f) => f != path);
+    },
+    openFile(path) {
+      uni.openDocument({
+        filePath: "file:///" + path,
+        success: function (res) {},
+      });
+    },
+    onTypeChange(values) {
+      this.file.type = values.join(",");
+    },
+    resultPath(path) {
+      console.error(path);
+      if (!path.startsWith("/storage/emulated/0/HRA_DOC/")) {
+        uni.showToast({
+          title: "只允许选择 [ 文件管理 / 内部存储/ HRA_DOC /] 目录下的文件!",
+          duration: 4000,
+          icon: "none",
+        });
+      } else {
+        if (this.linkFiles.filter((f) => f == path).length) {
+          uni.showToast({
+            title: "该文件已经建立关联,请选择其他文件!",
+            duration: 4000,
+            icon: "none",
+          });
+        } else {
+          this.linkFiles.push(path);
+        }
+      }
+    },
     menuClick(menu) {
       if (menu.name == "编辑") {
         this.viewMode = false;
-        this.title = "编辑: " + this.file.name;
+        this.title = this.file.name;
       } else if (menu.name == "拍照") {
         this.addPhoto();
       } else if (menu.name == "视频") {
@@ -322,36 +375,23 @@ export default {
           if (val.data) {
             this.file = val.data;
             this.viewMode = val.data._viewMode;
-            this.title = this.viewMode
-              ? "查看: " + this.file.name
-              : "编辑: " + this.file.name;
-
+            this.title = this.file.name;
+            this.loadParam = { guid: this.file.guid };
+            this.linkFiles = this.file.file ? this.file.file.split(",") : [];
             fileService.query({ foreign_id: this.file.guid }).then((files) => {
               this.photos = files.filter((file) => file.type == 1);
               this.videos = files.filter((file) => file.type == 2);
               this.audios = files.filter((file) => file.type == 3);
             });
           } else {
-            this.file = {
-              name: "",
-              code: "",
-              type: "",
-              desc: "",
-            };
+            this.file = {};
           }
+          this.inited = true;
         },
       });
     },
     back() {
-      if (this.backFilterPage) {
-        uni.navigateTo({
-          url: "/pages/filesys/filter?filterStr=" + this.backFilterPage,
-        });
-      } else {
-        uni.switchTab({
-          url: "/pages/filesys/index",
-        });
-      }
+      uni.navigateBack();
     },
     setActive(index) {
       this.activeIndex = index;
@@ -387,8 +427,9 @@ export default {
         name: this.file.name,
         code: this.file.code,
         type: this.file.type,
-        desc: this.file.desc,
-        leaf: 1,
+        remark: this.file.remark,
+        file: this.linkFiles.join(","),
+        guid: this.file.guid,
       };
       if (file.guid) {
         CatalogService.update(file).then(() => {
@@ -401,7 +442,9 @@ export default {
         });
       } else {
         file.guid = this.newGUId;
-        file.parentGuid = this.currCatalog ? this.currCatalog.guid : "";
+        console.error(file.guid);
+        file.parent_id = this.currCatalog ? this.currCatalog.guid : "";
+        file.leaf = 1;
         CatalogService.insert(file).then(() => {
           this.loadCatalogs();
           uni.showToast({
@@ -419,6 +462,7 @@ export default {
         sourceType: ["camera", "album"],
         success: (res) => {
           res.tempFilePaths.forEach((path) => {
+            console.error(path)
             uni.saveFile({
               tempFilePath: path,
               success: (res) => {
@@ -546,50 +590,10 @@ export default {
 
 <style lang="scss" scoped>
 .i-header {
-  z-index: 1;
-  height: 56px;
-  line-height: 56px;
-  border-bottom: 1px solid #f0f0f0;
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
-  background: #fff;
-  > .i-header-text {
-    font-size: 16px;
-    padding: 0 10px;
-  }
-
-  .icon.iconfont {
-    color: #007aff;
-    font-size: 20px;
-    font-weight: bold;
-  }
-}
-
-.i-list-item {
-  padding: 10px 0 10px 10px;
-  border-bottom: 1px solid #f8f8f8;
-}
-
-.list-item-content {
-  font-size: 16px;
-  color: #666;
-  font-weight: bold;
-  height: 25px;
-  display: flex;
-  flex-direction: row;
-  line-height: 25px;
-}
-
-.icon.iconfont {
-  vertical-align: middle;
-  font-size: 16px;
-  color: #b2b2b2;
-
-  &:hover {
-    color: #007aff;
-  }
 }
 
 .row-item {
@@ -655,9 +659,9 @@ export default {
   background: #f0f0f0;
 }
 .f-content {
-  width: 100%;
   height: 100%;
   padding: 15px;
+  background: #f5f5f5;
   .file-item {
     box-sizing: border-box;
     position: relative;
@@ -671,6 +675,7 @@ export default {
     overflow: hidden;
     .iconfont {
       font-size: 50px;
+      font-weight: normal !important;
       color: #007aff;
     }
     .remove-btn {
@@ -688,9 +693,9 @@ export default {
     }
     .video-remove {
       display: block;
-      height:26px;
-      padding:0 5px;
-      width:26px;
+      height: 26px;
+      padding: 0 5px;
+      width: 26px;
       font-size: 18px;
       color: rgb(231, 80, 10);
       background: rgba(190, 223, 224, 0.8);
@@ -714,6 +719,7 @@ export default {
       border: 1px dashed rgb(56, 148, 224);
       .iconfont {
         font-size: 50px;
+        font-weight: normal !important;
         color: #007aff;
       }
     }
@@ -746,5 +752,24 @@ export default {
     color: #007aff;
   }
 }
+.link-file {
+  padding-left: 10px;
+  padding-right: 10px;
+  display: inline-block;
+  height: 26px;
+  margin: 10px 0 10px 10px;
+  line-height: 26px;
+  font-size: 12px;
+  border-radius: 6px;
 
+  background: rgba(223, 231, 250, 0.747);
+  .file-text {
+    color: #5499e4;
+    text-decoration: underline;
+  }
+  .remove-btn {
+    padding: 0 0 0 10px;
+    color: rgb(247, 176, 176);
+  }
+}
 </style>
