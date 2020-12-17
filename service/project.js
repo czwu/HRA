@@ -1,5 +1,6 @@
 import constants from '../common/constants'
 import BaseService from './base'
+//项目 应用表
 let config = {
     tableName: "TProject",
     columns: [

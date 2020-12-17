@@ -11,7 +11,6 @@ let config = {
         { name: "start_time", type: "INT" }, //初始事件引出时间
         { name: "end_time", type: "INT" }, //事件结束时间
         { name: "team_name", type: "VARCHAR(50)" }, // 班组名称
-        // { name: "desc", type: "VARCHAR(250)" }, // 概况
         { name: "project_id", type: "VARCHAR(50)" }, //所属项目ID 
         { name: "created_at", type: "INT" }, //任务创建时间
         { name: "created_by", type: "VARCHAR(50)" }, //创建人
@@ -27,7 +26,6 @@ class Service extends BaseService {
             { name: '初始事件引出时间', field: 'start_time', datetype: 'hour-minute', type: 'datepicker' },
             { name: '事件结束时间', field: 'end_time', datetype: 'hour-minute', type: 'datepicker' },
             { name: '班组名称', field: 'team_name', datatype: 'string', type: 'text' }
-            // { name: '简述', field: 'desc', datatype: 'string', type: 'text' }
         ]
     }
 

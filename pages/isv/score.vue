@@ -9,6 +9,7 @@
         ></text>
         <text class="i-header-text">情境表</text>
         <view class="uni-grow"></view>
+        <text class="icon iconfont" @click="save">&#xe656;</text>
       </view>
 
       <view class="i-tab">
@@ -77,17 +78,17 @@
                 v-bind:key="score"
                 @click="setScore(key + 1, score)"
                 :class="
-                  formdata['score_' + (key + 1)] == score ? 'selected' : ''
+                  currScore['score_' + (key + 1)] == score ? 'selected' : ''
                 "
                 :style="{
                   color:
-                    formdata['score_' + (key + 1)] == score
+                    currScore['score_' + (key + 1)] == score
                       ? score < 3
                         ? '#666'
                         : '#fff'
                       : '#666',
                   background:
-                    formdata['score_' + (key + 1)] == score
+                    currScore['score_' + (key + 1)] == score
                       ? 'rgba(161, 3, 3,' + score * 0.1 + ')'
                       : '#fff',
                 }"
@@ -152,6 +153,23 @@ export default {
         score_5: 0,
         score_6: 0,
       },
+      scoreType1: {
+        score_1: 0,
+        score_2: 0,
+        score_3: 0,
+        score_4: 0,
+        score_5: 0,
+        score_6: 0,
+      },
+      scoreType2: {
+        score_1: 0,
+        score_2: 0,
+        score_3: 0,
+        score_4: 0,
+        score_5: 0,
+        score_6: 0,
+      },
+      currScore: {},
       currTabIndex: 1,
       issues: [],
       issueList: [
@@ -225,7 +243,7 @@ export default {
   },
   onLoad(options) {
     this.issues = this.issueList.filter((d) => d.type == 1);
-    this.parentId = options.guid || "GUID001";
+    this.parentId = options.guid;
     this.loadData();
   },
   onShow() {},
@@ -237,7 +255,9 @@ export default {
       }
       this.issues = this.issueList.filter((d) => d.type == i);
       this.currTabIndex = i;
-      this.score_total = 0;
+      this.currScore =
+        this.currTabIndex == 1 ? this.scoreType1 : this.scoreType2;
+      this.totalVal();
     },
     save() {},
     back(delta) {
@@ -257,6 +277,11 @@ export default {
             this.guid = data[0].guid;
             this.mode = "update";
             this.currTabIndex = this.formdata.score_type;
+            this.currScore =
+              this.currTabIndex == 1 ? this.scoreType1 : this.scoreType2;
+            for (let i = 1; i <= 6; i++) {
+              this.$set(this.currScore, "score_" + i, data[0]["score_" + i]);
+            }
             this.issues = this.issueList.filter(
               (d) => d.type == this.currTabIndex
             );
@@ -271,22 +296,20 @@ export default {
       this.autoSave();
     },
     setScore(index, score) {
-      this.$set(this.formdata, "score_" + index, score);
+      this.$set(this.currScore, "score_" + index, score);
+      this.totalVal();
+    },
+    totalVal() {
       let total = 0;
       for (let i = 1; i <= 6; i++) {
-        total += this.formdata["score_" + i];
+        total += this.currScore["score_" + i] || 0;
       }
       this.formdata.score_total = total;
-      this.autoSave();
     },
     popupMedia() {
       this.$refs.media.popup(this.guid, "tester_opinion");
     },
-    autoSave() {
-      if (this.auto_save) {
-        this.save();
-      }
-    },
+    autoSave() {},
     save() {
       this.formdata.score_type = this.currTabIndex;
       this.formdata.foreign_id = this.parentId;
@@ -294,13 +317,17 @@ export default {
       if (this.mode == "create") {
         this.formdata.guid = this.guid;
       }
+      for (let i = 1; i <= 6; i++) {
+        this.formdata["score_" + i] += this.currScore["score_" + i];
+      }
       moduleService[fn](this.formdata).then(() => {
-         this.mode = 'update'
-        // uni.showToast({
-        //   title: "保存成功!",
-        //   duration: 2000,
-        // });
+        this.mode = "update";
+        uni.showToast({
+          title: "保存成功!",
+          duration: 2000,
+        });
       });
+      this.back(2);
     },
   },
 };

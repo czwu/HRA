@@ -50,23 +50,23 @@
                 </view>
               </view>
             </view>
+            <view
+              class="no-content"
+              @click="addDept()"
+              v-if="activeTab.depts && !activeTab.depts.length"
+            >
+              <view>
+                <image
+                  class="add-img"
+                  src="/static/images/img_new.png"
+                  mode="widthFix"
+                />
+              </view>
+              <view>
+                <text class="add-text">点击这里添加部门</text>
+              </view>
+            </view>
           </scroll-view>
-        </view>
-        <view
-          class="no-content"
-          @click="addDept()"
-          v-if="activeTab.depts && !activeTab.depts.length"
-        >
-          <view>
-            <image
-              class="add-img"
-              src="/static/images/img_new.png"
-              mode="widthFix"
-            />
-          </view>
-          <view>
-            <text class="add-text">点击这里添加部门</text>
-          </view>
         </view>
       </view>
     </view>
@@ -269,6 +269,10 @@ export default {
 
     saveDept(done, val) {
       let name = val.trim();
+      if (!name) {
+        uni.showToast({ title: "名称不能为空!", duration: 2000, icon: "none" });
+        return;
+      }
       if (name.length < 20) {
         //通过id判断是修改还是新增操作
         if (this.data4PopMenu.guid) {

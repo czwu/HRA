@@ -26,7 +26,6 @@ class ViewService {
                 name: constants.db_name,
                 sql: sql,
                 success(e) {
-                    console.error('sqlData', e)
                     resolve(e);
                 },
                 fail(e) {

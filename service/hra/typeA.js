@@ -22,7 +22,7 @@ let config = {
         { name: "human_error_factor", type: "VARCHAR(50)", ext: "" }, //可能的人误点
         { name: "human_error_pattern", type: "VARCHAR(50)", ext: "" }, //人误失误模式
         { name: "human_error_desc", type: "VARCHAR(200)", ext: "" }, //人误描述
-        { name: "filter_reason", type: "VARCHAR(50)", ext: "" }, //筛选原因
+        { name: "filter_reason", type: "VARCHAR(500)", ext: "" }, //筛选原因
         { name: "filter_by", type: "VARCHAR(255)", ext: "" }, //筛选依据
         { name: "filter_results", type: "VARCHAR(255)", ext: "" }, //筛选结果
         { name: "success_criteria", type: "VARCHAR(255)", ext: "" }, //成功准则
@@ -64,7 +64,7 @@ class TypeAService extends BaseService {
             { name: '可能的人误点', field: 'human_error_factor', datatype: 'string', type: 'text', css: 'long-col' },
             { name: '人误失误模式', field: 'human_error_pattern', datatype: 'string', type: 'text', css: 'long-col' },
             { name: '人误描述', field: 'human_error_desc', datatype: 'string', type: 'text', css: 'long-col' },
-            { name: '筛选原因', field: 'filter_reason', datatype: 'string', type: 'text', css: 'long-col' },
+            { name: '筛选原因', field: 'filter_reason', datatype: 'string', type: 'multi-select', css: 'long-col', dictType: constants.DICT_TYPE.FILTER_REASON, split: "|" },
             { name: '筛选依据', field: 'filter_by', datatype: 'string', type: 'text', css: 'long-col' },
             { name: '筛选结果', field: 'filter_results', datatype: 'string', type: 'text', css: 'long-col' },
             { name: '成功准则', field: 'success_criteria', datatype: 'string', type: 'text', css: 'long-col' },

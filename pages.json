@@ -160,6 +160,13 @@
             }
         },
         {
+            "path": "pages/hra/multiSelect",
+            "style": {
+                "app-plus": {
+                    "titleNView": false
+                }
+            }
+        }, {
             "path": "pages/hra/selectEvent",
             "style": {
                 "app-plus": {
@@ -321,14 +328,6 @@
         },
         {
             "path": "pages/person/persons",
-            "style": {
-                "app-plus": {
-                    "titleNView": false
-                }
-            }
-        },
-        {
-            "path": "pages/person/viewPerson",
             "style": {
                 "app-plus": {
                     "titleNView": false

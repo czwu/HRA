@@ -54,7 +54,7 @@
               <text style="padding-left: 15px; font-weight: normal"
                 >{{ data.value }}
               </text>
-              <text class="desc-text">{{ data.desc }} </text>
+              <text class="desc-text">{{ data.descrip }} </text>
               <view class="uni-grow"></view>
               <view
                 style="margin-left: 25px"

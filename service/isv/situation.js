@@ -10,20 +10,20 @@ let config = {
         { name: "code", type: "VARCHAR(50)" }, //情境编码
         { name: "type", type: "VARCHAR(50)" }, //情境类型
         { name: "role", type: "VARCHAR(50)" }, // 角色
-        { name: "desc", type: "VARCHAR(200)" }, // 情境简述
+        { name: "descrip", type: "VARCHAR(200)" }, // 情境简述
         { name: "project_id", type: "VARCHAR(50)" } //所属项目ID
     ],
     datas: [
-        { guid: 'GUID001', name: '热态设备1', code: 'MN001', type: '事故', role: 'SRO', desc: '我是情境简述' },
-        { guid: 'GUID002', name: '热态设备2', code: 'MN002', type: '事故', role: 'SRO', desc: '我是情境简述' },
-        { guid: 'GUID003', name: '热态设备3', code: 'MN003', type: '启停堆', role: 'SRO', desc: '我是情境简述' },
-        { guid: 'GUID004', name: '热态设备4', code: 'MN004', type: '启停堆', role: 'SRO', desc: '我是情境简述' },
-        { guid: 'GUID005', name: '热态设备5', code: 'MN005', type: '功率控制', role: 'SRO', desc: '我是情境简述' },
-        { guid: 'GUID006', name: '热态设备6', code: 'MN006', type: '功率控制', role: 'SRO', desc: '我是情境简述' },
-        { guid: 'GUID007', name: '热态设备7', code: 'MN007', type: '功率控制', role: 'SRO', desc: '我是情境简述' },
-        { guid: 'GUID008', name: '热态设备8', code: 'MN008', type: '大修', role: 'SRO', desc: '我是情境简述' },
-        { guid: 'GUID009', name: '热态设备9', code: 'MN009', type: '大修', role: 'SRO', desc: '我是情境简述' },
-        { guid: 'GUID011', name: '热态设备10', code: 'MN0010', type: '大修', role: 'SRO', desc: '我是情境简述' }
+        { guid: 'GUID001', name: '热态设备1', code: 'MN001', type: '事故', role: 'SRO', descrip: '我是情境简述' },
+        { guid: 'GUID002', name: '热态设备2', code: 'MN002', type: '事故', role: 'SRO', descrip: '我是情境简述' },
+        { guid: 'GUID003', name: '热态设备3', code: 'MN003', type: '启停堆', role: 'SRO', descrip: '我是情境简述' },
+        { guid: 'GUID004', name: '热态设备4', code: 'MN004', type: '启停堆', role: 'SRO', descrip: '我是情境简述' },
+        { guid: 'GUID005', name: '热态设备5', code: 'MN005', type: '功率控制', role: 'SRO', descrip: '我是情境简述' },
+        { guid: 'GUID006', name: '热态设备6', code: 'MN006', type: '功率控制', role: 'SRO', descrip: '我是情境简述' },
+        { guid: 'GUID007', name: '热态设备7', code: 'MN007', type: '功率控制', role: 'SRO', descrip: '我是情境简述' },
+        { guid: 'GUID008', name: '热态设备8', code: 'MN008', type: '大修', role: 'SRO', descrip: '我是情境简述' },
+        { guid: 'GUID009', name: '热态设备9', code: 'MN009', type: '大修', role: 'SRO', descrip: '我是情境简述' },
+        { guid: 'GUID011', name: '热态设备10', code: 'MN0010', type: '大修', role: 'SRO', descrip: '我是情境简述' }
     ]
 }
 class Service extends BaseService {}

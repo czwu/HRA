@@ -165,6 +165,7 @@
 import util from "../../common/util";
 import moduleService from "../../service/isv/situationStep";
 import regulationItemService from "../../service/basic/regulationItem";
+import situationIssueService from "../../service/isv/situationIssue";
 import { mapState, mapActions } from "vuex";
 export default {
   data() {
@@ -181,7 +182,7 @@ export default {
         top: 0,
         right: "50px",
       },
-      roles: ["ROA", "ROB", "ROC", "值长"],
+      roles: ["ROA", "ROB", "ROC", "值长",'副值长', '安工'],
       popMenus: [],
       data4PopMenu: {}, //对应当前弹出菜单的数据对象
       editInfo: {
@@ -199,7 +200,6 @@ export default {
     this.parentId = options.guid;
     this.parentName = options.name;
     this.showTab = options.showTab;
-    this.loadList();
   },
   onShow() {
     if (this.parentId) {
@@ -231,6 +231,7 @@ export default {
     },
     loadList() {
       return moduleService.queryByForeignId(this.parentId).then((datas) => {
+        console.error("--------");
         datas.forEach((item) => (item.expand = true));
         this.list = datas;
       });
@@ -376,6 +377,10 @@ export default {
     //   });
     // },
     selectAction(data, val) {
+      if ((data.expected && val) || (data.expected === 0 && !val)) {
+        data.expected = "";
+        return;
+      }
       data.expected = val ? 1 : 0;
       moduleService.update({
         guid: data.guid,

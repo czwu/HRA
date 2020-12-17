@@ -1,86 +1,78 @@
 <template>
   <view @click="pageClick">
     <view class="uni-column">
-      <view class="i-tab-layout" v-if="showTab">
-        <view class="i-tab">
-          <view class="tab-item active">操作流程</view>
-          <view class="tab-item" @click="goPerformance()">绩效评分</view>
-        </view>
-      </view>
       <view class="uni-grow content-panel">
-        <view v-if="list.length">
+        <view>
           <view class="list-panel">
             <view class="uni-row">
-              <view class="uni-grow"> </view>
-              <text class="btn-txt" @click="expand(true)">全部展开</text>
-              <text class="btn-txt" @click="expand(false)">全部收缩</text>
-            </view>
-            <view
-              class="uni-column list-item"
-              v-for="data in list"
-              v-bind:key="data.guid"
-            >
-              <view
-                class="uni-row uni-grow title-row"
-                @click="expand(!data.expand, data)"
+              <text class="btn-txt primary" @click="toAddData()"
+                >添加规程路径</text
               >
-                <text
-                  class="icon iconfont color3"
-                  :class="data.has_req ? 'iconchecked' : 'iconquestion1'"
-                ></text>
-                <text class="step-num">{{ data.step_num }}</text>
-                <text class="regulation-code"
-                  >({{ data.regulation_code }})
-                </text>
-                <view style="width: 30px"></view>
-                <text class="step-name">{{ data.step_name }}</text>
-                <view class="uni-grow"></view>
-                <text
-                  class="icon iconfont iconshousuo"
-                  style="font-size: 12px; margin-right: 15px"
-                  :style="data.expand ? 'transform: rotate(90deg)' : ''"
-                ></text>
-                <text
-                  @click.stop="showPopMenus('2', data, $event)"
-                  class="icon iconfont iconelipsis"
-                  style="font-weight: bold; font-size: 24px"
-                ></text>
-              </view>
-              <view class="body-row uni-row" v-show="data.expand">
+              <text
+                class="btn-txt"
+                @click="expand(true)"
+                v-show="list.length > 1"
+                >全部展开</text
+              >
+              <text
+                class="btn-txt"
+                @click="expand(false)"
+                v-show="list.length > 1"
+                >全部收缩</text
+              >
+            </view>
+            <view class="" v-if="list.length">
+              <view
+                class="uni-column list-item"
+                v-for="data in list"
+                v-bind:key="data.guid"
+              >
                 <view
-                  class="action-item uni-grow"
-                  @click="selectAction(data, 1)"
-                  :class="{ selected: data.expected == 1 }"
+                  class="uni-row uni-grow title-row"
+                  @click="expand(!data.expand, data)"
                 >
-                  <text class="action-text">
-                    {{ data.unexpected_action_title }}
+                  <text class="step-num">{{ data.step_num }}</text>
+                  <text class="regulation-code"
+                    >({{ data.regulation_code }})
                   </text>
+                  <view style="width: 30px"></view>
+                  <text class="step-name">{{ data.step_name }}</text>
+                  <text class="color-text">{{ data.action_type }}</text>
+                  <view class="uni-grow"></view>
+                  <text
+                    class="icon iconfont iconshousuo"
+                    style="font-size: 12px; margin-right: 15px"
+                    :style="data.expand ? 'transform: rotate(90deg)' : ''"
+                  ></text>
+                  <text
+                    @click.stop="showPopMenus('2', data, $event)"
+                    class="icon iconfont iconelipsis"
+                    style="font-weight: bold; font-size: 24px"
+                  ></text>
                 </view>
-                <view class="" style="width: 10px"></view>
-                <view
-                  class="action-item uni-grow"
-                  @click="selectAction(data, 0)"
-                  :class="{ selected: data.expected === 0 }"
-                >
-                  <text class="action-text">
-                    {{ data.unexpected_action_title }}
-                  </text>
+                <view class="body-row uni-row" v-show="data.expand">
+                  <view
+                    class="action-item uni-grow"
+                    @click="selectAction(data, 1)"
+                    :class="{ selected: data.expected == 1 }"
+                  >
+                    <text class="action-text">
+                      {{ data.unexpected_action_title }}
+                    </text>
+                  </view>
+                  <view class="" style="width: 10px"></view>
+                  <view
+                    class="action-item uni-grow"
+                    @click="selectAction(data, 0)"
+                    :class="{ selected: data.expected === 0 }"
+                  >
+                    <text class="action-text">
+                      {{ data.unexpected_action_title }}
+                    </text>
+                  </view>
                 </view>
-      
               </view>
             </view>
-          </view>
-        </view>
-        <view class="no-content" @click="toAddData()" v-if="!list.length">
-          <view>
-            <image
-              class="add-img"
-              src="/static/images/img_new.png"
-              mode="widthFix"
-            />
-          </view>
-          <view>
-            <text class="add-text">点击这里添加规程</text>
           </view>
         </view>
       </view>
@@ -101,8 +93,9 @@
 
 <script>
 import util from "../../common/util";
-import moduleService from "../../service/isv/situationStep";
+import moduleService from "../../service/hra/typeCRegulation";
 import regulationItemService from "../../service/basic/regulationItem";
+
 export default {
   props: {
     param: {
@@ -116,8 +109,6 @@ export default {
       scrollHeight: 100,
       scrollTop: 0,
       allMenus: [
-        { name: "添加规程", type: "1", icon: "iconadd" },
-        { name: "编辑", type: "2", icon: "iconccedit" },
         { name: "删除", type: "2", icon: "iconsystem-manage-remove red" },
       ],
       popStyle: {
@@ -147,10 +138,12 @@ export default {
       this.popMenuVisible = false;
     },
     loadList() {
-      return moduleService.query(this.param).then((datas) => {
-        datas.forEach((item) => (item.expand = true));
-        this.list = datas;
-      });
+      return moduleService
+        .query({ foreign_id: this.param.foreign_id })
+        .then((datas) => {
+          datas.forEach((item) => (item.expand = true));
+          this.list = datas;
+        });
     },
     remove(obj) {
       uni.showModal({
@@ -222,29 +215,16 @@ export default {
         if (stepmap[step.guid]) {
           datalist.push(stepmap[step.guid]);
         } else {
-          datalist.push({
-            guid: regulationItemService.genGuid(),
-            foreign_id: this.parentId,
-            step_guid: step.guid,
-            step_num: step.step_num,
-            step_name: step.step_name,
-            regulation_code: step.regulation_code,
-            action_title: step.action_title,
-            unexpected_action_title: step.unexpected_action_title,
-            start_time: "",
-            end_time: "",
-            duration: "",
-            estimated_time: "",
-            role: "",
-            tutelage: "",
-            remark: "",
-          });
+          step.foreign_id = this.param.foreign_id;
+          step.step_guid = step.guid;
+          step.guid = moduleService.genGuid();
+          datalist.push(step);
         }
       });
       moduleService
         .removeBy({
           regulation_code: datas[0].regulation_code,
-          foreign_id: this.parentId,
+          foreign_id: this.param.foreign_id,
         })
         .then(() => {
           moduleService.insertList(datalist, "multi").then(() => {
@@ -254,6 +234,10 @@ export default {
     },
 
     selectAction(data, val) {
+      if ((data.expected && val) || (data.expected === 0 && !val)) {
+        data.expected = "";
+        return;
+      }
       data.expected = val ? 1 : 0;
       moduleService.update({
         guid: data.guid,
@@ -382,7 +366,15 @@ export default {
   margin: 10px 0px 10px 10px;
   height: 30px;
   line-height: 30px;
-  background: #007aff;
-  color: #fff;
+  background: #eee;
+  line-height: 30px;
+  text-align: center;
+  border-radius: 4px;
+  font-size: 14px;
+  color: #666;
+  &.primary {
+    background: rgba(149, 181, 250, 0.438);
+    color: #007aff;
+  }
 }
 </style>

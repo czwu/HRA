@@ -45,7 +45,7 @@
                   </view> -->
                 </view>
                 <view class="desc">
-                  <text class="color-text-desc">{{ data.desc }}</text>
+                  <text class="color-text-desc">{{ data.descrip }}</text>
                 </view>
               </view>
               <view style="padding: 0 15px">

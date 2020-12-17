@@ -58,7 +58,7 @@
                   </view>
                 </view>
                 <view class="desc">
-                  <text class="color-text-desc">{{ job.duty }}</text>
+                  <text class="color-text-desc">{{ job.descrip }}</text>
                 </view>
               </view>
             </view>

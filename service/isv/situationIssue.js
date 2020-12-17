@@ -9,7 +9,7 @@ let config = {
         { name: "guid", type: "VARCHAR(50)", ext: "PRIMARY KEY" }, //唯一ID
         { name: "foreign_id", type: "VARCHAR(50)", ext: "NOT NULL" }, //关联的主数据ID  情境版本步骤guid
         { name: "code", type: "VARCHAR(50)" }, //问题编号
-        { name: "desc", type: "VARCHAR(100)" }, //问题描述'
+        { name: "descrip", type: "VARCHAR(100)" }, //问题描述'
         { name: "tester", type: "VARCHAR(50)" }, //测试者
         { name: "implementer", type: "VARCHAR(50)" }, //实施者
         { name: "type", type: "VARCHAR(50)" }, //问题分类 需要基础数据
@@ -31,7 +31,7 @@ class Service extends BaseService {
     getFormItems() {
         return [
             { name: '问题编号', field: 'code', datatype: 'string', type: 'text', required: true },
-            { name: '问题描述', field: 'desc', datatype: 'string', type: 'text-media', required: true, css: 'long-col' },
+            { name: '问题描述', field: 'descrip', datatype: 'string', type: 'text-media', required: true, css: 'long-col' },
             { name: '测试者', field: 'tester', datatype: 'string', type: 'text', defaultValue: util.getUserName(), disabled: true },
             { name: '实施者', field: 'implementer', datatype: 'string', type: 'text' },
             { name: '问题分类', field: 'type', datatype: 'string', type: 'text' },
@@ -47,7 +47,7 @@ class Service extends BaseService {
         let num = (Math.random() + '').replace('.', '').substr(0, 4);
         Object.assign(data, {
             code: 'REQ_' + num,
-            desc: '我是问题描述!',
+            descrip: '我是问题描述!',
             implementer: 'zhangqiling',
             plain: '我是问题方案....'
         })

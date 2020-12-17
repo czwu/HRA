@@ -229,9 +229,7 @@ export default {
     },
     viewPerson(data) {
       uni.setStorageSync("editData", data);
-      uni.navigateTo({
-        url: "/pages/person/viewPerson",
-      });
+      uni.navigateTo({ url: "/pages/person/addPerson?jobId=" + this.job.guid });
     },
     showPopMenus(type, data, event) {
       this.popMenus = this.allMenus.filter((menu) => menu.type == type);
@@ -247,7 +245,7 @@ export default {
     },
     toAddPerson() {
       uni.setStorageSync("editData", "");
-      uni.navigateTo({ url: "/pages/person/addPerson?jobId="+this.job.guid });
+      uni.navigateTo({ url: "/pages/person/addPerson?jobId=" + this.job.guid });
     },
     menuClick(menu) {
       if (menu.type == "1") {
@@ -265,7 +263,9 @@ export default {
           this.remove(this.data4PopMenu);
         } else if (menu.name == "编辑") {
           uni.setStorageSync("editData", this.data4PopMenu);
-          uni.navigateTo({ url: "/pages/person/addPerson?jobId="+this.job.guid });
+          uni.navigateTo({
+            url: "/pages/person/addPerson?jobId=" + this.job.guid,
+          });
         } else if (menu.name == "拷贝") {
           this.copy(this.data4PopMenu);
         }

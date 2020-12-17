@@ -91,18 +91,17 @@
                   v-for="audio in audios"
                   v-bind:key="audio.guid"
                 >
+                  <text
+                    class="remove-btn"
+                    v-show="!viewMode"
+                    @click="removeFile(audio)"
+                    >✕</text
+                  >
                   <audio
                     :src="audio.path"
                     :controls="true"
                     :name="formatTime(audio.time)"
-                  >
-                    <cover-view
-                      class="video-remove"
-                      @click="removeFile(video)"
-                      v-show="!viewMode"
-                      >✕
-                    </cover-view>
-                  </audio>
+                  ></audio>
                 </view>
               </view>
             </scroll-view>
@@ -342,7 +341,7 @@ export default {
     startRecord() {
       recorderManager.stop();
       console.log("开始录音");
-      this.cancelAudio = false;
+      // this.cancelAudio = false;
       this.audioTime = 0;
       this.audioTimer = null;
       this.audioTimer = setInterval(() => {

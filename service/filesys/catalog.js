@@ -13,7 +13,7 @@ let config = {
         { name: "name", type: "VARCHAR(50)", ext: "NOT NULL" },
         { name: "leaf", type: "INT", ext: "DEFAULT 0" },
         { name: "type", type: "VARCHAR(100)", ext: "" }, // 
-        { name: "file", type: "VARCHAR(500)", ext: "" },
+        { name: "file_path", type: "VARCHAR(500)", ext: "" },
         { name: "remark", type: "VARCHAR(255)", ext: "" },
         { name: "project_id", type: "VARCHAR(50)", ext: "" },
         { name: "created_at", type: "INT", ext: "" },
@@ -63,7 +63,7 @@ class CatalogService extends BaseService {
             { name: "文件名称", field: "name", type: 'text', },
             { name: "文件编码", field: "code", type: 'text' },
             { name: "类别", field: "type", type: 'text' },
-            { name: "相关文件", field: "file", type: 'select-file', css: 'long-col', conf: {} },
+            { name: "相关文件", field: "file_path", type: 'select-file', css: 'long-col', conf: {} },
             { name: "备注", field: "remark", type: 'text', css: 'long-col' }
         ]
     }
@@ -74,7 +74,7 @@ class CatalogService extends BaseService {
             name: 'File_' + num,
             code: 'GHLS_' + num,
             type: '维修',
-            file: "",
+            file_path: "",
             remark: '我是文件备注...'
         })
     }

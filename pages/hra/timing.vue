@@ -176,7 +176,7 @@ export default {
         let field3 = this.fields.filter((f) => f.addField == "tl_value")[0];
         this.dynamicField(field3, this.formdata.tl_value);
       });
-      interviewService.query({ type: "访谈人员" }).then((datas) => {
+      interviewService.query({ type: "访谈对象" }).then((datas) => {
         let users = [];
         datas.forEach((item) => {
           users.push(item.value);

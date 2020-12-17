@@ -12,21 +12,14 @@ let config = {
         { name: "type", type: "VARCHAR(50)", ext: "" },
         { name: "num", type: "INT", ext: "" }, //人数
         { name: "worktime", type: "VARCHAR(255)", ext: "" }, //倒班时间
-        { name: "desc", type: "VARCHAR(255)", ext: "" }, //岗位描述
+        { name: "descrip", type: "VARCHAR(255)", ext: "" }, //岗位描述
         { name: "project_id", type: "VARCHAR(50)", ext: "" },
-        { name: "file", type: "VARCHAR(255)", ext: "" }, //文件地址
+        { name: "file_path", type: "VARCHAR(255)", ext: "" }, //文件地址
         { name: "created_at", type: "INT", ext: "" },
         { name: "created_by", type: "VARCHAR(50)", ext: "" },
         { name: "updated_at", type: "INT", ext: "" },
         { name: "updated_by", type: "VARCHAR(50)", ext: "" },
         { name: "delete_flag", type: "INT", ext: " DEFAULT 0 " }
-    ],
-    datas: [
-        ['JOB_SmBfQwEc49Q5dEnZ', 'DEPT_Kd4yFCcYkzi0IZk4', '岗位A', 'CODE_1', 'TYPE_1', 3, '8小时3班倒', '职责描述....', util.getProjectId()],
-        ['JOB_uBuW6bWyTr7LeC1g', 'DEPT_Kd4yFCcYkzi0IZk4', '岗位B', 'CODE_2', 'TYPE_2', 2, '8小时3班倒', '职责描述....', util.getProjectId()],
-        ['JOB_UvnsoixfZZAVls4V', 'DEPT_Kd4yFCcYkzi0IZk4', '岗位C', 'CODE_3', 'TYPE_3', 5, '8小时3班倒', '职责描述....', util.getProjectId()],
-        ['JOB_LBuoMKnNWWtGUvKZ', 'DEPT_g2zNfBtc6WNHu1AQ', '电气科岗', 'CODE_DQ', 'TYPE_3', 2, '8小时3班倒', '职责描述....', util.getProjectId()],
-        ['JOB_P25bbgoUwY4HSrbo', 'DEPT_ae5sMYvqCkOKTU52', '静机科岗', 'CODE_JJ', 'TYPE_3', 1, '8小时3班倒', '职责描述....', util.getProjectId()]
     ],
     guidPrefix: "JOB_"
 }
@@ -38,8 +31,8 @@ class JobService extends BaseService {
             { name: '类别', field: 'type', datatype: 'string', type: 'text' },
             { name: '人数', field: 'num', datatype: 'number', type: 'text', inputIcon: 'iconyunsuanfu' },
             { name: '倒班时间', field: 'worktime', datatype: 'string', type: 'text' },
-            { name: '相关文件', field: 'file', datatype: 'string', type: "file", css: 'long-col' },
-            { name: '岗位描述', field: 'desc', datatype: 'string', type: 'text', css: 'long-col' }
+            { name: '相关文件', field: 'file_path', datatype: 'string', type: "file", css: 'long-col' },
+            { name: '岗位描述', field: 'descrip', datatype: 'string', type: 'text', css: 'long-col' }
         ]
     }
     remove(guid) {
@@ -64,7 +57,7 @@ class JobService extends BaseService {
             type: '岗位类型',
             num: 5,
             worktime: '八小时三班倒',
-            desc: '我是岗位描述信息....'
+            descrip: '我是岗位描述信息....'
         })
     }
 }

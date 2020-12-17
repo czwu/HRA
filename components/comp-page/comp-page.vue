@@ -1,11 +1,11 @@
 <template>
   <view class="uni-column">
     <view class="uni-row i-header" v-if="header">
-      <view class="uni-grow" style="width:100px">
+      <view class="uni-grow" style="width: 100px">
         <text class="icon iconfont" @click="back">&#xe600;</text>
       </view>
       <view class="title">{{ title }}</view>
-      <view class="uni-grow uni-row"  style="width:100px">
+      <view class="uni-grow uni-row" style="width: 100px">
         <view class="uni-grow"></view>
         <text
           @click="autoInput"
@@ -52,9 +52,12 @@
             <template v-else>
               <view
                 class="uni-input-label"
-                :class="{ 'label-warp': item.labelWarp }"
-                >{{ item.name }}</view
-              >
+                :class="{
+                  'label-warp': item.labelWarp,
+                  required: item.required,
+                }"
+                >{{ item.name }}
+              </view>
               <input
                 v-if="item.type == 'text' || item.type.startsWith('text-')"
                 class="uni-input"
@@ -157,6 +160,31 @@
                   @change="switchChange(item, $event)"
                 />
               </view>
+              <view
+                class="uni-row uni-grow"
+                v-if="item.type == 'multi-select'"
+                @click="multiSelect(item)"
+              >
+                <view
+                  class="uni-input multi-select"
+                  v-if="formdata[item.field]"
+                >
+                  <text
+                    class="multi-item"
+                    :class="{
+                      multi: item.multi !== false,
+                      user: item.userMode,
+                    }"
+                    v-for="val in formdata[item.field].split(item.split)"
+                    v-bind:key="val"
+                    >{{ val }}</text
+                  >
+                </view>
+                <text class="uni-input" v-else style="color: #bbb">{{
+                  "请选择"
+                }}</text>
+                <text class="icon iconfont iconright11 picker-icon"></text>
+              </view>
               <view class="text-warp uni-row" v-if="item.type == 'label'">
                 <text class="value-text">{{
                   formdata[item.field] || item.placeholder
@@ -247,6 +275,7 @@
 import util from "../../common/util";
 import constants from "../../common/constants";
 import dictService from "../../service/dict";
+import personService from "../../service/person/person";
 import DateTimePicker from "../../components/bory-dateTimePicker/bory-dateTimePicker.vue";
 import { mapState, mapActions } from "vuex";
 import uniPopup from "@/components/uni-popup/uni-popup.vue";
@@ -600,6 +629,26 @@ export default {
     uploadFile() {
       uni.showToast({ title: "该功能暂未实现!", duration: 2000, icon: "none" });
     },
+    multiSelect(item) {
+      let conf = Object.assign({}, item);
+      conf.value = this.formdata[item.field];
+      if (!item.userMode) {
+        conf.values = this.dicts[item.dictType];
+        uni.setStorageSync("multiItem", conf);
+        uni.navigateTo({
+          url: "/pages/hra/multiSelect",
+        });
+      } else {
+        personService.queryJobUsers().then((users) => {
+          conf.values = users;
+          console.error(users);
+          uni.setStorageSync("multiItem", conf);
+          uni.navigateTo({
+            url: "/pages/hra/multiSelect",
+          });
+        });
+      }
+    },
   },
 };
 </script>
@@ -638,6 +687,17 @@ export default {
   }
   .uni-input-label {
     background: #fff;
+  }
+}
+
+.uni-input-label {
+  position: relative;
+  &.required::before {
+    content: "*";
+    position: absolute;
+    top: 0px;
+    right: 10px;
+    color:red;
   }
 }
 .row-item {
@@ -849,5 +909,29 @@ export default {
   color: #999;
   font-size: 13px;
   line-height: 20px;
+}
+.multi-select {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+
+  .multi-item.multi {
+    line-height: 20px;
+    margin-top: 4px;
+    margin-right: 5px;
+    line-height: 15px;
+    height: 15px;
+    font-weight: 300;
+    color: #359dff;
+    background: rgba(232, 244, 255, 1);
+    font-size: 11px;
+    padding: 2px 8px;
+    border-radius: 6px;
+    &.user {
+      line-height: 20px;
+      margin-top: 15px;
+      height: 20px;
+    }
+  }
 }
 </style>

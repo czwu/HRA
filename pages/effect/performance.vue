@@ -35,7 +35,7 @@
               >{{ option.name }}</view
             >
           </view>
-          <view class="uni-row">
+          <view >
             <view class="option-item uni-flex uni-row uni-grow">
               <view class="option-label">INPO</view>
               <view
@@ -47,7 +47,6 @@
                 >{{ option.name }}</view
               >
             </view>
-            <view class="" style="width: 20px"></view>
             <view class="option-item uni-flex uni-row uni-grow">
               <view class="option-label">失误模式</view>
               <view
@@ -379,9 +378,11 @@ export default {
         { name: "不满意", value: 4 },
       ],
       inpo_options: [
-        { name: "选项1", value: 1 },
-        { name: "选项2", value: 2 },
-        { name: "选项3", value: 3 },
+        { name: "Team work", value: 1 },
+        { name: "control", value: 2 },
+        { name: "monitoring", value: 3 },
+        { name: "conservtion", value: 4 },
+        { name: "knowledge", value: 5 }
       ],
       mode_options: [
         { name: "选项1", value: 1 },

@@ -10,7 +10,11 @@
           v-show="!!currCatalog"
           >&#xe600;</text
         >
-        <view style="width: 200px" v-show="!currCatalog" class="uni-grow"></view>
+        <view
+          style="width: 200px"
+          v-show="!currCatalog"
+          class="uni-grow"
+        ></view>
         <text class="i-header-text">{{
           currCatalog ? currCatalog.name : "文件体系"
         }}</text>
@@ -73,11 +77,18 @@
                     v-if="catalog.leaf && catalog.code"
                     style="padding: 0 5px"
                   >
-                    ({{ catalog.type }})
+                    ({{ catalog.code }})
                   </text>
-                  <text class="color-text" v-if="catalog.leaf">{{
-                    catalog.type
-                  }}</text>
+
+                  <template v-if="catalog.leaf">
+                    <text
+                      class="color-text"
+                      v-for="type in catalog.type.split(',')"
+                      v-bind:key="type"
+                    >
+                      {{ type }}
+                    </text>
+                  </template>
                   <view class="uni-grow"></view>
                   <view v-show="!catalog.leaf">
                     <text class="icon iconfont">&#xe601;</text>
@@ -337,6 +348,10 @@ export default {
     },
     saveCatalog(done, val) {
       let name = val.trim();
+      if (!name) {
+         uni.showToast({ title: "名称不能为空!", duration: 2000, icon: "none" });
+         return;
+      }
       if (name.length < 20) {
         //通过id判断是修改还是新增操作
         if (this.data4PopMenu.guid) {
@@ -373,6 +388,7 @@ export default {
       } else {
         uni.showToast({
           title: "名称过长,请重新输入",
+          icon: "none"
         });
       }
     },

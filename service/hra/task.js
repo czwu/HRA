@@ -12,7 +12,7 @@ let config = {
         { name: "level", type: "VARCHAR(50)", ext: "" }, //级别
         { name: "working_condition_type", type: "VARCHAR(50)", ext: "" }, //工况类别
         { name: "htype", type: "VARCHAR(50)", ext: "" }, //人因类别
-        { name: "desc", type: "VARCHAR(500)", ext: "" }, //任务描述
+        { name: "descrip", type: "VARCHAR(500)", ext: "" }, //任务描述
         { name: "analysis_scope", type: "VARCHAR(50)", ext: "" }, //分析范围
         { name: "principal", type: "VARCHAR(50)", ext: "" }, //任务负责人
         { name: "participants", type: "VARCHAR(255)", ext: " DEFAULT 0 " }, //任务参与人员
@@ -33,14 +33,14 @@ class TaskService extends BaseService {
         return [
             { name: '任务名称', field: 'name', datatype: 'string', type: 'text', required: true },
             { name: '任务编码', field: 'code', datatype: 'string', type: 'text', required: true },
-            { name: '阶段', field: 'stage', datatype: 'string', type: 'select', dicttype: constants.DICT_TYPE.TASK_STAGE, required: true },
-            { name: '级别', field: 'level', datatype: 'string', type: 'select', dicttype: constants.DICT_TYPE.TASK_LEVEL, required: true },
+            { name: '阶段', field: 'stage', datatype: 'string', type: 'select', dicttype: constants.DICT_TYPE.TASK_STAGE },
+            { name: '级别', field: 'level', datatype: 'string', type: 'select', dicttype: constants.DICT_TYPE.TASK_LEVEL },
             { name: '工况类别', field: 'working_condition_type', datatype: 'string', type: 'select', dicttype: constants.DICT_TYPE.WORKING_CONDITION_TYPE, required: true },
             { name: '人因类别', field: 'htype', datatype: 'string', type: 'select', dicttype: constants.DICT_TYPE.TASK_HTYPE, required: true },
             { name: '分析范围', field: 'analysis_scope', datatype: 'string', type: 'select', dicttype: constants.DICT_TYPE.TASK_ANALYSIS_SCOPE, required: true },
-            { name: '任务负责人', field: 'principal', datatype: 'string', type: 'select', dicttype: constants.DICT_TYPE.USER_SELECT, required: true },
-            { name: '任务参与人员', field: 'participants', datatype: 'string', type: 'select', dicttype: constants.DICT_TYPE.USER_SELECT, multi: true, required: true },
-            { name: '任务描述', field: 'desc', datatype: 'string', type: 'textarea', css: 'long-col row-textarea' },
+            { name: '任务负责人', field: 'principal', datatype: 'string', type: 'multi-select', required: true, split: ',', multi: false, userMode: true },
+            { name: '任务参与人员', field: 'participants', datatype: 'string', type: 'multi-select', required: true, split: ',', userMode: true },
+            { name: '任务描述', field: 'descrip', datatype: 'string', type: 'textarea', css: 'long-col row-textarea' },
             { name: '截止时间', field: 'deadline_at', datatype: 'string', type: 'datepicker', datetype: 'datetime' },
             { name: '备注', field: 'remark', datatype: 'string', type: 'textarea', css: 'long-col row-textarea' }
         ]
@@ -57,9 +57,10 @@ class TaskService extends BaseService {
         data.principal = '马云';
         data.participants = '张娜娜';
         data.deadline_at = '2020-09-10 14:20'
-        data.desc = data.name + ': 任务描述, 我是任务描述'
+        data.descrip = data.name + ': 任务描述, 我是任务描述'
         data.remark = '需要紧急处理'
     }
+
 
 }
 const taskService = new TaskService(config)

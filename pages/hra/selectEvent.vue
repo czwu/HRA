@@ -58,7 +58,7 @@
                     <view class="uni-grow"></view>
                   </view>
                   <view class="desc">
-                    <text class="color-text-desc">{{ task.desc }}</text>
+                    <text class="color-text-desc">{{ task.descrip }}</text>
                   </view>
                 </view>
                 <view style="line-height: 72px">

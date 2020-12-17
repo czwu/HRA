@@ -18,6 +18,8 @@ const constants = {
 
         USER_SELECT: '人员',
 
+        FILTER_REASON: '筛选原则'
+
     },
 
     MSG: {

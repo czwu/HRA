@@ -57,6 +57,14 @@ let config = {
         [util.uuid(16), constants.DICT_TYPE.USER_SELECT, '马云', '马云', null],
         [util.uuid(16), constants.DICT_TYPE.USER_SELECT, '张磊', '张磊', null],
         [util.uuid(16), constants.DICT_TYPE.USER_SELECT, '马化腾', '马化腾', null],
+        //筛选原则
+        [util.uuid(16), constants.DICT_TYPE.FILTER_REASON, '反应堆在正常运行过程中投运的系统或设备', '反应堆在正常运行过程中投运的系统或设备', null],
+        [util.uuid(16), constants.DICT_TYPE.FILTER_REASON, '主控室报警信号', '主控室报警信号', null],
+        [util.uuid(16), constants.DICT_TYPE.FILTER_REASON, '阀值继电器T1试验', '阀值继电器T1试验', null],
+        [util.uuid(16), constants.DICT_TYPE.FILTER_REASON, '存在有效的行政隔离手段确保设备状态', '存在有效的行政隔离手段确保设备状态', null],
+        [util.uuid(16), constants.DICT_TYPE.FILTER_REASON, '系统要求时存在自动保护信号恢复设备状态', '系统要求时存在自动保护信号恢复设备状态', null],
+        [util.uuid(16), constants.DICT_TYPE.FILTER_REASON, '可能导致某些人误出现的因素对于某个部件或设备来说不存在', '可能导致某些人误出现的因素对于某个部件或设备来说不存在', null],
+        [util.uuid(16), constants.DICT_TYPE.FILTER_REASON, '人误的发生不会造成任何严重后果或可以被立即恢复', '人误的发生不会造成任何严重后果或可以被立即恢复', null],
 
     ],
     guidPrefix: "",

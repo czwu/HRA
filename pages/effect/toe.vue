@@ -98,12 +98,12 @@
               </view>
             </view>
             <view class="desc-text uni-grow flex-row" v-if="question.input">
-              <input
-                class="uni-input"
-                placeholder="请输入"
-                v-model="question.desc"
+              <textarea
+                class="uni-textarea"
                 placeholder-style="color:#bbb"
-                @blur="textChange(question)"
+                placeholder="请输入"
+                :value="question.descrip"
+                @blur="textareaBlur(question, 'descrip', $event)"
               />
             </view>
           </view>
@@ -204,6 +204,10 @@ export default {
     textChange(question) {
       this.save(question);
     },
+    textareaBlur(question, field, e) {
+      question[field] = e.detail.value;
+      this.save(question);
+    },
     goScore() {
       uni.navigateTo({
         url:
@@ -230,11 +234,11 @@ export default {
         type: question.type,
         question: question.question,
         question_index: question.question_index,
-        option: question.input ? "" : option.name,
+        option_name: question.input ? "" : option.name,
         option_index: question.input ? "" : option.index,
         value1: question.value1 || "",
         value2: question.value2 || "",
-        desc: question.desc || "",
+        descrip: question.descrip || "",
       }).then(() => {});
     },
     popupMedia(item) {
@@ -326,7 +330,18 @@ export default {
     }
   }
 }
+.uni-textarea {
+  flex-grow:1;
+  width: 100%;
+  box-sizing: border-box;
+  flex-grow: 1;
+  padding: 15px 15px;
+  height: 100px;
+  font-size: 14px;
+  color: #444;
+}
 .desc-item.question-item {
+  position: relative;;
   margin-top: 30px;
   border: 1px solid #f5f5f5;
   flex-direction: row;
@@ -343,6 +358,12 @@ export default {
     height: 46px;
     font-size: 14px;
     color: #666;
+  }
+  .input-icon.iconelipsis{
+    position: absolute;
+    top:0px;
+    right:10px;
+    z-index: 100;
   }
 }
 .i-tab-layout {

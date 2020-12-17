@@ -180,6 +180,7 @@
           :btns="tableBtn"
         >
         </comp-table>
+        <steps ref="steps" v-if="tabIndex == 2" :param="loadParam"></steps>
         <comp-page
           ref="compPage"
           v-if="mainData.guid && service"
@@ -193,7 +194,10 @@
           formcss="line-form"
         ></comp-page>
       </view>
-      <timing v-if="tabIndex == 1 && childTabIndex == 2" :param="loadParam"></timing>
+      <timing
+        v-if="tabIndex == 1 && childTabIndex == 2"
+        :param="loadParam"
+      ></timing>
     </scroll-view>
     <comp-media ref="media" v-if="tabIndex == 9"></comp-media>
   </view>
@@ -212,10 +216,11 @@ import psfService from "../../service/hra/psf";
 import faultEventService from "../../service/hra/faultEvent";
 import timingService from "../../service/hra/timing";
 import typeCInfoService from "../../service/hra/typeCInfo";
-import teamViewService from "../../service/hra/teamView";
+import teamViewService from "../../service/hra/teamView"; 
 import deptService from "../../service/person/dept";
 import CBDTService from "../../service/hra/CBDT";
 import timing from "./timing";
+import steps from "./steps";
 export default {
   data() {
     return {
@@ -234,7 +239,7 @@ export default {
         {
           name: "行为分析",
           index: 0,
-          service: behaviorTypeService,
+          service: behaviorTypeService
         },
         {
           name: "情景信息",
@@ -254,7 +259,7 @@ export default {
           name: "规程路径",
           index: 2,
           type: "procedure",
-          tableAddType: "Procedure",
+          service: typeCInfoService,
         },
         {
           name: "报警清单",
@@ -316,6 +321,7 @@ export default {
   },
   components: {
     timing,
+    steps,
   },
   onLoad() {
     uni.setStorageSync("editData", "");
@@ -447,7 +453,7 @@ export default {
         if (this.infoType == "team") {
           data.team_id = this.team_id;
         }
-      } else { 
+      } else {
         data.foreign_id = this.mainData.guid;
       }
       if (this.tabs[this.tabIndex].name == "PSF") {
@@ -488,6 +494,9 @@ export default {
           "/pages/filesys/selectFile?fnName=onCBDTSelectFile&field=" +
           item.item_index,
       });
+    },
+    onSelectRegulation(datas) {
+      this.$refs.steps.onSelectRegulation(datas);
     },
     onCBDTSelectFile({ field, path, guid }) {
       let item = this.currCbdtItems.filter(

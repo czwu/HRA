@@ -58,7 +58,7 @@
                   </view>
                 </view>
                 <view class="desc">
-                  <text class="color-text-desc">{{ task.desc }}</text>
+                  <text class="color-text-desc">{{ task.descrip }}</text>
                 </view>
               </view>
             </view>

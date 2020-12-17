@@ -377,7 +377,7 @@ export default {
             this.viewMode = val.data._viewMode;
             this.title = this.file.name;
             this.loadParam = { guid: this.file.guid };
-            this.linkFiles = this.file.file ? this.file.file.split(",") : [];
+            this.linkFiles = this.file.file_path ? this.file.file_path.split(",") : [];
             fileService.query({ foreign_id: this.file.guid }).then((files) => {
               this.photos = files.filter((file) => file.type == 1);
               this.videos = files.filter((file) => file.type == 2);
@@ -428,7 +428,7 @@ export default {
         code: this.file.code,
         type: this.file.type,
         remark: this.file.remark,
-        file: this.linkFiles.join(","),
+        file_path: this.linkFiles.join(","),
         guid: this.file.guid,
       };
       if (file.guid) {

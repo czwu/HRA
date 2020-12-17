@@ -78,7 +78,6 @@
         ></comp-page>
       </view>
     </scroll-view>
-
   </view>
 </template>
 
@@ -248,8 +247,9 @@ export default {
     back() {
       uni.navigateBack();
     },
-    iconClick(field, formdata) {
-
+    iconClick(field, formdata) {},
+    onSelectMultiField(field, datas) {
+      this.$refs.compPage.formdata[field] = datas[0].name;
     }
   },
 };

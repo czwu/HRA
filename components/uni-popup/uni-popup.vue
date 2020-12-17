@@ -233,7 +233,7 @@ export default {
 .uni-popup {
   position: fixed;
   /* #ifndef APP-NVUE */
-  z-index: 99;
+  z-index: 3999;
   /* #endif */
 }
 

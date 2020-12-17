@@ -1,6 +1,6 @@
 <template>
   <view class="container">
-    <comp-page :service="service" :title="title"></comp-page>
+    <comp-page :service="service" :title="title" ref="compPage"></comp-page>
   </view>
 </template>
 <script>
@@ -29,6 +29,13 @@ export default {
     beforeSave(data, fields) {
       data.task_id = this.taskId;
       return true;
+    },
+    onSelectMultiField(field, datas) {
+      let values = [];
+      datas.forEach((data) => {
+        values.push(data.value);
+      });
+      this.$refs.compPage.formdata[field] = values.join("|");
     },
   },
 };

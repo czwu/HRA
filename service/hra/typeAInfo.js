@@ -33,7 +33,7 @@ class Service extends BaseService {
         var formItems = [
             { field: "position", name: "位置", datatype: 'string', type: 'switch', values: ['否', '是'], for: `${constants.INFO_TYPE.DEVICE},${constants.INFO_TYPE.OBJECT}` },
             { field: "real_position", name: "实际位置", datatype: 'string', type: "text", placeholder: '是否与位置相同，如果不是请输入正确位置地点', for: `${constants.INFO_TYPE.DEVICE},${constants.INFO_TYPE.OBJECT}` },
-            { field: "operator", name: "操作人员", datatype: 'string', type: "select", css: 'long-col', dicttype: constants.DICT_TYPE.USER_SELECT, for: `${constants.INFO_TYPE.PLAIN}` },
+            { field: "operator", name: "操作人员", datatype: 'string', css: 'long-col', for: `${constants.INFO_TYPE.PLAIN}`, type: 'multi-select', required: true, split: ',', multi: false, userMode: true },
             { field: "verify", name: "是否试验验证", datatype: 'string', type: 'switch', defaultValue: '是', values: ['否', '是'], for: `${constants.INFO_TYPE.VERIFY}` },
             { field: "experienced", name: "熟练度", datatype: 'string', type: 'item-select', defaultValue: '', values: ['熟手', '新手'], comments, for: `${constants.INFO_TYPE.TRAINING}` },
             { field: "document", name: "相关文件", datatype: 'string', type: "file", css: 'long-col' },

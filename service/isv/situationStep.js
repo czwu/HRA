@@ -12,9 +12,9 @@ let config = {
         { name: "step_num", type: "VARCHAR(50)", ext: "NOT NULL" }, //步骤号 
         { name: "regulation_code", type: "VARCHAR(50)" }, //规程号
         { name: "action_title", type: "VARCHAR(200)" }, //预期相应
-        { name: "expected", type: "INT" }, //是否有预期相应
-        { name: "unexpected_action_title", type: "VARCHAR(200)" }, //非预期相应
-        { name: "unexpected", type: "INT" }, //是否有非预期相应
+        { name: "expected", type: "INT" }, //是否预期响应
+        { name: "unexpected_action_title", type: "VARCHAR(200)" }, //非预期响应
+        { name: "unexpected", type: "INT" }, //是否有非预期响应
         { name: "start_time", type: "VARCHAR(20)" }, //开始时间
         { name: "end_time", type: "VARCHAR(20)" }, //完成时间 
         { name: "duration", type: "VARCHAR(20)" }, //持续时间
@@ -43,7 +43,7 @@ class Service extends BaseService {
             { name: "完成时间", field: "end_time", type: 'text', placeholder: '00:00:00', inputIcon: 'iconshijian' },
             { name: "持续时间", field: "duration", type: 'label', placeholder: '00:00:00' },
             { name: "预计时间", field: "estimated_time", type: 'text', placeholder: '00:00:00' },
-            { name: "角色", field: "role", type: 'item-select', values: ['ROA', 'ROB', 'ROC', '值长'], css: 'long-col' },
+            { name: "角色", field: "role", type: 'item-select', values: ['ROA', 'ROB', 'ROC', '值长', '副值长', '安工'], css: 'long-col' },
             { name: "监护", field: "tutelage", type: 'switch', values: ['否', '是'], defaultValue: '否' },
             { name: "备注", field: "remark", type: 'text-media', css: 'long-col' }
         ]

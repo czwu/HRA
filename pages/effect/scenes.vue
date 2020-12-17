@@ -63,7 +63,7 @@
                   <view class="uni-grow"></view>
                 </view>
                 <!-- <view class="desc uni-row uni-flex" style="line-height: 30px">
-                  <text class="color-text-desc">{{ data.desc }}</text>
+                  <text class="color-text-desc">{{ data.descrip }}</text>
                 </view> -->
               </view>
               <view>

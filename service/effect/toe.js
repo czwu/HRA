@@ -12,11 +12,11 @@ let config = {
         { name: "type", type: "VARCHAR(50)" }, //主类型 分为  全局情景因子 识别报警 检测指示状态 情景/问题理解 相应计划决策 操作 交流和协调   
         { name: "question", type: "VARCHAR(50)" }, //问题项名称
         { name: "question_index", type: "VARCHAR(50)" }, //问题项下标 从1开始
-        { name: "option", type: "VARCHAR(50)" }, //问题选项
+        { name: "option_name", type: "VARCHAR(50)" }, //问题选项
         { name: "option_index", type: "VARCHAR(50)" }, //问题选项下标 从1开始       
         { name: "value1", type: "VARCHAR(100)" }, //扩展值2
         { name: "value2", type: "VARCHAR(100)" }, //扩展值2
-        { name: "desc", type: "VARCHAR(100)" }, //其他具体的,内容
+        { name: "descrip", type: "VARCHAR(100)" }, //其他具体的,内容
         { name: "project_id", type: "VARCHAR(50)" }, //所属项目ID 
         { name: "created_at", type: "INT" }, //任务创建时间
         { name: "created_by", type: "VARCHAR(50)" }, //创建人
