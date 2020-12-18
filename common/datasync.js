@@ -2,7 +2,7 @@ import projectService from '../service/project'
 import util from './util'
 import constants from './constants'
 import regulationLoader from '../datasync/loader/regulation'
-
+import projectInitData from '../datasync/loader/init.json'
 const Datasync = {
     initProject(projectGuid) {
         console.log('项目数据初始化开始:' + projectGuid);
@@ -53,6 +53,20 @@ const Datasync = {
             console.log(e);
             return false;
         }
+    },
+
+    initProjectTest() {
+        return new Promise((resolve, reject) => {
+            uni.showLoading({ title: '正在初始化...' });
+            regulationLoader.load(projectInitData);
+            setTimeout(() => {
+                uni.showLoading({ title: '初始化完成...' })
+                setTimeout(() => {
+                    uni.hideLoading();
+                    resolve()
+                }, 1000)
+            }, 1000)
+        })
     },
 
     getProjects() {

@@ -9,7 +9,7 @@ import regulationItemService from '../../service/basic/regulationItem'
 //     function_type
 // ]
 class Loader {
-    load(proj) {
+    load(proj, callback) {
         let regulations = [],
             regulationItems = [];
         let regulationTypes = proj.PRegulationType;
@@ -55,8 +55,6 @@ class Loader {
             regulationItemService.clearData().then(() => {
                 regulationItemService.insertList(regulationItems, 'multi ')
             })
-
-
         }
     }
 }

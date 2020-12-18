@@ -107,6 +107,7 @@
 <script>
 import util from "../../common/util";
 import moduleService from "../../service/effect/scene";
+import sceneItemService from "../../service/effect/sceneItem";
 import { mapState, mapActions } from "vuex";
 export default {
   data() {

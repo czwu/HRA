@@ -42,7 +42,7 @@
         </view>
       </view>
     </view>
-        <view class="popup pop-menu" v-show="popMenuVisible" :style="popStyle">
+    <view class="popup pop-menu" v-show="popMenuVisible" :style="popStyle">
       <view
         class="pop-menu-item uni-row"
         v-for="menu in popMenus"
@@ -58,6 +58,7 @@
 
 <script>
 import projectService from "../../service/project";
+import datasync from "../../common/datasync";
 import util from "../../common/util";
 import { mapState, mapActions } from "vuex";
 export default {
@@ -73,12 +74,12 @@ export default {
       interval: 4000,
       duration: 1000,
       projects: [],
-      scrollTop:0,
+      scrollTop: 0,
       popStyle: {
         top: 0,
         right: "50px",
       },
-      popMenuVisible:false,
+      popMenuVisible: false,
       popMenus: [
         { name: "在线上传", type: "1", icon: "iconshujushangchuan" },
         { name: "在线下载", type: "1", icon: "iconicon-xiazai" },
@@ -102,10 +103,20 @@ export default {
       loadDicts: "loadDicts",
     }),
     select(project) {
-      util.setProjectId(project.guid);
-      uni.switchTab({
-        url: "/pages/filesys/index",
-      });
+      if (!project.init) {
+        util.setProjectId(project.guid);
+        datasync.initProjectTest(project.guid).then(() => {
+          projectService.update({ guid: project.guid, init: 1 });
+          uni.switchTab({
+            url: "/pages/filesys/index",
+          });
+        });
+      } else {
+        util.setProjectId(project.guid);
+        uni.switchTab({
+          url: "/pages/filesys/index",
+        });
+      }
     },
     reload() {
       projectService.queryAll().then((datas) => {
@@ -169,7 +180,7 @@ export default {
   margin: 20px 0px 0px 20px;
   background: #f5f5f5;
 }
-.image-warp{
+.image-warp {
   position: relative;
 }
 .project-img {

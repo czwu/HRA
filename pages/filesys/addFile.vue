@@ -21,7 +21,6 @@
         />
       </view>
       <form>
-        
         <view class="uni-row form-padding">
           <view class="uni-row row-item uni-grow">
             <view class="uni-input-label">文件名称</view>
@@ -45,7 +44,8 @@
           </view>
           <view class="uni-row row-item uni-grow">
             <view class="uni-input-label">类别</view>
-            <comp-tag type="文件类别" @change="onTypeChange" :value="file.type"> </comp-tag>
+            <comp-tag type="文件类别" @change="onTypeChange" :value="file.type">
+            </comp-tag>
           </view>
           <view class="uni-row row-item uni-grow" style="width: 100%">
             <view class="uni-input-label">相关文件</view>
@@ -377,7 +377,9 @@ export default {
             this.viewMode = val.data._viewMode;
             this.title = this.file.name;
             this.loadParam = { guid: this.file.guid };
-            this.linkFiles = this.file.file_path ? this.file.file_path.split(",") : [];
+            this.linkFiles = this.file.file_path
+              ? this.file.file_path.split(",")
+              : [];
             fileService.query({ foreign_id: this.file.guid }).then((files) => {
               this.photos = files.filter((file) => file.type == 1);
               this.videos = files.filter((file) => file.type == 2);
@@ -431,6 +433,22 @@ export default {
         file_path: this.linkFiles.join(","),
         guid: this.file.guid,
       };
+      if (!file.name) {
+        uni.showToast({
+          title: "文件名称不能为空!",
+          duration: 2000,
+          icon: "none",
+        });
+        return;
+      }
+      if (!file.code) {
+        uni.showToast({
+          title: "文件编码不能为空!",
+          duration: 2000,
+          icon: "none",
+        });
+        return;
+      }
       if (file.guid) {
         CatalogService.update(file).then(() => {
           this.loadCatalogs();
@@ -462,7 +480,7 @@ export default {
         sourceType: ["camera", "album"],
         success: (res) => {
           res.tempFilePaths.forEach((path) => {
-            console.error(path)
+            console.error(path);
             uni.saveFile({
               tempFilePath: path,
               success: (res) => {
@@ -510,13 +528,7 @@ export default {
       this.$refs.popup.open();
       this.startRecord();
     },
-    uploadFile() {
-      uni.showToast({
-        title: "该功能暂未实现!",
-        duration: 2000,
-        icon: "none",
-      });
-    },
+
     startRecord() {
       recorderManager.stop();
       console.log("开始录音");

@@ -301,7 +301,7 @@ export default {
     border: 1px solid #f2f2f2;
     &.selected {
       color: #007aff;
-      background: rgb(219, 223, 240);
+      background:#e8f4ff;
     }
   }
   .op-item {

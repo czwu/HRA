@@ -57,63 +57,11 @@ export default {
       });
     },
     dataUpload() {
-      let acceptType='',callback=()=>{}
-      function ip(obj) {
-        plus.android.importClass(obj);
-        return obj;
-      }
-      if (plus.os.name == "Android" && typeof callback == "function") {
-        var CODE_REQUEST = 1000;
-        var context = plus.android.runtimeMainActivity();
-        ip(context);
-        var Intent = plus.android.importClass("android.content.Intent");
-        var intent = new Intent(Intent.ACTION_GET_CONTENT);
-        intent.addCategory(Intent.CATEGORY_OPENABLE);
-        if (acceptType) {
-          intent.setType(acceptType);
-        } else {
-          intent.setType("*/*");
-        }
-        context.onActivityResult = function (
-          requestCode,
-          resultCode,
-          intentData
-        ) {
-          if (requestCode == CODE_REQUEST) {
-            if (intentData) {
-              var uriValue = intentData.getData();
-              plus.android.importClass(uriValue);
-              var scheme = uriValue.getScheme();
-              if (scheme == "content") {
-                //还需要进行数据库查询，一般图片数据
-                var cursor = ip(context.getContentResolver()).query(
-                  uriValue,
-                  ["_data"],
-                  null,
-                  null,
-                  null
-                );
-                if (cursor) {
-                  ip(cursor).moveToFirst();
-                  var columnIndex = cursor.getColumnIndex("_data");
-                  picturePath = cursor.getString(columnIndex);
-                  cursor.close();
-                  callback(picturePath); //返回文件路径
-                }
-              } else if (scheme == "file") {
-                callback(uriValue.getPath()); //返回文件路径
-              }
-            } else {
-              callback(null);
-            }
-          }
-        };
-        context.startActivityForResult(intent, CODE_REQUEST);
-      }
+
     },
 
     dataDownload() {
-      datasync.initProject(util.getProjectId());
+      datasync.initProject(util.getProjectId()); 
     },
 
     setting() {},

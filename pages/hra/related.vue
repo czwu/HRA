@@ -79,6 +79,18 @@
         </view>
       </view>
       <view class="tab-content" style="padding: 20px 20px 20px 20px">
+        <comp-page
+          ref="compPage"
+          v-if="data2.guid"
+          :service="service"
+          title=""
+          :param="loadParam"
+          :autoload="true"
+          :header="false"
+          :scroll="false"
+          :auto_save="true"
+          formcss="line-form"
+        ></comp-page>
         <comp-related
           ref="compRelated"
           :service="service"
@@ -88,18 +100,6 @@
           :fix_right="fixRight"
         ></comp-related>
       </view>
-      <comp-page
-        ref="compPage"
-        v-if="data2.guid"
-        :service="service"
-        title=""
-        :param="loadParam"
-        :autoload="true"
-        :header="false"
-        :scroll="false"
-        :auto_save="true"
-        formcss="line-form"
-      ></comp-page>
     </scroll-view>
   </view>
 </template>
@@ -167,7 +167,7 @@ export default {
           therpService.query({ foreign_id: this.data2.guid }).then((data) => {
             if (data.length) {
               this.therpData = data[0];
-              this.showTabByData()
+              this.showTabByData();
             }
           });
         }

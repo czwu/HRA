@@ -8,8 +8,8 @@ let config = {
         { name: "guid", type: "VARCHAR(50)", ext: "PRIMARY KEY" }, //唯一ID
         { name: "foreign_id", type: "VARCHAR(50)", ext: "NOT NULL" }, //关联的主数据ID  关联基础信息
         { name: "name", type: "VARCHAR(50)", ext: "NOT NULL" }, //场景/事件/概况
-        { name: "start_time", type: "INT" }, //初始事件引出时间
-        { name: "end_time", type: "INT" }, //事件结束时间
+        { name: "start_time", type: "VARCHAR(50)" }, //初始事件引出时间
+        { name: "end_time", type: "VARCHAR(50)" }, //事件结束时间
         { name: "team_name", type: "VARCHAR(50)" }, // 班组名称
         { name: "project_id", type: "VARCHAR(50)" }, //所属项目ID 
         { name: "created_at", type: "INT" }, //任务创建时间
@@ -17,14 +17,14 @@ let config = {
         { name: "updated_at", type: "INT" }, //修改人
         { name: "updated_by", type: "VARCHAR(50)" }, //修改时间
         { name: "delete_flag", type: "INT", ext: " DEFAULT 0 " }
-    ]
+    ],
 }
 class Service extends BaseService {
     getFormItems() {
         return [
-            { name: '场景/事件/概况', field: 'name', datatype: 'string', type: 'text' },
-            { name: '初始事件引出时间', field: 'start_time', datetype: 'hour-minute', type: 'datepicker' },
-            { name: '事件结束时间', field: 'end_time', datetype: 'hour-minute', type: 'datepicker' },
+            { name: '场景/事件/概况', field: 'name', datatype: 'string', type: 'text', required: true },
+            { name: '初始事件引出时间', field: 'start_time', datetype: 'hour-minute', type: 'datepicker', required: true, labelWarp: true },
+            { name: '事件结束时间', field: 'end_time', datetype: 'hour-minute', type: 'datepicker', required: true },
             { name: '班组名称', field: 'team_name', datatype: 'string', type: 'text' }
         ]
     }
