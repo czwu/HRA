@@ -460,7 +460,6 @@ export default {
         });
       } else {
         file.guid = this.newGUId;
-        console.error(file.guid);
         file.parent_id = this.currCatalog ? this.currCatalog.guid : "";
         file.leaf = 1;
         CatalogService.insert(file).then(() => {
@@ -476,11 +475,12 @@ export default {
     addPhoto() {
       uni.chooseImage({
         count: 5, //可以选择图片的张数
-        sizeType: ["original", "compressed"], //可以指定是原图还是压缩图，默认二者都有
+        sizeType: ["compressed"], //可以指定是原图还是压缩图，默认二者都有
         sourceType: ["camera", "album"],
         success: (res) => {
           res.tempFilePaths.forEach((path) => {
-            console.error(path);
+            // console.error(path);
+            // fileManage.saveMediaFile(path);
             uni.saveFile({
               tempFilePath: path,
               success: (res) => {
@@ -555,23 +555,8 @@ export default {
         //在文件列表上移除该文件
         this.removeFileFormList(item);
         //获取终端保存的文件清单,并且通过path比对,找到相对应的文件,然后在终端上删除
-        uni.getSavedFileList({
-          success: function (res) {
-            if (res.fileList.length > 0) {
-              let delFiles = res.fileList.filter(
-                (f) => f.filePath == item.path
-              );
-              if (delFiles.length) {
-                uni.removeSavedFile({
-                  filePath: delFiles[0].filePath,
-                  complete: function (res) {
-                    console.log("成功在终端移除文件");
-                  },
-                });
-              }
-            }
-          },
-        });
+        let localPath = plus.io.convertLocalFileSystemURL(item.path);
+        fileManage.deleteFile(localPath);
       });
     },
     removeFileFormList(item) {

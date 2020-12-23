@@ -1,3 +1,4 @@
+import constants from './constants'
 let userName = 'tuwei';
 let projectId = 'JIE49483KFJD223'
 
@@ -108,6 +109,14 @@ export default {
                 },
             });
         });
+    },
+
+    getProjectPath() {
+        return `${constants.DOC_BASE}/${projectId}`
+    },
+
+    getMediaPath() {
+        return `${constants.DOC_BASE}/${projectId}/media`
     }
 
 }

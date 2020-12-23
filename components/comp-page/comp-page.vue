@@ -641,7 +641,6 @@ export default {
       } else {
         personService.queryJobUsers().then((users) => {
           conf.values = users;
-          console.error(users);
           uni.setStorageSync("multiItem", conf);
           uni.navigateTo({
             url: "/pages/hra/multiSelect",

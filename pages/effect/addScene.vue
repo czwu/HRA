@@ -181,7 +181,6 @@ export default {
         }
         this.loadItems();
         this.inited = true;
-        console.error("id", this.loadParam.guid);
       },
     });
   },

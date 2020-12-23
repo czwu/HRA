@@ -11,21 +11,40 @@ let config = {
         { name: "type", type: "VARCHAR(50)" }, //情境类型
         { name: "role", type: "VARCHAR(50)" }, // 角色
         { name: "descrip", type: "VARCHAR(200)" }, // 情境简述
-        { name: "project_id", type: "VARCHAR(50)" } //所属项目ID
+        { name: "project_id", type: "VARCHAR(50)" }, //所属项目ID
+        { name: "created_at", type: "INT" }, //任务创建时间
+        { name: "created_by", type: "VARCHAR(50)" }, //创建人
+        { name: "updated_at", type: "INT" }, //修改人
+        { name: "updated_by", type: "VARCHAR(50)" }, //修改时间
+        { name: "delete_flag", type: "INT", ext: " DEFAULT 0 " }
     ],
     datas: [
-        { guid: 'GUID001', name: '热态设备1', code: 'MN001', type: '事故', role: 'SRO', descrip: '我是情境简述' },
-        { guid: 'GUID002', name: '热态设备2', code: 'MN002', type: '事故', role: 'SRO', descrip: '我是情境简述' },
-        { guid: 'GUID003', name: '热态设备3', code: 'MN003', type: '启停堆', role: 'SRO', descrip: '我是情境简述' },
-        { guid: 'GUID004', name: '热态设备4', code: 'MN004', type: '启停堆', role: 'SRO', descrip: '我是情境简述' },
-        { guid: 'GUID005', name: '热态设备5', code: 'MN005', type: '功率控制', role: 'SRO', descrip: '我是情境简述' },
-        { guid: 'GUID006', name: '热态设备6', code: 'MN006', type: '功率控制', role: 'SRO', descrip: '我是情境简述' },
-        { guid: 'GUID007', name: '热态设备7', code: 'MN007', type: '功率控制', role: 'SRO', descrip: '我是情境简述' },
-        { guid: 'GUID008', name: '热态设备8', code: 'MN008', type: '大修', role: 'SRO', descrip: '我是情境简述' },
-        { guid: 'GUID009', name: '热态设备9', code: 'MN009', type: '大修', role: 'SRO', descrip: '我是情境简述' },
-        { guid: 'GUID011', name: '热态设备10', code: 'MN0010', type: '大修', role: 'SRO', descrip: '我是情境简述' }
-    ]
+
+    ],
 }
-class Service extends BaseService {}
+class Service extends BaseService {
+
+    getFormItems() {
+        return [
+            { name: '情境名称', field: 'name', datatype: 'string', type: 'text', required: true },
+            { name: '情境编码', field: 'code', datatype: 'string', type: 'text', required: true },
+            { name: '情境类型', field: 'type', datatype: 'string', type: 'text' },
+            { name: '角色', field: 'role', datatype: 'string', type: 'text' },
+            { name: '情境简述', field: 'descrip', datatype: 'string', type: 'text-media', css: 'long-col' }
+        ]
+    }
+
+
+    autoInput(data) {
+        let num = (Math.random() + '').replace('.', '').substr(0, 4);
+        Object.assign(data, {
+            name: '热态设备' + num,
+            code: 'GUID' + num,
+            type: '事故',
+            role: 'SRO',
+            descrip: '我是情境简述....'
+        })
+    }
+}
 const service = new Service(config)
 export default service;

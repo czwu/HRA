@@ -18,6 +18,7 @@
           <text class="icon iconfont">&#xe66e;</text>
         </view>
       </view>
+      <uni-breadcrumb :datas="breadData"></uni-breadcrumb>
       <view class="i-tab uni-row">
         <view
           class="tab-item"
@@ -136,6 +137,7 @@ export default {
       parentId: "",
       parentName: "",
       tabIndex: 0,
+      breadData: [{ name: "人员效能", back: -1 }, { name: "场景" }],
     };
   },
   onLoad(options) {
@@ -289,7 +291,7 @@ export default {
 .i-tab {
   .tab-item {
     margin: 0 0 0 20px;
-    padding: 10px 0 2px 0;
+    padding: 0px 0 2px 0;
     color: #666;
     &.active {
       border-bottom: 3px solid #98bef7;

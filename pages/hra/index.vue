@@ -19,6 +19,7 @@
             scroll-y="true"
             class="sv"
             :style="{ height: scrollHeight + 'px' }"
+             @scroll="scroll"
           >
             <view
               class="i-list-item uni-row"

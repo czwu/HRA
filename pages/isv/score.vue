@@ -11,7 +11,7 @@
         <view class="uni-grow"></view>
         <text class="icon iconfont" @click="save">&#xe656;</text>
       </view>
-
+      <uni-breadcrumb :datas="breadData"></uni-breadcrumb>
       <view class="i-tab">
         <view class="tab-item" @click="back(1)">情境版本</view>
         <view class="tab-item active">评分</view>
@@ -224,6 +224,7 @@ export default {
           type: 2,
         },
       ],
+      breadData: [],
     };
   },
   onReady() {
@@ -243,7 +244,9 @@ export default {
   },
   onLoad(options) {
     this.issues = this.issueList.filter((d) => d.type == 1);
-    this.parentId = options.guid;
+    let parentName = options.name;
+    this.parentId = options.guid; 
+    this.breadData = [{ name: "ISV", back: 2 }, { name: parentName }];
     this.loadData();
   },
   onShow() {},
@@ -360,7 +363,7 @@ export default {
   }
 }
 .i-tab {
-  padding: 10px 20px;
+  padding: 0 20px 10px;
   display: flex;
   font-size: 13px;
   flex-direction: row;

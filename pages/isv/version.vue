@@ -15,11 +15,12 @@
           <text class="icon iconfont">&#xe66e;</text>
         </view>
       </view>
-
+      <uni-breadcrumb :datas="breadData"></uni-breadcrumb>
       <view class="i-tab">
         <view class="tab-item active">情境版本</view>
         <view class="tab-item" @click="goScore()">评分</view>
       </view>
+
       <view class="uni-grow">
         <view class="i-list">
           <scroll-view
@@ -147,6 +148,7 @@ export default {
       list: [],
       parentId: "",
       parentName: "",
+      breadData: [],
     };
   },
   components: {
@@ -172,6 +174,7 @@ export default {
   onLoad(options) {
     this.parentId = options.guid || "GUID001";
     this.parentName = options.name;
+    this.breadData = [{ name: "ISV", back: 1 }, { name: options.name }];
     this.loadList();
   },
   onShow() {},
@@ -208,7 +211,7 @@ export default {
     },
     goScore() {
       uni.navigateTo({
-        url: "/pages/isv/score?guid=" + this.parentId,
+        url: "/pages/isv/score?guid=" + this.parentId+"&name="+this.parentName,
         animationType: "none",
       });
     },
@@ -411,7 +414,7 @@ export default {
   }
 }
 .i-tab {
-  padding: 10px 15px;
+  padding: 0px 15px 10px ;
   display: flex;
   font-size: 13px;
   flex-direction: row;

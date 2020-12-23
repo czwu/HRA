@@ -6,13 +6,13 @@
         <view class="uni-grow"></view>
         <text class="i-header-text">ISV</text>
         <view class="uni-grow"></view>
-        <!-- <view
+        <view
           class
           style="transform: rotate(90deg)"
           @click.stop="showPopMenus('1', null, $event)"
         >
           <text class="icon iconfont">&#xe66e;</text>
-        </view> -->
+        </view>
       </view>
       <view class="uni-grow content-panel">
         <view class="i-list" v-if="list.length">
@@ -20,6 +20,7 @@
             scroll-y="true"
             class="sv"
             :style="{ height: scrollHeight + 'px' }"
+            @scroll="scroll"
           >
             <view
               class="i-list-item uni-row"
@@ -51,9 +52,42 @@
               <view style="padding: 0 15px">
                 <text class="icon iconfont row-icon" style="">&#xe601;</text>
               </view>
+              <view
+                @click.stop="showPopMenus('2', data, $event)"
+                style="padding-left: 10px"
+              >
+                <text
+                  class="icon iconfont row-icon"
+                  style="font-weight: bold; font-size: 22px"
+                  >&#xe66e;</text
+                >
+              </view>
             </view>
           </scroll-view>
         </view>
+        <view class="no-content" @click="toAddData()" v-if="!list.length">
+          <view>
+            <image
+              class="add-img"
+              src="/static/images/img_new.png"
+              mode="widthFix"
+            />
+          </view>
+          <view>
+            <text class="add-text">点击这里添加情境信息</text>
+          </view>
+        </view>
+      </view>
+    </view>
+    <view class="popup pop-menu" v-show="popMenuVisible" :style="popStyle">
+      <view
+        class="pop-menu-item uni-row"
+        v-for="menu in popMenus"
+        v-bind:key="menu.name"
+        @click="menuClick(menu)"
+      >
+        <view class="iconfont" :class="menu.icon"></view>
+        <text style="padding-left: 10px">{{ menu.name }}</text>
       </view>
     </view>
   </view>
@@ -70,11 +104,9 @@ export default {
       scrollHeight: 500,
       scrollTop: 0,
       allMenus: [
-        // { name: "新建情境", type: "1", icon: "iconadd" },
-        // { name: "导入", type: "1", icon: "iconimport2" },
-        // { name: "编辑", type: "2", icon: "iconccedit" },
-        // { name: "拷贝", type: "2", icon: "iconcopy" },
-        // { name: "删除", type: "2", icon: "iconsystem-manage-remove red" },
+        { name: "新建情境", type: "1", icon: "iconadd" },
+        { name: "编辑", type: "2", icon: "iconccedit" },
+        { name: "删除", type: "2", icon: "iconsystem-manage-remove red" },
       ],
       popStyle: {
         top: 0,
@@ -163,27 +195,22 @@ export default {
         this.popMenuVisible = false;
       }, 10);
     },
-
-    // menuClick(menu) {
-    //   if (menu.type == "1") {
-    //     if (menu.name == "新建情景") {
-    //       this.toAddTask();
-    //     } else if (menu.name == "导入") {
-    //       uni.showToast({
-    //         title: "该功能暂未实现!",
-    //         duration: 2000,
-    //         icon: "none",
-    //       });
-    //     }
-    //   } else if (menu.type == "2") {
-    //     if (menu.name == "删除") {
-    //       this.remove(this.data4PopMenu);
-    //     } else if (menu.name == "编辑") {
-    //       uni.setStorageSync("editData", this.data4PopMenu);
-    //       uni.navigateTo({ url: "/pages/hra/addTask" });
-    //     }
-    //   }
-    // },
+    toAddData() {
+      uni.setStorageSync("editData", "");
+      uni.navigateTo({ url: "/pages/isv/addSituation" });
+    },
+    menuClick(menu) {
+      if (menu.type == "1") {
+          this.toAddData();
+      } else if (menu.type == "2") {
+        if (menu.name == "删除") {
+          this.remove(this.data4PopMenu);
+        } else if (menu.name == "编辑") {
+          uni.setStorageSync("editData", this.data4PopMenu);
+          uni.navigateTo({ url: "/pages/isv/addSituation" });
+        }
+      }
+    },
   },
 };
 </script>

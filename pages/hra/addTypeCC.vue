@@ -63,7 +63,7 @@
           <view
             class="link-btn"
             style=""
-            v-if="data.stage_index > 1"
+             v-if="data.stage_index > 1 && mode=='update'"
             @click.stop="toCorrelation(data)"
             >{{ data.correlation || "选择相关性" }}</view
           >

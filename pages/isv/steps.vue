@@ -18,6 +18,7 @@
           <text class="icon iconfont iconelipsis"></text>
         </view>
       </view>
+      <!-- <uni-breadcrumb :datas="breadData"></uni-breadcrumb> -->
       <view class="i-tab-layout" v-if="showTab">
         <view class="i-tab">
           <view class="tab-item active">操作流程</view>
@@ -182,7 +183,7 @@ export default {
         top: 0,
         right: "50px",
       },
-      roles: ["ROA", "ROB", "ROC", "值长",'副值长', '安工'],
+      roles: ["ROA", "ROB", "ROC", "值长", "副值长", "安工"],
       popMenus: [],
       data4PopMenu: {}, //对应当前弹出菜单的数据对象
       editInfo: {
@@ -194,13 +195,19 @@ export default {
       parentId: "",
       parentName: "",
       showTab: false,
+      breadData: [],
     };
   },
   onLoad(options) {
     this.parentId = options.guid;
     this.parentName = options.name;
     this.showTab = options.showTab;
+    if(this.showTab){
+
+    }else{
+    }
   },
+
   onShow() {
     if (this.parentId) {
       this.loadList();
@@ -215,7 +222,6 @@ export default {
           let titleH = uni.createSelectorQuery().select(".content-panel");
           titleH
             .boundingClientRect((data) => {
-              console.error(wHeight, data.top);
               _this.scrollHeight = wHeight - data.top - 30;
             })
             .exec();
@@ -231,7 +237,6 @@ export default {
     },
     loadList() {
       return moduleService.queryByForeignId(this.parentId).then((datas) => {
-        console.error("--------");
         datas.forEach((item) => (item.expand = true));
         this.list = datas;
       });
@@ -461,7 +466,7 @@ export default {
     border: 1px solid #f2f2f2;
     &.selected {
       color: #007aff;
-         background:#e8f4ff;
+      background: #e8f4ff;
     }
   }
   .op-item {

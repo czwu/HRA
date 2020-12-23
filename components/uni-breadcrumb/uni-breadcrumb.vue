@@ -2,7 +2,9 @@
   <view class="breadcrumb uni-row">
     <view v-for="(crumb, i) in datas || crumbs" v-bind:key="i">
       <text class="i-curmb" @click="clickCrumb(crumb)">{{ crumb.name }}</text>
-      <text class="i-curmb-split" v-show="i < (datas || crumbs).length - 1">&gt;</text>
+      <text class="i-curmb-split" v-show="i < (datas || crumbs).length - 1"
+        >&gt;</text
+      >
     </view>
     <view class="uni-grow"></view>
   </view>
@@ -22,6 +24,10 @@ export default {
       if (crumb.url) {
         uni.switchTab({
           url: crumb.url,
+        });
+      } else if (crumb.back) {
+        uni.navigateBack({
+          delta: crumb.back,
         });
       } else {
         this.$emit("itemClick", crumb);

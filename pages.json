@@ -166,7 +166,8 @@
                     "titleNView": false
                 }
             }
-        }, {
+        },
+        {
             "path": "pages/hra/selectEvent",
             "style": {
                 "app-plus": {
@@ -216,6 +217,14 @@
         },
         {
             "path": "pages/isv/addStep",
+            "style": {
+                "app-plus": {
+                    "titleNView": false
+                }
+            }
+        },
+        {
+            "path": "pages/isv/addSituation",
             "style": {
                 "app-plus": {
                     "titleNView": false
@@ -344,6 +353,22 @@
         },
         {
             "path": "pages/investigation/index",
+            "style": {
+                "app-plus": {
+                    "titleNView": false
+                }
+            }
+        },
+        {
+            "path": "pages/investigation/addDevice",
+            "style": {
+                "app-plus": {
+                    "titleNView": false
+                }
+            }
+        },
+        {
+            "path": "pages/investigation/investigation",
             "style": {
                 "app-plus": {
                     "titleNView": false

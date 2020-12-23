@@ -15,6 +15,7 @@
         />
         <view style="width: 20px"></view>
       </view>
+ 
       <scroll-view
         scroll-y="true"
         class="sv"
@@ -144,6 +145,7 @@ export default {
       ],
       popMenus: [],
       form_mode: "create",
+ 
     };
   },
   onLoad(options) {

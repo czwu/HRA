@@ -57,11 +57,17 @@ export default {
       });
     },
     dataUpload() {
-
+      uni.chooseFile({
+        count: 6, //默认100
+        extension: [".zip", ".doc"],
+        success: function (res) {
+          console.log(JSON.stringify(res.tempFilePaths));
+        },
+      });
     },
 
     dataDownload() {
-      datasync.initProject(util.getProjectId()); 
+      datasync.initProject(util.getProjectId());
     },
 
     setting() {},
