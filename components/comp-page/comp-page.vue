@@ -7,21 +7,21 @@
       <view class="title">{{ title }}</view>
       <view class="uni-grow uni-row" style="width: 100px">
         <view class="uni-grow"></view>
-        <text
+        <!-- <text
           @click="autoInput"
           style="margin-right: 50px; color: #007aff"
           v-if="mode != 'update'"
           >自动录入</text
-        >
+        > -->
         <text class="icon iconfont" @click="save">&#xe656;</text>
       </view>
     </view>
-    <text
+    <!-- <text
       @click="autoInput"
       style="color: #007aff; position: absolute; right: 50px; top: 20px"
       v-if="mode != 'update' && !auto_save && !header"
       >自动录入</text
-    >
+    > -->
     <form>
       <scroll-view
         :scroll-y="scroll"

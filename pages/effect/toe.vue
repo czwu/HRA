@@ -12,8 +12,8 @@
     </view>
     <view class="i-tab-layout">
       <view class="i-tab uni-row">
-        <view class="tab-item active">SF评分</view>
-        <view class="tab-item" @click="goScore()">绩效评分</view>
+        <view class="tab-item active">情境因子</view>
+        <view class="tab-item" @click="goScore()">评价</view>
       </view>
     </view>
 

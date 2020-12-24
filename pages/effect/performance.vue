@@ -9,13 +9,16 @@
         ></text>
         <text class="i-header-text">{{ parentName }}</text>
         <view class="uni-grow"></view>
+        <text
+          class="icon iconfont iconsure"
+          style="color: #007aff"
+          @click="save"
+        />
       </view>
       <view class="i-tab-layout">
-        <view class="i-tab">
-          <view class="tab-item" @click="back(1)">{{
-            type == 1 ? "SF评分" : "操作流程"
-          }}</view>
-          <view class="tab-item active">绩效评分</view>
+        <view class="i-tab" v-if="type == 1">
+          <view class="tab-item" @click="back(1)"> 情境因子 </view>
+          <view class="tab-item active">评价</view>
         </view>
       </view>
       <scroll-view
@@ -35,7 +38,7 @@
               >{{ option.name }}</view
             >
           </view>
-          <view >
+          <view>
             <view class="option-item uni-flex uni-row uni-grow">
               <view class="option-label">INPO</view>
               <view
@@ -47,28 +50,227 @@
                 >{{ option.name }}</view
               >
             </view>
-            <view class="option-item uni-flex uni-row uni-grow">
-              <view class="option-label">失误模式</view>
+          </view>
+          <view class="lapse uni-column" v-if="lapseData.length">
+            <view class="lapse-head uni-row" @click="expand = !expand">
+              <text class="">失误模式</text>
+              <view class="uni-grow"></view>
+              <text
+                class="icon iconfont iconshousuo"
+                style="font-size: 12px; margin-right: 15px"
+                :style="expand ? 'transform: rotate(90deg)' : ''"
+              ></text>
+            </view>
+            <view
+              v-show="expand"
+              class="lapse-type uni-column"
+              v-for="typeData in lapseData"
+              v-bind:key="typeData.type_code"
+            >
               <view
-                class="option-val"
-                v-for="option in mode_options"
-                v-bind:key="option.vlaue"
-                @click="checkItem('err_mode', option)"
-                :class="{ checked: option.value == formdata.err_mode }"
-                >{{ option.name }}</view
+                class="lapse-type-head uni-row"
+                @click="typeData.expand = !typeData.expand"
               >
+                <text class=""> {{ typeData.type }}</text>
+                <view class="uni-grow"></view>
+                <text
+                  class="icon iconfont iconshousuo"
+                  style="font-size: 12px; margin-right: 15px"
+                  :style="typeData.expand ? 'transform: rotate(90deg)' : ''"
+                ></text>
+              </view>
+              <view
+                class="lapse-type-content uni-column"
+                v-show="typeData.expand"
+              >
+                <view
+                  class="lapse-option-list uni-column"
+                  v-for="option in typeData.options"
+                  v-bind:key="option.code"
+                >
+                  <view class="lapse-option-warp uni-column">
+                    <view
+                      class="lapse-option-item uni-row"
+                      :class="{ selected: option.selected }"
+                    >
+                      <text
+                        class="radio icon iconfont"
+                        @click="lapseSelect(option)"
+                        :class="
+                          option.group
+                            ? option.selected
+                              ? 'iconxuanze1'
+                              : 'iconxuanze'
+                            : option.selected
+                            ? 'iconxuanzeyixuan'
+                            : 'icondaixuanze'
+                        "
+                      ></text>
+                      <text class="" @click="lapseSelect(option)">{{
+                        option.name
+                      }}</text>
+                      <view
+                        class="lapse-input uni-row uni-grow"
+                        v-if="option.selected && !option.options"
+                      >
+                        <input
+                          class="uni-input flex-grow"
+                          name="input"
+                          type="text"
+                          v-model="option.remark"
+                          placeholder-style="color:#bbb"
+                          style="padding-left: 30px"
+                          placeholder="可输入备注信息"
+                        />
+                        <text
+                          class="icon iconfont iconelipsis"
+                          @click="popupMedia2Lapse(option)"
+                        ></text>
+                      </view>
+                    </view>
+                    <view
+                      class="lapse-option-level2"
+                      v-if="option.options && option.selected"
+                    >
+                      <view
+                        class="lapse-option-list uni-column"
+                        v-for="option in option.options"
+                        v-bind:key="option.code"
+                      >
+                        <view class="lapse-option-warp uni-column">
+                          <view
+                            class="lapse-option-item uni-row"
+                            :class="{ selected: option.selected }"
+                          >
+                            <text
+                              class="radio icon iconfont"
+                              @click="lapseSelect(option)"
+                              :class="
+                                option.group
+                                  ? option.selected
+                                    ? 'iconxuanze1'
+                                    : 'iconxuanze'
+                                  : option.selected
+                                  ? 'iconxuanzeyixuan'
+                                  : 'icondaixuanze'
+                              "
+                            ></text>
+                            <text @click="lapseSelect(option)">{{
+                              option.name
+                            }}</text>
+                            <view
+                              class="lapse-input uni-row uni-grow"
+                              v-if="option.selected && !option.options"
+                            >
+                              <input
+                                class="uni-input flex-grow"
+                                name="input"
+                                type="text"
+                                v-model="option.remark"
+                                placeholder-style="color:#bbb"
+                                style="padding-left: 30px"
+                                placeholder="可输入备注信息"
+                              />
+                              <text
+                                class="icon iconfont iconelipsis"
+                                @click="popupMedia2Lapse(option)"
+                              ></text>
+                            </view>
+                          </view>
+                          <view
+                            class="lapse-option-level3"
+                            v-if="option.options && option.selected"
+                          >
+                            <view
+                              class="lapse-option-list uni-column"
+                              v-for="option in option.options"
+                              v-bind:key="option.code"
+                            >
+                              <view class="lapse-option-warp uni-column">
+                                <view
+                                  class="lapse-option-item uni-row"
+                                  :class="{ selected: option.selected }"
+                                >
+                                  <text
+                                    @click="lapseSelect(option)"
+                                    class="radio icon iconfont"
+                                    :class="
+                                      option.group
+                                        ? option.selected
+                                          ? 'iconxuanze1'
+                                          : 'iconxuanze'
+                                        : option.selected
+                                        ? 'iconxuanzeyixuan'
+                                        : 'icondaixuanze'
+                                    "
+                                  ></text>
+                                  <text @click="lapseSelect(option)">{{
+                                    option.name
+                                  }}</text>
+                                  <view
+                                    class="lapse-input uni-row uni-grow"
+                                    v-if="option.selected && !option.options"
+                                  >
+                                    <input
+                                      class="uni-input flex-grow"
+                                      name="input"
+                                      type="text"
+                                      v-model="option.remark"
+                                      placeholder-style="color:#bbb"
+                                      style="padding-left: 30px"
+                                      placeholder="可输入备注信息"
+                                    />
+                                    <text
+                                      class="icon iconfont iconelipsis"
+                                      @click="popupMedia2Lapse(option)"
+                                    ></text>
+                                  </view>
+                                </view>
+                                <view
+                                  class="lapse-option-level3"
+                                  v-if="option.options"
+                                >
+                                </view>
+                              </view>
+                            </view>
+                          </view>
+                        </view>
+                      </view>
+                    </view>
+                  </view>
+                </view>
+              </view>
             </view>
           </view>
-          <view class="option-item uni-flex uni-row">
-            <view>1、我是失误原因文字描述内容等</view>
+          <view
+            class="lapse-head uni-row"
+            @click="expand2 = !expand2"
+            style="margin: 10px 0"
+          >
+            <text class="">人误问题与评分</text>
             <view class="uni-grow"></view>
-            <picker
-              mode="selector"
-              :range="[0, 1, 2, 3, 4, 5]"
-              :value="formdata.score1"
-              @change="dataChange('score1', $event.detail.value)"
-            >
-              <view class="uni-row">
+            <text
+              class="icon iconfont iconshousuo"
+              style="font-size: 12px; margin-right: 15px"
+              :style="expand2 ? 'transform: rotate(90deg)' : ''"
+            ></text>
+          </view>
+          <view class="uni-column" v-if="expand2">
+            <view class="option-item uni-flex uni-row">
+              <view class="uni-row uni-grow">
+                <text class="">问题1:</text>
+                <input
+                  class="uni-input flex-grow"
+                  name="input"
+                  type="text"
+                  v-model="formdata.req1"
+                  placeholder-style="color:#bbb"
+                  style="padding-left: 10px"
+                  @blur="dataChange('req1')"
+                  placeholder="请输入问题!"
+              /></view>
+
+              <view class="uni-row" @click="openScore('score1')">
                 <text class="score-label">评分:</text>
                 <view
                   class="score-btn"
@@ -83,120 +285,124 @@
                   </text>
                 </view>
               </view>
-            </picker>
-          </view>
-          <view class="option-item uni-flex uni-row">
-            <text class="input-label">回答</text>
-            <input
-              class="uni-input flex-grow"
-              name="input"
-              type="text"
-              v-model="formdata.answer1"
-              placeholder-style="color:#bbb"
-              style="padding-left: 30px"
-              @blur="dataChange('answer1')"
-              placeholder="请输入"
-            />
-            <text
-              class="icon iconfont iconelipsis"
-              @click="popupMedia('answer1')"
-            ></text>
-          </view>
-          <view class="option-item uni-flex uni-row">
-            <text class="input-label">人误恢复情况</text>
-            <input
-              class="uni-input flex-grow"
-              name="input"
-              type="text"
-              v-model="formdata.restore1"
-              placeholder-style="color:#bbb"
-              style="padding-left: 30px"
-              @blur="dataChange('restore1')"
-              placeholder="请输入"
-            />
-            <text
-              class="icon iconfont iconelipsis"
-              @click="popupMedia('restore1')"
-            ></text>
-          </view>
-          <view class="option-item uni-flex uni-row">
-            <text class="input-label"> 人误对核电站的影响</text>
-            <input
-              class="uni-input flex-grow"
-              name="input"
-              type="text"
-              v-model="formdata.effect1"
-              placeholder-style="color:#bbb"
-              style="padding-left: 30px"
-              @blur="dataChange('effect1')"
-              placeholder="请输入"
-            />
-            <text
-              class="icon iconfont iconelipsis"
-              @click="popupMedia('effect1')"
-            ></text>
-          </view>
-          <view class="option-item uni-flex uni-row">
-            <text class="input-label"> 改进措施和建议</text>
-            <input
-              class="uni-input flex-grow"
-              name="input"
-              type="text"
-              v-model="formdata.measure1"
-              placeholder-style="color:#bbb"
-              style="padding-left: 30px"
-              @blur="dataChange('measure1')"
-              placeholder="请输入"
-            />
-            <text
-              class="icon iconfont iconelipsis"
-              @click="popupMedia('measure1')"
-            ></text>
-          </view>
-          <view class="option-item uni-flex uni-row">
-            <text class="input-label"> 相关文件</text>
-            <text class="file-text">{{
-              formdata.document1 | filePathRender
-            }}</text>
-            <text
-              v-show="!formdata.document1"
-              style="color: #bbb; padding-left: 30px"
-              >请选择</text
-            >
-            <view class="uni-grow"></view>
-            <text
-              class="icon iconfont iconlianjie input-icon"
-              @click="openSelectFilePage('document1')"
-            ></text>
-          </view>
-          <view class="option-item uni-flex uni-row">
-            <text class="input-label"> 备注</text>
-            <input
-              class="uni-input flex-grow"
-              name="input"
-              type="text"
-              v-model="formdata.remark1"
-              placeholder-style="color:#bbb"
-              style="padding-left: 30px"
-              @blur="dataChange('remark1')"
-              placeholder="请输入"
-            />
-            <text
-              class="icon iconfont iconelipsis"
-              @click="popupMedia('remark1')"
-            ></text>
-          </view>
+            </view>
+            <view class="option-item uni-flex uni-row">
+              <text class="input-label">回答</text>
+              <input
+                class="uni-input flex-grow"
+                name="input"
+                type="text"
+                v-model="formdata.answer1"
+                placeholder-style="color:#bbb"
+                style="padding-left: 30px"
+                @blur="dataChange('answer1')"
+                placeholder="请输入"
+              />
+              <text
+                class="icon iconfont iconelipsis"
+                @click="popupMedia('answer1')"
+              ></text>
+            </view>
+            <view class="option-item uni-flex uni-row">
+              <text class="input-label">人误恢复情况</text>
+              <input
+                class="uni-input flex-grow"
+                name="input"
+                type="text"
+                v-model="formdata.restore1"
+                placeholder-style="color:#bbb"
+                style="padding-left: 30px"
+                @blur="dataChange('restore1')"
+                placeholder="请输入"
+              />
+              <text
+                class="icon iconfont iconelipsis"
+                @click="popupMedia('restore1')"
+              ></text>
+            </view>
+            <view class="option-item uni-flex uni-row">
+              <text class="input-label"> 人误对核电站的影响</text>
+              <input
+                class="uni-input flex-grow"
+                name="input"
+                type="text"
+                v-model="formdata.effect1"
+                placeholder-style="color:#bbb"
+                style="padding-left: 30px"
+                @blur="dataChange('effect1')"
+                placeholder="请输入"
+              />
+              <text
+                class="icon iconfont iconelipsis"
+                @click="popupMedia('effect1')"
+              ></text>
+            </view>
+            <view class="option-item uni-flex uni-row">
+              <text class="input-label"> 改进措施和建议</text>
+              <input
+                class="uni-input flex-grow"
+                name="input"
+                type="text"
+                v-model="formdata.measure1"
+                placeholder-style="color:#bbb"
+                style="padding-left: 30px"
+                @blur="dataChange('measure1')"
+                placeholder="请输入"
+              />
+              <text
+                class="icon iconfont iconelipsis"
+                @click="popupMedia('measure1')"
+              ></text>
+            </view>
+            <view class="option-item uni-flex uni-row">
+              <text class="input-label"> 相关文件</text>
+              <text class="file-text">{{
+                formdata.document1 | filePathRender
+              }}</text>
+              <text
+                v-show="!formdata.document1"
+                style="color: #bbb; padding-left: 30px"
+                >请选择</text
+              >
+              <view class="uni-grow"></view>
+              <text
+                class="icon iconfont iconlianjie input-icon"
+                @click="openSelectFilePage('document1')"
+              ></text>
+            </view>
+            <view class="option-item uni-flex uni-row">
+              <text class="input-label"> 备注</text>
+              <input
+                class="uni-input flex-grow"
+                name="input"
+                type="text"
+                v-model="formdata.remark1"
+                placeholder-style="color:#bbb"
+                style="padding-left: 30px"
+                @blur="dataChange('remark1')"
+                placeholder="请输入"
+              />
+              <text
+                class="icon iconfont iconelipsis"
+                @click="popupMedia('remark1')"
+              ></text>
+            </view>
 
-          <view class="option-item uni-flex uni-row">
-            <view>2、我是失误原因文字描述内容等</view>
-            <view class="uni-grow"></view>
-            <picker
-              mode="selector"
-              :range="[0, 1, 2, 3, 4, 5]"
-              :value="formdata.score1"
-              @change="dataChange('score2', $event.detail.value)"
-            >
-              <view class="uni-row">
+            <view class="option-item uni-flex uni-row">
+              <view class="uni-row uni-grow">
+                <text class="">问题2:</text>
+                <input
+                  class="uni-input flex-grow"
+                  name="input"
+                  type="text"
+                  v-model="formdata.req2"
+                  placeholder-style="color:#bbb"
+                  style="padding-left: 10px"
+                  @blur="dataChange('req2')"
+                  placeholder="请输入问题!"
+              /></view>
+
+              <view class="uni-row" @click="openScore('score2')">
                 <text class="score-label">评分:</text>
                 <view
                   class="score-btn"
@@ -211,120 +417,139 @@
                   </text>
                 </view>
               </view>
-            </picker>
-          </view>
-          <view class="option-item uni-flex uni-row">
-            <text class="input-label">回答</text>
-            <input
-              class="uni-input flex-grow"
-              name="input"
-              type="text"
-              v-model="formdata.answer2"
-              placeholder-style="color:#bbb"
-              style="padding-left: 30px"
-              @blur="dataChange('answer2')"
-              placeholder="请输入"
-            />
-            <text
-              class="icon iconfont iconelipsis"
-              @click="popupMedia('answer2')"
-            ></text>
-          </view>
-          <view class="option-item uni-flex uni-row">
-            <text class="input-label">人误恢复情况</text>
-            <input
-              class="uni-input flex-grow"
-              name="input"
-              type="text"
-              v-model="formdata.restore2"
-              placeholder-style="color:#bbb"
-              style="padding-left: 30px"
-              @blur="dataChange('restore2')"
-              placeholder="请输入"
-            />
-            <text
-              class="icon iconfont iconelipsis"
-              @click="popupMedia('restore2')"
-            ></text>
-          </view>
-          <view class="option-item uni-flex uni-row">
-            <text class="input-label"> 人误对核电站的影响</text>
-            <input
-              class="uni-input flex-grow"
-              name="input"
-              type="text"
-              v-model="formdata.effect2"
-              placeholder-style="color:#bbb"
-              style="padding-left: 30px"
-              @blur="dataChange('effect2')"
-              placeholder="请输入"
-            />
-            <text
-              class="icon iconfont iconelipsis"
-              @click="popupMedia('effect2')"
-            ></text>
-          </view>
-          <view class="option-item uni-flex uni-row">
-            <text class="input-label"> 改进措施和建议</text>
-            <input
-              class="uni-input flex-grow"
-              name="input"
-              type="text"
-              v-model="formdata.measure2"
-              placeholder-style="color:#bbb"
-              style="padding-left: 30px"
-              @blur="dataChange('measure2')"
-              placeholder="请输入"
-            />
-            <text
-              class="icon iconfont iconelipsis"
-              @click="popupMedia('measure2')"
-            ></text>
-          </view>
-          <view class="option-item uni-flex uni-row">
-            <text class="input-label"> 相关文件</text>
-            <text class="file-text">{{
-              formdata.document2 | filePathRender
-            }}</text>
-            <text
-              v-show="!formdata.document2"
-              style="color: #bbb; padding-left: 30px"
-              >请选择</text
-            >
-            <view class="uni-grow"></view>
-            <text
-              class="icon iconfont iconlianjie input-icon"
-              @click="openSelectFilePage('document2')"
-            ></text>
-          </view>
-          <view class="option-item uni-flex uni-row">
-            <text class="input-label"> 备注</text>
-            <input
-              class="uni-input flex-grow"
-              name="input"
-              type="text"
-              v-model="formdata.remark2"
-              placeholder-style="color:#bbb"
-              style="padding-left: 30px"
-              @blur="dataChange('remark2')"
-              placeholder="请输入"
-            />
-            <text
-              class="icon iconfont iconelipsis"
-              @click="popupMedia('remark2')"
-            ></text>
+            </view>
+            <view class="option-item uni-flex uni-row">
+              <text class="input-label">回答</text>
+              <input
+                class="uni-input flex-grow"
+                name="input"
+                type="text"
+                v-model="formdata.answer2"
+                placeholder-style="color:#bbb"
+                style="padding-left: 30px"
+                @blur="dataChange('answer2')"
+                placeholder="请输入"
+              />
+              <text
+                class="icon iconfont iconelipsis"
+                @click="popupMedia('answer2')"
+              ></text>
+            </view>
+            <view class="option-item uni-flex uni-row">
+              <text class="input-label">人误恢复情况</text>
+              <input
+                class="uni-input flex-grow"
+                name="input"
+                type="text"
+                v-model="formdata.restore2"
+                placeholder-style="color:#bbb"
+                style="padding-left: 30px"
+                @blur="dataChange('restore2')"
+                placeholder="请输入"
+              />
+              <text
+                class="icon iconfont iconelipsis"
+                @click="popupMedia('restore2')"
+              ></text>
+            </view>
+            <view class="option-item uni-flex uni-row">
+              <text class="input-label"> 人误对核电站的影响</text>
+              <input
+                class="uni-input flex-grow"
+                name="input"
+                type="text"
+                v-model="formdata.effect2"
+                placeholder-style="color:#bbb"
+                style="padding-left: 30px"
+                @blur="dataChange('effect2')"
+                placeholder="请输入"
+              />
+              <text
+                class="icon iconfont iconelipsis"
+                @click="popupMedia('effect2')"
+              ></text>
+            </view>
+            <view class="option-item uni-flex uni-row">
+              <text class="input-label"> 改进措施和建议</text>
+              <input
+                class="uni-input flex-grow"
+                name="input"
+                type="text"
+                v-model="formdata.measure2"
+                placeholder-style="color:#bbb"
+                style="padding-left: 30px"
+                @blur="dataChange('measure2')"
+                placeholder="请输入"
+              />
+              <text
+                class="icon iconfont iconelipsis"
+                @click="popupMedia('measure2')"
+              ></text>
+            </view>
+            <view class="option-item uni-flex uni-row">
+              <text class="input-label"> 相关文件</text>
+              <text class="file-text">{{
+                formdata.document2 | filePathRender
+              }}</text>
+              <text
+                v-show="!formdata.document2"
+                style="color: #bbb; padding-left: 30px"
+                >请选择</text
+              >
+              <view class="uni-grow"></view>
+              <text
+                class="icon iconfont iconlianjie input-icon"
+                @click="openSelectFilePage('document2')"
+              ></text>
+            </view>
+            <view class="option-item uni-flex uni-row">
+              <text class="input-label"> 备注</text>
+              <input
+                class="uni-input flex-grow"
+                name="input"
+                type="text"
+                v-model="formdata.remark2"
+                placeholder-style="color:#bbb"
+                style="padding-left: 30px"
+                @blur="dataChange('remark2')"
+                placeholder="请输入"
+              />
+              <text
+                class="icon iconfont iconelipsis"
+                @click="popupMedia('remark2')"
+              ></text>
+            </view>
           </view>
         </view>
       </scroll-view>
     </view>
     <comp-media ref="media"></comp-media>
+    <uni-popup ref="numPopup">
+      <uni-popup-dialog type="info" mode="base" title="评分" :nobtn="true">
+        <view
+          class="tag-items uni-grow uni-row"
+          style="padding: 0 20px 40px 20px"
+        >
+          <text
+            class="num-item"
+            v-for="num in nums"
+            v-bind:key="num"
+            @click="setScore(num)"
+            >{{ num }}</text
+          >
+        </view>
+      </uni-popup-dialog>
+    </uni-popup>
   </view>
 </template>
 
 <script>
 import moduleService from "../../service/effect/performance";
+import lapseService from "../../service/effect/lapse";
 import util from "../../common/util";
 import { mapState, mapActions } from "vuex";
+import uniPopup from "@/components/uni-popup/uni-popup.vue";
+import uniPopupDialog from "@/components/uni-popup/uni-popup-dialog.vue";
 export default {
   data() {
     return {
@@ -335,8 +560,11 @@ export default {
       parentId: "",
       mode: "create",
       type: 1,
+      expand: true,
+      expand2: true,
       guid: moduleService.genGuid(),
       parentName: "",
+      nums: [-5, -4, -3, -2, -1, 0, 1, 2, 3, 4, 5],
       formdata: {
         foreign_id: "",
         level: "",
@@ -357,20 +585,6 @@ export default {
         document2: "",
         remark2: "",
       },
-      issues: [],
-      issueList: [
-        {
-          name:
-            " 认知需求：情境需要多少认识活动（如：思考、决策、计算、记忆、观察、搜索等）？",
-          field: "score_tlx1",
-          type: 1,
-        },
-        {
-          name: "体力需求：请境需要多少体力活动（如旋转、控制）？",
-          field: "score_tlx2",
-          type: 1,
-        },
-      ],
       level_options: [
         { name: "非常满意", value: 1 },
         { name: "满意", value: 2 },
@@ -382,13 +596,15 @@ export default {
         { name: "control", value: 2 },
         { name: "monitoring", value: 3 },
         { name: "conservtion", value: 4 },
-        { name: "knowledge", value: 5 }
+        { name: "knowledge", value: 5 },
       ],
       mode_options: [
         { name: "选项1", value: 1 },
         { name: "选项2", value: 2 },
         { name: "选项3", value: 3 },
       ],
+      lapseData: [],
+      lapseList: [],
     };
   },
   onReady() {
@@ -406,12 +622,32 @@ export default {
       },
     });
   },
+  components: {
+    uniPopup,
+    uniPopupDialog,
+  },
   onLoad(options) {
-    this.issues = this.issueList.filter((d) => d.type == 1);
     this.type = options.type;
     this.parentId = options.guid;
     this.parentName = options.name;
     this.loadData();
+    let lapseData = lapseService.getLapseOptions();
+    this.lapseList = lapseService.getOptionList(lapseData);
+    this.lapseData = lapseData;
+    lapseService.query({ foreign_id: this.parentId }).then((list) => {
+      //数据合并  将数据库的数据,与当前的模型合并
+      let codeMap = {};
+      list.forEach((item) => {
+        codeMap[item.code] = item;
+      });
+      this.lapseList.forEach((item) => {
+        if (codeMap[item.code]) {
+          //如果数据库存在记录,则将数据合并,并选中
+          Object.assign(item, codeMap[item.code]);
+          item.selected = true;
+        }
+      });
+    });
   },
   onShow() {},
   computed: {},
@@ -421,10 +657,14 @@ export default {
       this.autoSave();
     },
     back(delta) {
-      uni.navigateBack({
-        animationType: delta == 1 ? "none" : "slide-out-right",
-        delta,
-      });
+      if (this.type == 2) {
+        uni.navigateBack();
+      } else {
+        uni.navigateBack({
+          animationType: delta == 1 ? "none" : "slide-out-right",
+          delta,
+        });
+      }
     },
     loadData() {
       moduleService
@@ -443,13 +683,17 @@ export default {
     popupMedia(field) {
       this.$refs.media.popup(this.guid, field);
     },
+    popupMedia2Lapse(option) {
+      this.$refs.media.popup(option.guid, "remark");
+    },
     dataChange(field, value) {
       if (value) {
         this.formdata[field] = value;
       }
       this.autoSave();
     },
-    autoSave() {
+    autoSave() {},
+    save() {
       var fn = this.mode == "create" ? "insert" : "update";
       this.formdata.type = this.type;
       if (this.mode == "create") {
@@ -458,13 +702,49 @@ export default {
       }
       moduleService[fn](this.formdata).then(() => {
         this.mode = "update";
+        this.back(2);
+      });
+
+      //删除原有数据
+      this.lapseList.forEach((item) => (item.foreign_id = this.parentId));
+      lapseService.removeBy({ foreign_id: this.parentId }).then(() => {
+        let selectedList = this.lapseList.filter((item) => item.selected);
+        if (selectedList.length) {
+          lapseService.insertList(selectedList, "multi");
+        }
       });
     },
+
     openSelectFilePage(field) {
       uni.navigateTo({ url: "/pages/filesys/selectFile?field=" + field });
     },
     onSelectFile({ field, path, guid }) {
       this.formdata[field] = guid;
+    },
+    openScore(field) {
+      this.openScoreField = field;
+      this.$refs.numPopup.open();
+    },
+
+    setScore(num) {
+      this.formdata[this.openScoreField] = num;
+      this.$refs.numPopup.close();
+      this.autoSave();
+    },
+    lapseSelect(option) {
+      if (option.selected) {
+        option.selected = false;
+      } else {
+        if (option.group) {
+          //如有有同组的数据,则同组为单选,清楚其他选择项
+          this.lapseList.forEach((item) => {
+            if (item.group == option.group) {
+              item.selected = false;
+            }
+          });
+        }
+        option.selected = true;
+      }
     },
   },
 };
@@ -560,5 +840,58 @@ export default {
       color: #fff;
     }
   }
+}
+.num-item {
+  margin-right: 10px;
+  width: 40px;
+  text-align: center;
+  display: block;
+  padding: 5px 0;
+  font-weight: bold;
+  background: #cedbf5;
+  color: #007aff;
+}
+.lapse-head {
+  line-height: 40px;
+  text-align: left;
+  padding: 0 15px;
+  background: rgb(212, 228, 243);
+}
+.lapse-type {
+  margin-bottom: 10px;
+}
+.lapse-type-head {
+  line-height: 40px;
+  text-align: left;
+  padding: 0 15px;
+  font-weight: bold;
+  font-size: 13px;
+  color: #888;
+  background: #f2f2f2;
+}
+.lapse-option-warp {
+  padding-left: 20px;
+}
+.lapse-option-item {
+  line-height: 40px;
+  font-size: 13px;
+}
+.radio.icon {
+  margin-right: 15px;
+}
+.lapse-option-item.selected {
+  > .radio.icon {
+    color: #007aff;
+  }
+}
+.lapse-input {
+  padding-right: 20px;
+  .uni-input {
+    color: #007aff;
+    font-size: 13px;
+  }
+}
+.uni-input {
+  color: #007aff;
 }
 </style>

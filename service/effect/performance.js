@@ -9,8 +9,8 @@ let config = {
         { name: "foreign_id", type: "VARCHAR(50)", ext: "NOT NULL" }, //关联的主数据ID  关联场景
         { name: "level", type: "VARCHAR(10)" }, // 等级   1非常满意 2满意 3有偏差 4不满意
         { name: "inpo", type: "VARCHAR(10)" }, // inpo   1,2,3
-        { name: "err_mode", type: "VARCHAR(10)" }, // 失误模型   1,2,3
         { name: "score1", type: "INT" }, //失误原因1 评分
+        { name: "req1", type: "VARCHAR(200)" }, //失误原因 问题1
         { name: "answer1", type: "VARCHAR(200)" }, //失误原因1 回答
         { name: "restore1", type: "VARCHAR(200)" }, //失误原因1 人误恢复情况
         { name: "effect1", type: "VARCHAR(200)" }, //失误原因1 人误对核电站的影响
@@ -18,6 +18,7 @@ let config = {
         { name: "document1", type: "VARCHAR(200)" }, //失误原因1 相关文件
         { name: "remark1", type: "VARCHAR(200)" }, //失误原因1 备注
         { name: "score2", type: "INT" }, //失误原因1 评分
+        { name: "req2", type: "VARCHAR(200)" }, //失误原因 问题1
         { name: "answer2", type: "VARCHAR(200)" }, //失误原因2 回答
         { name: "restore2", type: "VARCHAR(200)" }, //失误原因2 恢复情况
         { name: "effect2", type: "VARCHAR(200)" }, //失误原因2 人误对核电站的影响

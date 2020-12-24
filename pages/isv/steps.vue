@@ -22,7 +22,6 @@
       <view class="i-tab-layout" v-if="showTab">
         <view class="i-tab">
           <view class="tab-item active">操作流程</view>
-          <view class="tab-item" @click="goPerformance()">绩效评分</view>
         </view>
       </view>
       <view class="uni-grow content-panel">
@@ -36,6 +35,15 @@
             <view class="list-panel">
               <view class="uni-row">
                 <view class="uni-grow"> </view>
+                <picker
+                  style="line-height: 46px"
+                  mode="selector"
+                  :range="roles"
+                  :value="roles.indexOf(defaultRole)"
+                  @change="defaultRoleChange($event.detail.value)"
+                >
+                  <text class="btn-txt1">默认角色 : {{ defaultRole }}</text>
+                </picker>
                 <text class="btn-txt" @click="expand(true)">全部展开</text>
                 <text class="btn-txt" @click="expand(false)">全部收缩</text>
               </view>
@@ -59,6 +67,11 @@
                   <view style="width: 30px"></view>
                   <text class="step-name">{{ data.step_name }}</text>
                   <view class="uni-grow"></view>
+                  <text
+                    class="icon iconfont iconpingfen"
+                    style="font-size: 16px; margin-right: 20px"
+                    @click="goPerformance(data)"
+                  ></text>
                   <text
                     class="icon iconfont iconshousuo"
                     style="font-size: 12px; margin-right: 15px"
@@ -196,15 +209,15 @@ export default {
       parentName: "",
       showTab: false,
       breadData: [],
+      defaultRole: uni.getStorageSync("defaultRole") || "副值长"
     };
   },
   onLoad(options) {
     this.parentId = options.guid;
     this.parentName = options.name;
     this.showTab = options.showTab;
-    if(this.showTab){
-
-    }else{
+    if (this.showTab) {
+    } else {
     }
   },
 
@@ -335,7 +348,7 @@ export default {
             end_time: "",
             duration: "",
             estimated_time: "",
-            role: "",
+            role: this.defaultRole,
             tutelage: "",
             remark: "",
           });
@@ -399,15 +412,17 @@ export default {
         role: data.role,
       });
     },
-    goPerformance() {
+    defaultRoleChange(index) {
+      this.defaultRole = this.roles[index];
+      uni.setStorageSync("defaultRole", this.defaultRole);
+    },
+    goPerformance(data) {
       uni.navigateTo({
         url:
-          "/pages/effect/performance?guid=" +
-          this.parentId +
+          "/pages/effect/performance?type=2&guid=" +
+          data.guid +
           "&name=" +
-          this.parentName +
-          "&type=2",
-        animationType: "none",
+          data.step_name,
       });
     },
     expand(bool, data) {
@@ -533,5 +548,17 @@ export default {
   line-height: 30px;
   background: #007aff;
   color: #fff;
+}
+.btn-txt1 {
+  text-align: left;
+  display: inline-block;
+  margin: 10px 0px 10px 10px;
+  height: 30px;
+  line-height: 30px;
+  width: 120px;
+  color: #007aff;
+}
+.icon.iconfont.iconpingfen {
+  color: rgb(243, 211, 30) !important;
 }
 </style>

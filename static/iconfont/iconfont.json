@@ -6,6 +6,69 @@
   "description": "HRA",
   "glyphs": [
     {
+      "icon_id": "7186796",
+      "name": "选择",
+      "font_class": "xuanze",
+      "unicode": "e650",
+      "unicode_decimal": 58960
+    },
+    {
+      "icon_id": "13524515",
+      "name": "选择",
+      "font_class": "xuanzeyixuan",
+      "unicode": "e8fc",
+      "unicode_decimal": 59644
+    },
+    {
+      "icon_id": "13598897",
+      "name": "选择",
+      "font_class": "daixuanze",
+      "unicode": "e60c",
+      "unicode_decimal": 58892
+    },
+    {
+      "icon_id": "14193131",
+      "name": "选择",
+      "font_class": "xuanze1",
+      "unicode": "e6c0",
+      "unicode_decimal": 59072
+    },
+    {
+      "icon_id": "5792169",
+      "name": "收缩",
+      "font_class": "shousuo",
+      "unicode": "e630",
+      "unicode_decimal": 58928
+    },
+    {
+      "icon_id": "13687174",
+      "name": "FontAwesome question circle",
+      "font_class": "question1",
+      "unicode": "e88b",
+      "unicode_decimal": 59531
+    },
+    {
+      "icon_id": "14646877",
+      "name": "checked",
+      "font_class": "checked",
+      "unicode": "e70e",
+      "unicode_decimal": 59150
+    },
+    {
+      "icon_id": "1494374",
+      "name": "评分",
+      "font_class": "pingfen",
+      "unicode": "e79a",
+      "unicode_decimal": 59290
+    },
+    {
+      "icon_id": "16087995",
+      "name": "运算符",
+      "font_class": "yunsuanfu",
+      "unicode": "e7a2",
+      "unicode_decimal": 59298
+    },
+    {
       "icon_id": "4116746",
       "name": "密码",
       "font_class": "mima",

@@ -1,6 +1,6 @@
 <template>
   <view class="container" @click="pageClick" :class="screenOrientation">
-    <uni-tab-bar :class="screenOrientation" index="3"></uni-tab-bar>
+    <uni-tab-bar :class="screenOrientation" index="5"></uni-tab-bar>
     <view class="uni-column">
       <view class="uni-row i-header">
         <view class="uni-grow"></view>
