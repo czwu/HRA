@@ -79,6 +79,18 @@ export default class BaseService {
         }
     }
 
+    closeDataBase(fn = function() {}) {
+        if (this.isOpen()) {
+            plus.sqlite.closeDatabase({
+                name: constants.db_name, //数据库名称
+                success(e) {
+                    fn()
+                }
+            });
+        } else {
+            fn()
+        }
+    }
 
     isTableExists(tableName, callback) {
         if (this.isOpen()) {

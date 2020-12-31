@@ -8,10 +8,6 @@ let config = {
         { name: "userName", type: "VARCHAR(50)", ext: "NOT NULL" },
         { name: "password", type: "VARCHAR(50)", ext: "NOT NULL" },
         { name: "name", type: "VARCHAR(50)", ext: "" }
-    ],
-    datas: [
-        [100, 'zhangsan', 'MTIzNDU2', '张三'],
-        [101, 'tuwei', 'MTIzNDU2', '图为']
     ]
 }
 

@@ -167,7 +167,7 @@ export default {
       this.save(item);
     },
     popupMedia(item) {
-      this.$refs.media.popup(item.guid, "item_remark");
+      this.$refs.media.popup(item.guid, "remark");
     },
     switchChange(item, e) {
       item.value = e.detail.value ? "是" : "否";

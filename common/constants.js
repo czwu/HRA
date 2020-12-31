@@ -48,7 +48,9 @@ const constants = {
     HEIGHT_TOOLS: ['钢平台', '梯子', '脚手架'],
     HANDLE_SPACE: ['够', '不够', '较危险'],
 
-    DOC_BASE: '/storage/emulated/0/HRA_DOC'
+    DOC_BASE: '/storage/emulated/0/HRA_DOC/'
+
+
 
 
 }

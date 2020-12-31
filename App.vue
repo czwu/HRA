@@ -18,7 +18,7 @@ export default {
   },
   onLaunch: function () {
     plus.screen.lockOrientation("default");
-    // uni.onWindowResize(res => { 
+    // uni.onWindowResize(res => {
     //   uni.getSystemInfo({
     //     success: res => {
     //       if (res.windowWidth > res.windowHeight) {
@@ -34,9 +34,7 @@ export default {
     ...mapState({
       loginUser: "loginUser",
     }),
-  }
-
-
+  },
 };
 </script>
 

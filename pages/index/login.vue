@@ -8,17 +8,17 @@
           style="width: 280px"
         ></image>
       </view>
-      <view class=" uni-grow"> </view>
+      <view class="uni-grow"> </view>
       <view class="content">
-          <image
+        <image
           mode="widthFix"
-          class='image-boy'
+          class="image-boy"
           src="../../static/images/boy.png"
-             style="width: 350px"
+          style="width: 350px"
         ></image>
-             <image
+        <image
           mode="widthFix"
-              class='image-girl'
+          class="image-girl"
           src="../../static/images/girl.png"
           style="width: 310px"
         ></image>
@@ -48,9 +48,7 @@
               />
             </view>
           </view>
-          <view class="form-row">
-
-          </view>
+          <view class="form-row"> </view>
           <view class="form-row">
             <button type="primary" @click="doLogin" class="uni-grow login-btn">
               登录
@@ -70,6 +68,8 @@
 <script>
 import { mapState, mapActions } from "vuex";
 import util from "../../common/util.js";
+import userService from "../../service/user";
+import datasync from "../../common/datasync";
 export default {
   data() {
     return {
@@ -79,8 +79,12 @@ export default {
       },
     };
   },
-  created() {
-
+  onLoad() {
+    userService.queryAll().then((users) => {  
+      if (!users.length) {
+        datasync.initApp();
+      }
+    });
   },
   methods: {
     doLogin() {
@@ -134,7 +138,7 @@ export default {
   height: 100%;
   padding: 0;
   margin: 0;
-  background-image: linear-gradient(to right, #E1F3FE, #CDEBFF);
+  background-image: linear-gradient(to right, #e1f3fe, #cdebff);
 }
 
 .login-form {
@@ -176,7 +180,7 @@ export default {
 .input-warp:hover {
   .icon.iconfont {
     top: 13px;
-    color: #007AFF
+    color: #007aff;
   }
 }
 .btn-warp {
@@ -193,17 +197,17 @@ export default {
     color: #666;
   }
 }
-.image-boy{
+.image-boy {
   position: absolute;
-  left:0;
-  bottom:0px;
+  left: 0;
+  bottom: 0px;
 }
-.image-girl{
+.image-girl {
   position: absolute;
-  right:0;
-  bottom:0;
+  right: 0;
+  bottom: 0;
 }
-.login-btn{
+.login-btn {
   border-radius: 15px;
 }
 </style>

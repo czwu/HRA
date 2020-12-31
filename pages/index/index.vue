@@ -32,9 +32,9 @@
               mode="widthFix"
               @click="select(project)"
             />
-            <view @click.stop="showPopMenus('1', project, $event)">
+            <!-- <view @click.stop="showPopMenus('1', project, $event)">
               <text class="icon iconfont iconelipsis"></text>
-            </view>
+            </view> -->
           </view>
           <view class="project-text" @click="select(project)">{{
             project.name
@@ -105,7 +105,7 @@ export default {
     select(project) {
       if (!project.init) {
         util.setProjectId(project.guid);
-        datasync.initProjectTest(project.guid).then(() => {
+        datasync.initProject(project.guid).then(() => {
           projectService.update({ guid: project.guid, init: 1 });
           uni.switchTab({
             url: "/pages/filesys/index",

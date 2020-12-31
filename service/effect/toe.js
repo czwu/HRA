@@ -3,7 +3,7 @@ import util from '../../common/util'
 import BaseService from '../base'
 
 
-//电厂基础信息表
+//toe
 let config = {
     tableName: "toe",
     columns: [

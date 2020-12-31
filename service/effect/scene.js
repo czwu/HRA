@@ -1,7 +1,7 @@
 import constants from '../../common/constants'
 import BaseService from '../base'
 import toeService from './toe'
-//情境信息表  数据需要从HRA模块同步过来,无需再pad端创建, pad端可在情境下添加步骤记录
+//情境信息表
 let config = {
     tableName: "scene",
     columns: [

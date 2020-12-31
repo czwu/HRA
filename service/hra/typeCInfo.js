@@ -2,7 +2,7 @@ import constants from '../../common/constants'
 import BaseService from '../base'
 
 /**
- * HRA数据 A类-信息采集 公共表(设备信息,操作对象,报警,指示,工作计划,试验验证,日常巡检,培训)     备注:可达性由于字段区别太大,无法共用该表
+ * HRA数据 C类-信息采集 公共表(warning,directive,team)  备注:可达性由于字段区别太大,无法共用该表
  * 信息类型通过 info_type 区分
  */
 let config = {

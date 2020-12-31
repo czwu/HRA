@@ -486,7 +486,7 @@ export default {
       CBDTService.update({ [field]: item[field], guid: item.guid });
     },
     popupMedia(item) {
-      this.$refs.media.popup(item.guid, "item_remark");
+      this.$refs.media.popup(item.guid, "item_remark",CBDTService.tableName);
     },
     openSelectFilePage(item) {
       uni.navigateTo({

@@ -112,11 +112,11 @@ export default {
     },
 
     getProjectPath() {
-        return `${constants.DOC_BASE}/${projectId}`
+        return `${constants.DOC_BASE}${projectId}/`
     },
 
     getMediaPath() {
-        return `${constants.DOC_BASE}/${projectId}/media`
+        return `${constants.DOC_BASE}${projectId}/media/`
     }
 
 }

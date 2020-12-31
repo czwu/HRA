@@ -1,72 +1,86 @@
 import projectService from '../service/project'
+import userService from '../service/user'
 import util from './util'
 import constants from './constants'
 import regulationLoader from '../datasync/loader/regulation'
-import projectInitData from '../datasync/loader/init.json'
 const Datasync = {
     initProject(projectGuid) {
-        console.log('项目数据初始化开始:' + projectGuid);
-        var File = plus.android.importClass("java.io.File");
-        var String = plus.android.importClass("java.lang.String");
-        var BufferedReader = plus.android.importClass("java.io.BufferedReader");
-        var BufferedInputStream = plus.android.importClass("java.io.BufferedInputStream");
-        var FileInputStream = plus.android.importClass("java.io.FileInputStream");
-        var InputStreamReader = plus.android.importClass("java.io.InputStreamReader");
-        try {
-            var directory = new File(`${constants.DOC_BASE}/${projectGuid}`);
-            if (!directory.exists()) {
-                console.log('项目数据文件夹不存在,正在创建...:');
-                directory.mkdirs(); //创建目录
-            }
-            var file = new File(`${constants.DOC_BASE}/${projectGuid}/proj.json`);
-
-            if (!file.exists()) {
-                console.log('未找到 proj.json 文件,数据初始化失败!');
-                return;
-            }
-            uni.showLoading({ title: '已找到proj.json文件,准备读取...' });
-            var builder = '';
-
-            // uni.hideLoading();
-            try {
-                var fis = new BufferedInputStream(new FileInputStream(file));
-                var reader = new BufferedReader(new InputStreamReader(fis, "utf-8"), 5 * 1024 * 1024);
-                var line = new String();
-                var i = 0;
-                while ((line = reader.readLine()) != null) { //读取文件
-                    if (i % 1000 === 0) {
-                        uni.showLoading({ title: '数据文件读取中...' });
-                    }
-                    builder += (line);
-                    i++;
-                }
-                uni.showLoading({ title: '数据文件加载完成' });
-                fis.close();
-                reader.close();
-            } catch (e) {
-                console.log(e);
-                return '';
-            }
-            let proj = JSON.parse(builder);
-            this.dataProcess(proj)
-        } catch (e) {
-            console.log(e);
-            return false;
-        }
-    },
-
-    initProjectTest() {
         return new Promise((resolve, reject) => {
             uni.showLoading({ title: '正在初始化...' });
-            regulationLoader.load(projectInitData);
-            setTimeout(() => {
-                uni.showLoading({ title: '初始化完成...' })
+            this.readProj((jsontext) => {
+                let proj = JSON.parse(jsontext);
+                this.dataProcess(proj);
                 setTimeout(() => {
                     uni.hideLoading();
-                    resolve()
-                }, 1000)
-            }, 1000)
+                    resolve();
+                }, 3000)
+
+            })
+        });
+    },
+
+    initApp() {
+        this.readGlobalJson((jsontext) => {
+            let appData = JSON.parse(jsontext);
+            let projects = appData.projects;
+            let users = appData.users;
+            projectService.insertList(projects, 'multi');
+            userService.insertList(users, 'multi');
         })
+    },
+
+    readProj(callback) {
+        var path = util.getProjectPath() + 'proj.json';
+        var File = plus.android.importClass("java.io.File");
+        var projFile = new File(path);
+        var exists = projFile.exists()
+        if (!exists) {
+            uni.showToast({
+                title: "未找到该项目的初始化文件(" + path + "),初始化失败",
+                duration: 4000,
+                icon: "none",
+            });
+            uni.hideLoading();
+            return
+        }
+        var reader = null;
+        console.error('start')
+        plus.io.resolveLocalFileSystemURL(path, (entry) => {
+            entry.file(function(file) {
+                reader = new plus.io.FileReader();
+                reader.onloadend = function(e) {
+                    callback && callback(e.target.result)
+                };
+                reader.readAsText(file);
+            }, function(e) {
+                console.log("Read faild");
+            });
+        });
+    },
+
+    readGlobalJson(callback) {
+        var path = constants.DOC_BASE + 'global.json'
+        var File = plus.android.importClass("java.io.File");
+        var projFile = new File(path);
+        var exists = projFile.exists()
+        if (!exists) {
+            uni.showToast({
+                title: "获取项目列表失败,未找到初始化文件(" + path + ")!",
+                duration: 4000,
+                icon: "none",
+            });
+            return
+        }
+        var reader = null;
+        plus.io.resolveLocalFileSystemURL(path, (entry) => {
+            entry.file(function(file) {
+                reader = new plus.io.FileReader();
+                reader.onloadend = function(e) {
+                    callback && callback(e.target.result)
+                };
+                reader.readAsText(file);
+            }, function(e) {});
+        });
     },
 
     getProjects() {

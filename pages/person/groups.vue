@@ -181,11 +181,18 @@ export default {
     },
     loadData() {
       this.loadPersonGroups().then((groups) => {
-        this.activeTab = groups[0];
-        uni.setStorage({
-          key: "activeTab",
-          data: { uuid: this.activeTab.uuid, name: this.activeTab.name },
-        });
+        //如果没有分组数据,则创建默认分组
+        if (!groups.length) {
+          groupService.initDefaultGroups().then(()=>{
+            this.loadData()
+          })
+        } else {
+          this.activeTab = groups[0];
+          uni.setStorage({
+            key: "activeTab",
+            data: { uuid: this.activeTab.uuid, name: this.activeTab.name },
+          });
+        }
       });
     },
     switchTab(tab) {

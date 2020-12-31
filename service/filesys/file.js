@@ -9,7 +9,7 @@ let config = {
         { name: "foreign_id", type: "VARCHAR(50)", ext: "NOT NULL" },
         { name: "type", type: "INT", ext: "DEFAULT 0" }, // 0:相关文件 1:图片 2:视频 3:音频,  9:其他
         { name: "path", type: "VARCHAR(255)", ext: "" },
-        { name: "field", type: "VARCHAR(50)", ext: "" }, //如果一条记录中,多个字段需要 图片 视频 音频功能,则需要设定 field,指定字段来做区分
+        { name: "field", type: "VARCHAR(50)", ext: " DEFAULT ''" }, //如果一条记录中,多个字段需要 图片 视频 音频功能,则需要设定 field,指定字段来做区分
         { name: "name", type: "VARCHAR(50)", ext: "" },
         { name: "time", type: "INT", ext: "" },
         { name: "project_id", type: "VARCHAR(50)", ext: "" },
@@ -20,7 +20,6 @@ let config = {
 }
 
 class FileService extends BaseService {
-
 
     remove(guid) {
         let delSql, guidSqlPart = "('" + guid + "')";

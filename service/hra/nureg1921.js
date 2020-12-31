@@ -1,7 +1,7 @@
 import constants from '../../common/constants'
 import BaseService from '../base'
 
-//ASEP决策树数据表
+//nureg1921 事件树
 let config = {
     tableName: "NUREG_1921",
     columns: [

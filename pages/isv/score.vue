@@ -310,7 +310,7 @@ export default {
       this.formdata.score_total = total;
     },
     popupMedia() {
-      this.$refs.media.popup(this.guid, "tester_opinion");
+      this.$refs.media.popup(this.guid, "tester_opinion",moduleService.tableName);
     },
     autoSave() {},
     save() {

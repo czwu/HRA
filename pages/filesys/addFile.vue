@@ -128,7 +128,7 @@
                 >✕</text
               >
               <image
-                :src="photo.path"
+                :src="filePrePath + photo.path"
                 @click="previewImg(photo)"
                 style="width: 200px; height: 150px"
                 mode="aspectFill"
@@ -149,7 +149,7 @@
               v-bind:key="video.guid"
             >
               <video
-                :src="video.path"
+                :src="filePrePath + video.path"
                 style="width: 200px; height: 150px"
                 class="video"
               >
@@ -182,7 +182,7 @@
                 >✕</text
               >
               <audio
-                :src="audio.path"
+                :src="filePrePath + audio.path"
                 :author="author"
                 :controls="true"
                 :name="formatTime(audio.time)"
@@ -230,6 +230,7 @@ import fileManage from "../../common/fileManage";
 import CatalogService from "../../service/filesys/catalog";
 import fileService from "../../service/filesys/file";
 import { mapState, mapActions } from "vuex";
+import constants from "../../common/constants";
 const recorderManager = uni.getRecorderManager();
 const innerAudioContext = uni.createInnerAudioContext();
 innerAudioContext.autoplay = true;
@@ -263,6 +264,7 @@ export default {
       audioTime: 0, //录音计时
       popMenus: [],
       linkFiles: [],
+      filePrePath: "file://" + constants.DOC_BASE,
     };
   },
   components: {
@@ -280,21 +282,34 @@ export default {
       self.audioTimer = null;
       self.audioTime = 0;
       if (!self.cancelAu) {
-        uni.saveFile({
-          tempFilePath: res.tempFilePath,
-          success: (res) => {
-            var savedFilePath = res.savedFilePath;
-            let audio = {
-              path: savedFilePath,
-              guid: "VOICE_" + util.uuid(),
-              foreign_id: self.file.guid || self.newGUId,
-              type: 3,
-              time: parseInt(Date.now() / 1000),
-            };
-            self.audios.push(audio);
-            fileService.insert(audio);
-          },
+        fileManage.saveMediaFile(res.tempFilePath, (newPath) => {
+          let audio = {
+            path: newPath,
+            guid: "VOICE_" + util.uuid(),
+            foreign_id: self.file.guid || self.newGUId,
+            type: 3,
+            name: "TCatalog",
+            time: parseInt(Date.now() / 1000),
+          };
+          self.audios.push(audio);
+          fileService.insert(audio);
         });
+        // uni.saveFile({
+        //   tempFilePath: res.tempFilePath,
+        //   success: (res) => {
+        //     var savedFilePath = res.savedFilePath;
+        //     let audio = {
+        //       path: savedFilePath,
+        //       guid: "VOICE_" + util.uuid(),
+        //       foreign_id: self.file.guid || self.newGUId,
+        //       type: 3,
+        //       name: "TCatalog",
+        //       time: parseInt(Date.now() / 1000),
+        //     };
+        //     self.audios.push(audio);
+        //     fileService.insert(audio);
+        //   }
+        // });
       }
       self.cancelAu = false;
     });
@@ -329,7 +344,7 @@ export default {
     },
     openFile(path) {
       uni.openDocument({
-        filePath: "file:///" + path,
+        filePath: "file://" + constants.DOC_BASE + path,
         success: function (res) {},
       });
     },
@@ -337,11 +352,21 @@ export default {
       this.file.type = values.join(",");
     },
     resultPath(path) {
-      console.error(path);
-      if (!path.startsWith("/storage/emulated/0/HRA_DOC/")) {
+      if (!path) {
         uni.showToast({
-          title: "只允许选择 [ 文件管理 / 内部存储/ HRA_DOC /] 目录下的文件!",
-          duration: 4000,
+          title:
+            "只允许选择非多媒体文件",
+          duration: 5000,
+          icon: "none",
+        });
+        return;
+      }
+      console.error(path);
+      if (!path.startsWith(util.getProjectPath())) {
+        uni.showToast({
+          title:
+            "只允许选择 [ 文件管理 / 内部存储/ HRA_DOC / "+util.getProjectId() +"] 目录下的文件,请将相关文件复制到该目录下,然后再进行操作",
+          duration: 5000,
           icon: "none",
         });
       } else {
@@ -352,7 +377,8 @@ export default {
             icon: "none",
           });
         } else {
-          this.linkFiles.push(path);
+          let ipath = path.split(constants.DOC_BASE)[1];
+          this.linkFiles.push(ipath);
         }
       }
     },
@@ -477,25 +503,38 @@ export default {
         count: 5, //可以选择图片的张数
         sizeType: ["compressed"], //可以指定是原图还是压缩图，默认二者都有
         sourceType: ["camera", "album"],
+
         success: (res) => {
           res.tempFilePaths.forEach((path) => {
-            // console.error(path);
-            // fileManage.saveMediaFile(path);
-            uni.saveFile({
-              tempFilePath: path,
-              success: (res) => {
-                var savedFilePath = res.savedFilePath;
-                let photo = {
-                  path: savedFilePath,
-                  guid: "PIC_" + util.uuid(),
-                  foreign_id: this.file.guid || this.newGUId,
-                  type: 1,
-                  time: parseInt(Date.now() / 1000),
-                };
-                this.photos.push(photo);
-                fileService.insert(photo);
-              },
+            fileManage.saveMediaFile(path, (newPath) => {
+              let photo = {
+                path: newPath,
+                guid: "PIC_" + util.uuid(),
+                foreign_id: this.file.guid || this.newGUId,
+                type: 1,
+                name: "TCatalog",
+                time: parseInt(Date.now() / 1000),
+              };
+              this.photos.push(photo);
+              fileService.insert(photo);
             });
+            // uni.saveFile({
+            //   tempFilePath: path,
+            //   success: (res) => {
+            //     var savedFilePath = res.savedFilePath;
+
+            //     let photo = {
+            //       path: savedFilePath,
+            //       guid: "PIC_" + util.uuid(),
+            //       foreign_id: this.file.guid || this.newGUId,
+            //       type: 1,
+            //       name: "TCatalog",
+            //       time: parseInt(Date.now() / 1000),
+            //     };
+            //     this.photos.push(photo);
+            //     fileService.insert(photo);
+            //   },
+            // });
           });
         },
       });
@@ -505,22 +544,36 @@ export default {
       uni.chooseVideo({
         count: 1,
         sourceType: ["camera", "album"],
+        compressed: true,
         success: (res) => {
-          uni.saveFile({
-            tempFilePath: res.tempFilePath,
-            success: (res) => {
-              var savedFilePath = res.savedFilePath;
-              let video = {
-                path: savedFilePath,
-                guid: "VIDEO_" + util.uuid(),
-                foreign_id: this.file.guid || this.newGUId,
-                type: 2,
-                time: parseInt(Date.now() / 1000),
-              };
-              this.videos.push(video);
-              fileService.insert(video);
-            },
+          fileManage.saveMediaFile(res.tempFilePath, (newPath) => {
+            let video = {
+              path: newPath,
+              guid: "VIDEO_" + util.uuid(),
+              foreign_id: this.file.guid || this.newGUId,
+              type: 2,
+              name: "TCatalog",
+              time: parseInt(Date.now() / 1000),
+            };
+            this.videos.push(video);
+            fileService.insert(video);
           });
+          // uni.saveFile({
+          //   tempFilePath: res.tempFilePath,
+          //   success: (res) => {
+          //     var savedFilePath = res.savedFilePath;
+          //     let video = {
+          //       path: savedFilePath,
+          //       guid: "VIDEO_" + util.uuid(),
+          //       foreign_id: this.file.guid || this.newGUId,
+          //       type: 2,
+          //       name: "TCatalog",
+          //       time: parseInt(Date.now() / 1000),
+          //     };
+          //     this.videos.push(video);
+          //     fileService.insert(video);
+          //   },
+          // });
         },
       });
     },
@@ -554,9 +607,7 @@ export default {
       fileService.remove(item.guid).then(() => {
         //在文件列表上移除该文件
         this.removeFileFormList(item);
-        //获取终端保存的文件清单,并且通过path比对,找到相对应的文件,然后在终端上删除
-        let localPath = plus.io.convertLocalFileSystemURL(item.path);
-        fileManage.deleteFile(localPath);
+        fileManage.deleteMediaFile(item.path);
       });
     },
     removeFileFormList(item) {

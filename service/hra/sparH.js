@@ -1,7 +1,7 @@
 import constants from '../../common/constants'
 import BaseService from '../base'
 
-//ASEP决策树数据表
+//SPAR_H 事件树
 let config = {
     tableName: "SPAR_H",
     columns: [

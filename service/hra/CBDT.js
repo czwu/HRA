@@ -190,7 +190,7 @@ class Service extends BaseService {
             {
                 group_name: 'pcg',
                 item_index: '1',
-                item_name: '“不”子',
+                item_name: '“不” 字',
                 req: '“NOT”语句：步骤中是否包含“not”字样？'
             },
             {

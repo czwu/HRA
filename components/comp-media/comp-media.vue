@@ -10,7 +10,6 @@
               :class="item.css"
               v-for="item in tools"
               v-bind:key="item.name"
-              v-show="item.name.indexOf(mode) === 0"
               @click="toolClick(item.name)"
             >
               <view
@@ -48,7 +47,7 @@
                     >✕</text
                   >
                   <image
-                    :src="photo.path"
+                   :src="filePrePath + photo.path"
                     @click="previewImg(photo)"
                     style="width: 200px; height: 150px"
                     mode="aspectFill"
@@ -68,7 +67,7 @@
                   v-for="video in videos"
                   v-bind:key="video.guid"
                 >
-                  <video :src="video.path" style="width: 200px; height: 150px">
+                  <video    :src="filePrePath + video.path" style="width: 200px; height: 150px">
                     <cover-view
                       class="video-remove"
                       @click="removeFile(video)"
@@ -98,7 +97,7 @@
                     >✕</text
                   >
                   <audio
-                    :src="audio.path"
+                      :src="filePrePath + audio.path"
                     :controls="true"
                     :name="formatTime(audio.time)"
                   ></audio>
@@ -129,10 +128,12 @@
 </template>
 
 <script>
+import constants from "../../common/constants";
 import uniPopup from "@/components/uni-popup/uni-popup.vue";
 import uniPopupDialog from "@/components/uni-popup/uni-popup-dialog.vue";
 import fileService from "../../service/filesys/file";
 import util from "../../common/util";
+import fileManage from "../../common/fileManage";
 const recorderManager = uni.getRecorderManager();
 const innerAudioContext = uni.createInnerAudioContext();
 export default {
@@ -178,6 +179,8 @@ export default {
       title: "更多操作",
       viewMode: false,
       mode: "",
+      tableName: "",
+      filePrePath: "file://" + constants.DOC_BASE,
     };
   },
   components: {
@@ -192,22 +195,19 @@ export default {
       self.audioTimer = null;
       self.audioTime = 0;
       if (!self.cancelAu) {
-        uni.saveFile({
-          tempFilePath: res.tempFilePath,
-          success: (res) => {
-            var savedFilePath = res.savedFilePath;
-            let audio = {
-              path: savedFilePath,
-              guid: "VOICE_" + util.uuid(),
-              foreign_id: self.foreign_id,
-              field: self.field,
-              type: 3,
-              time: parseInt(Date.now() / 1000),
-            };
-            self.audios.push(audio);
-            fileService.insert(audio);
-            self.cssSet();
-          },
+        fileManage.saveMediaFile(res.tempFilePath, (newPath) => {
+          let audio = {
+            path: newPath,
+            guid: "VOICE_" + util.uuid(),
+            foreign_id: self.foreign_id,
+            field: self.field,
+            type: 3,
+            name: this.tableName,
+            time: parseInt(Date.now() / 1000),
+          };
+          self.audios.push(audio);
+          fileService.insert(audio);
+          self.cssSet();
         });
       }
       self.cancelAu = false;
@@ -267,63 +267,59 @@ export default {
     addPhoto(foreign_id, field) {
       uni.chooseImage({
         count: 5, //可以选择图片的张数
-        sizeType: ["original", "compressed"], //可以指定是原图还是压缩图，默认二者都有
+        sizeType: ["compressed"], //可以指定是原图还是压缩图，默认二者都有
         sourceType: ["camera", "album"],
         success: (res) => {
           res.tempFilePaths.forEach((path) => {
-            uni.saveFile({
-              tempFilePath: path,
-              success: (res) => {
-                var savedFilePath = res.savedFilePath;
-                let photo = {
-                  path: savedFilePath,
-                  guid: "PIC_" + util.uuid(),
-                  foreign_id: foreign_id,
-                  type: 1,
-                  field,
-                  time: parseInt(Date.now() / 1000),
-                };
-                console.log(photo);
-                this.photos.push(photo);
-                fileService.insert(photo);
-                this.cssSet();
-              },
+            fileManage.saveMediaFile(path, (newPath) => {
+              let photo = {
+                path: newPath,
+                guid: "PIC_" + util.uuid(),
+                foreign_id: foreign_id,
+                type: 1,
+                name: this.tableName,
+                field,
+                time: parseInt(Date.now() / 1000),
+              };
+              console.log(photo);
+              this.photos.push(photo);
+              fileService.insert(photo);
+              this.cssSet();
             });
           });
         },
       });
     },
+
     addVideo(foreign_id, field) {
       var self = this;
       uni.chooseVideo({
         count: 1,
         sourceType: ["camera", "album"],
+        compressed: true,
         success: (res) => {
-          uni.saveFile({
-            tempFilePath: res.tempFilePath,
-            success: (res) => {
-              var savedFilePath = res.savedFilePath;
-              let video = {
-                path: savedFilePath,
-                guid: "VIDEO_" + util.uuid(),
-                foreign_id,
-                field,
-                type: 2,
-                time: parseInt(Date.now() / 1000),
-              };
-              this.videos.push(video);
-              fileService.insert(video);
-              this.cssSet();
-            },
+          fileManage.saveMediaFile(res.tempFilePath, (newPath) => {
+            let video = {
+              path: newPath,
+              guid: "VIDEO_" + util.uuid(),
+              foreign_id,
+              field,
+              type: 2,
+              name: this.tableName,
+              time: parseInt(Date.now() / 1000),
+            };
+            this.videos.push(video);
+            fileService.insert(video);
+            this.cssSet();
           });
         },
       });
     },
-    popup(foreign_id, field, mode) {
-      this.mode = mode || "";
+    popup(foreign_id, field, tableName) {
+      this.tableName = tableName || "";
       this.activeIndex = 0;
       this.foreign_id = foreign_id;
-      this.field = field;
+      this.field = field || "";
       this.$refs.mediaPopup.open();
       this.loadFiles();
     },
@@ -378,23 +374,7 @@ export default {
         //在文件列表上移除该文件
         this.removeFileFormList(item);
         //获取终端保存的文件清单,并且通过path比对,找到相对应的文件,然后在终端上删除
-        uni.getSavedFileList({
-          success: function (res) {
-            if (res.fileList.length > 0) {
-              let delFiles = res.fileList.filter(
-                (f) => f.filePath == item.path
-              );
-              if (delFiles.length) {
-                uni.removeSavedFile({
-                  filePath: delFiles[0].filePath,
-                  complete: function (res) {
-                    console.log("成功在终端移除文件");
-                  },
-                });
-              }
-            }
-          },
-        });
+        fileManage.deleteMediaFile(item.path);
       });
     },
     removeFileFormList(item) {

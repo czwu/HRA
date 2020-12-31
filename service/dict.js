@@ -51,12 +51,6 @@ let config = {
         [util.uuid(16), constants.DICT_TYPE.WORKING_CONDITION_TYPE, '功率运行', '功率运行', null],
         [util.uuid(16), constants.DICT_TYPE.WORKING_CONDITION_TYPE, '停堆运行', '停堆运行', null],
 
-        //人员选择
-        [util.uuid(16), constants.DICT_TYPE.USER_SELECT, '张娜娜', '张娜娜', null],
-        [util.uuid(16), constants.DICT_TYPE.USER_SELECT, '刘亦菲', '刘亦菲', null],
-        [util.uuid(16), constants.DICT_TYPE.USER_SELECT, '马云', '马云', null],
-        [util.uuid(16), constants.DICT_TYPE.USER_SELECT, '张磊', '张磊', null],
-        [util.uuid(16), constants.DICT_TYPE.USER_SELECT, '马化腾', '马化腾', null],
         //筛选原则
         [util.uuid(16), constants.DICT_TYPE.FILTER_REASON, '反应堆在正常运行过程中投运的系统或设备', '反应堆在正常运行过程中投运的系统或设备', null],
         [util.uuid(16), constants.DICT_TYPE.FILTER_REASON, '主控室报警信号', '主控室报警信号', null],

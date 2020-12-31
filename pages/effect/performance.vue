@@ -681,10 +681,10 @@ export default {
         });
     },
     popupMedia(field) {
-      this.$refs.media.popup(this.guid, field);
+      this.$refs.media.popup(this.guid, field,moduleService.tableName);
     },
     popupMedia2Lapse(option) {
-      this.$refs.media.popup(option.guid, "remark");
+      this.$refs.media.popup(option.guid, "remark",lapseService.tableName);
     },
     dataChange(field, value) {
       if (value) {

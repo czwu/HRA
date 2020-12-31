@@ -245,7 +245,11 @@ export default {
       if (!item.guid) {
         item.newid = moduleService.genGuid();
       }
-      this.$refs.media.popup(item.guid || item.newid, "question");
+      this.$refs.media.popup(
+        item.guid || item.newid,
+        "question",
+        moduleService.tableName
+      );
     },
   },
 };
@@ -331,7 +335,7 @@ export default {
   }
 }
 .uni-textarea {
-  flex-grow:1;
+  flex-grow: 1;
   width: 100%;
   box-sizing: border-box;
   flex-grow: 1;
@@ -341,7 +345,7 @@ export default {
   color: #444;
 }
 .desc-item.question-item {
-  position: relative;;
+  position: relative;
   margin-top: 30px;
   border: 1px solid #f5f5f5;
   flex-direction: row;
@@ -359,10 +363,10 @@ export default {
     font-size: 14px;
     color: #666;
   }
-  .input-icon.iconelipsis{
+  .input-icon.iconelipsis {
     position: absolute;
-    top:0px;
-    right:10px;
+    top: 0px;
+    right: 10px;
     z-index: 100;
   }
 }

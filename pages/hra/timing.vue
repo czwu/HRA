@@ -158,7 +158,7 @@ export default {
       this.autoSave();
     },
     popupMedia(field) {
-      this.$refs.media.popup(this.formdata.guid || this.guid, field);
+      this.$refs.media.popup(this.formdata.guid || this.guid, field, timingService.tableName);
     },
     inputIconClick(field, formdata) {},
     init() {

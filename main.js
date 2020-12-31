@@ -7,12 +7,12 @@ import util from './common/util'
 Vue.config.productionTip = false
 
 Vue.prototype.$store = store;
-Vue.filter('timeString', function(value) {
-    return value ? util.dateFormat('hh:mm:ss', new Date(value * 1000)) : ""
-});
-Vue.filter('timeStringDefault', function(value) {
-    return value ? util.dateFormat('hh:mm:ss', new Date(value * 1000)) : "00:00:00"
-});
+// Vue.filter('timeString', function(value) {
+//     return value ? util.dateFormat('hh:mm:ss', new Date(value * 1000)) : ""
+// });
+// Vue.filter('timeStringDefault', function(value) {
+//     return value ? util.dateFormat('hh:mm:ss', new Date(value * 1000)) : "00:00:00"
+// });
 Vue.filter('dateString', function(value, format) {
     if (typeof value == 'string') {
         return value

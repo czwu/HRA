@@ -2,7 +2,7 @@ import constants from '../../common/constants'
 import BaseService from '../base'
 
 /**
- * HRA数据 C类-信息采集 情景信息->事件树故障树
+ * HRA数据 
  */
 let config = {
     tableName: "inspection",
