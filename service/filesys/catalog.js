@@ -30,6 +30,7 @@ let config = {
 }
 
 function copyCatalogChildren(catalog, parentCatalog, newCatalogs) {
+    let num = (Math.random() + '').replace('.', '').substr(0, 4);
     let time = parseInt(Date.now() / 1000),
         userName = util.getUserName();
     catalog.children.forEach((catalog) => {
@@ -41,6 +42,7 @@ function copyCatalogChildren(catalog, parentCatalog, newCatalogs) {
             leaf: catalog.leaf,
             type: catalog.type || '',
             remark: catalog.remark || '',
+            file_path: catalog.file_path,
             project_id: catalog.project_id,
             created_at: time,
             created_by: userName,
@@ -83,6 +85,7 @@ class CatalogService extends BaseService {
         return this.update({ guid, parent_id })
     }
     copies(catalog) {
+        let num = (Math.random() + '').replace('.', '').substr(0, 4);
         let time = parseInt(Date.now() / 1000),
             userName = util.getUserName();
         //第一步 拷贝数据本身
@@ -91,11 +94,12 @@ class CatalogService extends BaseService {
             guid: this.genGuid(),
             parent_id: catalog.parent_id,
             code: catalog.code || '',
-            name: catalog.name + '_copy',
+            name: catalog.name + '_copy_' + num,
             leaf: catalog.leaf,
             type: catalog.type || '',
             remark: catalog.remark || '',
             project_id: catalog.project_id,
+            file_path: catalog.file_path,
             created_at: time,
             created_by: userName,
             updated_at: time,
@@ -128,11 +132,11 @@ class CatalogService extends BaseService {
                     })
                 }
             });
-            fileService.insertList(newFiles).then(() => {
+            fileService.insertList(newFiles, 'multi').then(() => {
 
             })
         })
-        return this.insertList(newCatalogs)
+        return this.insertList(newCatalogs, 'multi')
     }
 
     renderPathById(guid) {

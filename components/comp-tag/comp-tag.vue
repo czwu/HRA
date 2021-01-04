@@ -105,6 +105,7 @@ export default {
   created() {},
   methods: {
     complete(done) {
+      this.textConfirm()
       let values = [];
       this.tags.filter((d) => {
         if (d.selected) {

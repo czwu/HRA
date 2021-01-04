@@ -352,6 +352,10 @@ export default {
          uni.showToast({ title: "名称不能为空!", duration: 2000, icon: "none" });
          return;
       }
+      if(this.catalogs.filter(d=>d.name == name).length){
+        uni.showToast({ title: "该名称已被使用,请修改!", duration: 2000, icon: "none" });
+        return
+      }
       if (name.length < 20) {
         //通过id判断是修改还是新增操作
         if (this.data4PopMenu.guid) {
