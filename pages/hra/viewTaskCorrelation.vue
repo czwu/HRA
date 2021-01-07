@@ -226,9 +226,14 @@ export default {
       var service =
         this.type == constants.TAST_TYPE.AC ? typeACService : typeCCService;
       let guid = service.genGuid();
+      let groupName =  "group_" + util.uuid(5);
+      let groupId =  util.uuid();
       service
-        .copyByQuery({ group_name: data.group_name }, (item) => {
-          item.group_name = "group_" + util.uuid(5);
+        .copyByQuery({ group_name: data.group_name,group_id:data.group_id }, (item) => {
+          item.group_name = groupName;
+          item.group_id = groupId;
+          item.correlation ='';
+          item.correlation_type = ''
         })
         .then((newData) => {
           this.loadTaskChildren();

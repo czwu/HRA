@@ -26,7 +26,7 @@ class PlainService extends BaseService {
         return [
             { name: '编号', field: 'code', datatype: 'string', type: 'text', required: true },
             { name: '计划名称', field: 'name', datatype: 'string', type: 'text', required: true },
-            { name: '周期', field: 'stage', datatype: 'number', type: 'text' },
+            { name: '周期(周)', field: 'stage', datatype: 'number', type: 'text' },
             { name: '计划类别', field: 'type', datatype: 'string', type: 'text' }
         ]
     }
@@ -35,7 +35,7 @@ class PlainService extends BaseService {
         return [
             { name: '编号', field: 'code', width: '20%' },
             { name: '计划名称', field: 'name', width: '30%' },
-            { name: '周期', field: 'stage', width: '20%' },
+            { name: '周期(周)', field: 'stage', width: '20%' },
             { name: '计划类别', field: 'type', width: '20%' }
         ]
     }

@@ -23,9 +23,10 @@ class Service extends BaseService {
     getFormItems() {
         return [
             { name: '场景/事件/概况', field: 'name', datatype: 'string', type: 'text', required: true },
+            { name: '班组名称', field: 'team_name', datatype: 'string', type: 'text' },
             { name: '初始事件引出时间', field: 'start_time', datetype: 'hour-minute', type: 'datepicker', required: true, labelWarp: true },
-            { name: '事件结束时间', field: 'end_time', datetype: 'hour-minute', type: 'datepicker', required: true },
-            { name: '班组名称', field: 'team_name', datatype: 'string', type: 'text' }
+            { name: '事件结束时间', field: 'end_time', datetype: 'hour-minute', type: 'datepicker', required: true }
+
         ]
     }
 

@@ -11,7 +11,7 @@ class FileManage {
     saveMediaFile(tempPath, callback) {
         var File = plus.android.importClass("java.io.File");
         let folderPath = util.getMediaPath();
-        this.checkMediaExists();
+        this.checkMediaExists(folderPath);
         let extName = this.getFileExt(tempPath);
         let newName = Date.now() + extName;
         this._plus.io.resolveLocalFileSystemURL(folderPath, (folderEntry) => {
@@ -43,7 +43,7 @@ class FileManage {
 
     zip() {
         let targetPath = util.getProjectPath();
-        var zipfile = constants.DOC_BASE + util.getProjectId() + '.zip';
+        var zipfile = constants.DOC_BASE + util.getProjectCode() + '.zip';
         this.deleteFile(zipfile);
         uni.showLoading({ title: '正在打包...' });
         plus.zip.compress(targetPath, zipfile,

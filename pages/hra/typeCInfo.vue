@@ -160,7 +160,7 @@
                   placeholder="请输入信息"
                   v-model="item.item_remark"
                   placeholder-style="color:#bbb"
-                  @blur="textChange(item, 'item_doc')"
+                  @blur="textChange(item, 'item_remark')"
                 />
                 <text
                   class="icon iconfont input-icon iconelipsis"

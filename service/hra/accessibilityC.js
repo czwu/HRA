@@ -75,11 +75,11 @@ class accessbilityService extends BaseService {
                     }
                 }
             }, // 操作空间 够 不够 较危险
-            { field: "window", name: "窗户", datatype: 'string', type: 'switch', values: ['否', '是'], showText: false },
-            { field: "well", name: "井", datatype: 'string', type: 'switch', values: ['否', '是'], showText: false },
-            { field: "pit", name: "坑地", datatype: 'string', type: 'switch', values: ['否', '是'], showText: false },
-            { field: "pipeline_room", name: "管道间", datatype: 'string', type: 'switch', values: ['否', '是'], showText: false },
-            { field: "cable_room", name: "电缆间", datatype: 'string', type: 'switch', values: ['否', '是'], showText: false },
+            { field: "window", name: "窗户", datatype: 'string', type: 'switch', values: ['否', '是'] },
+            { field: "well", name: "井", datatype: 'string', type: 'switch', values: ['否', '是'] },
+            { field: "pit", name: "坑地", datatype: 'string', type: 'switch', values: ['否', '是'] },
+            { field: "pipeline_room", name: "管道间", datatype: 'string', type: 'switch', values: ['否', '是'] },
+            { field: "cable_room", name: "电缆间", datatype: 'string', type: 'switch', values: ['否', '是'] },
             { field: "handle_doc", name: "相关文件", datatype: 'string', type: "file", css: 'long-col' }, //高度 相关文件
             { field: "handle_info", name: "多媒体", datatype: 'string', type: 'text-media', css: 'long-col' }, //高度 多媒体
             { field: "handle_remark", name: "备注", datatype: 'string', type: 'text-media', css: 'long-col' }, //高度备注

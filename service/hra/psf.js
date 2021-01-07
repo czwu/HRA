@@ -67,7 +67,7 @@ class Service extends BaseService {
             { name: '规程', field: 'procedure_info', datatype: 'string', type: 'selector', css: 'long-col', values: proceOptions },
             { name: "相关文件", field: "procedure_doc", datatype: 'string', type: "file" },
             { name: "备注", field: "procedure_remark", datatype: 'string', type: 'text-media' },
-            { name: '工效学/人机界面', field: 'hmi', datatype: 'string', type: 'selector', css: 'long-col', values: hmiOptions },
+            { name: '工效学 / 人机界面', field: 'hmi', datatype: 'string', type: 'selector', css: 'long-col', values: hmiOptions, labelWarp: true },
             { name: "相关文件", field: "hmi_doc", datatype: 'string', type: "file" },
             { name: "备注", field: "hmi_remark", datatype: 'string', type: 'text-media' },
             { name: '职责适宜度', field: 'suitability', datatype: 'string', type: 'selector', css: 'long-col', values: suitablityOptions },

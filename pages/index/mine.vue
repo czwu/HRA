@@ -1,7 +1,7 @@
 <template>
   <view class="container" :class="screenOrientation">
     <uni-tab-bar :class="screenOrientation" index="7"></uni-tab-bar>
-    <view class="layout">
+    <view class="layout uni-grow" >
       <view class="uni-flex uni-column uni-grow">
         <view class="header"> 我的 </view>
         <view class="item" @click="toSelectProject">
@@ -25,16 +25,16 @@
             该操作将重新读取proj.json文件,并初始化数据</text
           >
         </view>
-        <view class="item" @click="setting"
+        <!-- <view class="item" @click="setting"
           ><text class="icon iconfont iconshezhi"></text> <text> 设置</text>
-        </view>
+        </view> -->
         <view class="item" @click="goSql()"
           ><text class="icon iconfont icontiaoshi"></text>
           <text> 查看数据库表</text>
         </view>
-        <view class="item" @click="about"
+        <!-- <view class="item" @click="about"
           ><text class="icon iconfont iconguanyu"></text> <text> 关于</text>
-        </view>
+        </view> -->
         <view class="item btn" @click="logout"> <text> 退出登录</text> </view>
       </view>
     </view>
@@ -51,7 +51,7 @@ import { mapState, mapActions } from "vuex";
 export default {
   data() {
     return {
-      projectPath: constants.DOC_BASE + util.getProjectId() + ".zip",
+      projectPath: constants.DOC_BASE + util.getProjectCode() + ".zip",
     };
   },
 
@@ -96,6 +96,9 @@ export default {
 </script>
 
 <style  lang="scss" scope>
+.container{
+    background: #f8f8f8;
+}
 .layout {
   background: #f2f2f2;
 }
@@ -124,7 +127,7 @@ export default {
   &.btn {
     text-align: center;
     margin-bottom: 1px;
-    color: #333;
+    color: red;
   }
 }
 </style>

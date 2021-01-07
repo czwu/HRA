@@ -136,10 +136,7 @@ export default {
       mode: "create", //默认为新增数据
       formdata,
       guid,
-      users: [],
-      tdList: [{ value: "", name: "" }],
-      taList: [{ value: "", name: "" }],
-      tlList: [{ value: "", name: "" }],
+      users: []
     };
   },
   created() {
@@ -169,12 +166,12 @@ export default {
         } else {
           this.mode = "create";
         }
-        let field1 = this.fields.filter((f) => f.addField == "td_value")[0];
-        this.dynamicField(field1, this.formdata.td_value);
-        let field2 = this.fields.filter((f) => f.addField == "ta_value")[0];
-        this.dynamicField(field2, this.formdata.ta_value);
-        let field3 = this.fields.filter((f) => f.addField == "tl_value")[0];
-        this.dynamicField(field3, this.formdata.tl_value);
+        let field1 = this.fields.filter((f) => f.addField == "tcog_value")[0];
+        this.dynamicField(field1, this.formdata.tcog_value);
+        let field2 = this.fields.filter((f) => f.addField == "texe_value")[0];
+        this.dynamicField(field2, this.formdata.texe_value);
+        let field3 = this.fields.filter((f) => f.addField == "tpath_value")[0];
+        this.dynamicField(field3, this.formdata.tpath_value);
       });
       interviewService.query({ type: "访谈对象" }).then((datas) => {
         let users = [];
@@ -260,11 +257,11 @@ export default {
 
     autoSave() {
       //计算td 平均值
-      this.computeAverage("td_value", "td");
+      this.computeAverage("tcog_value", "tcog");
       //计算ta 平均值
-      this.computeAverage("ta_value", "ta");
+      this.computeAverage("texe_value", "texe");
       //计算tl 平均值
-      this.computeAverage("tl_value", "tl");
+      this.computeAverage("tpath_value", "tpath");
 
       if (this.mode == "create") {
         this.formdata.guid = this.guid;
@@ -340,9 +337,9 @@ export default {
   width: 200px;
 }
 .uni-input-label {
-  font-size: 14px;
+  font-size: 13px;
   padding: 0 10px;
-  width: 140px;
+  width: 160px;
   color: #333;
   background: #f8f8f8;
   &.label-warp {

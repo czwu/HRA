@@ -354,8 +354,7 @@ export default {
     resultPath(path) {
       if (!path) {
         uni.showToast({
-          title:
-            "只允许选择非多媒体文件",
+          title: "只允许选择非多媒体文件",
           duration: 5000,
           icon: "none",
         });
@@ -365,7 +364,9 @@ export default {
       if (!path.startsWith(util.getProjectPath())) {
         uni.showToast({
           title:
-            "只允许选择 [ 文件管理 / 内部存储/ HRA_DOC / "+util.getProjectId() +"] 目录下的文件,请将相关文件复制到该目录下,然后再进行操作",
+            "只允许选择 [ 文件管理 / 内部存储/ HRA_DOC / " +
+            util.getProjectCode() +
+            "] 目录下的文件,请将相关文件复制到该目录下,然后再进行操作",
           duration: 5000,
           icon: "none",
         });
@@ -497,6 +498,7 @@ export default {
           this.back();
         });
       }
+      CatalogService.loadAll();
     },
     addPhoto() {
       uni.chooseImage({
@@ -622,10 +624,10 @@ export default {
     previewImg(photo) {
       let list = [];
       this.photos.forEach((pic) => {
-        list.push(pic.path);
+        list.push(this.filePrePath + pic.path);
       });
       uni.previewImage({
-        current: photo.path, //  传 Number H5端出现不兼容
+        current: this.filePrePath + photo.path, //  传 Number H5端出现不兼容
         urls: list,
       });
     },

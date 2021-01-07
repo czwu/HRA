@@ -1,6 +1,7 @@
 import constants from './constants'
-let userName = 'tuwei';
+let userName = '';
 let projectId = 'JIE49483KFJD223'
+let projectCode = 'PROJECT_001'
 
 export default {
     /**
@@ -50,6 +51,12 @@ export default {
 
     getUserName() {
         return userName
+    },
+    setProjectCode(code) {
+        projectCode = code
+    },
+    getProjectCode() {
+        return projectCode
     },
     setProjectId(id) {
         projectId = id
@@ -112,11 +119,11 @@ export default {
     },
 
     getProjectPath() {
-        return `${constants.DOC_BASE}${projectId}/`
+        return `${constants.DOC_BASE}${projectCode}/`
     },
 
     getMediaPath() {
-        return `${constants.DOC_BASE}${projectId}/media/`
+        return `${constants.DOC_BASE}${projectCode}/media/`
     }
 
 }

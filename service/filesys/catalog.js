@@ -143,6 +143,7 @@ class CatalogService extends BaseService {
         if (!guid) {
             return ''
         }
+
         if (!this.fileIndexMap) {
             return guid
         } else {

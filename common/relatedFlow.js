@@ -180,6 +180,14 @@ export default class RelatedFlow {
         let options = this.related_options.filter(i => i.level == 1)
         options.forEach(option => {
             this.genPathByOption(option);
+            this.related_lines.push({
+                css: 'path-line horizontal',
+                style: {
+                    top: parseInt(option.row_index * (this.uni_height + 1)) + 'px',
+                    left: '10px',
+                    width: this.uni_width * 0.5 + 'px'
+                }
+            });
         })
     }
 
@@ -231,7 +239,19 @@ export default class RelatedFlow {
         let w = this.uni_width;
         selOptions.sort((a, b) => {
             return a.level - b.level
-        })
+        });
+
+        //添加水平路径线
+        let opiton = selOptions[0];
+        lines.push({
+            css: 'path-line horizontal',
+            style: {
+                top: parseInt(opiton.row_index * (this.uni_height + 1)) + 'px',
+                left: '10px',
+                width: this.uni_width * 0.5 + 'px'
+            }
+        });
+
         selOptions.forEach((option, i) => {
             let next = selOptions[i + 1];
             if (next) {

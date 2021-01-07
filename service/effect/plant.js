@@ -32,11 +32,11 @@ class Service extends BaseService {
             { name: '电厂名称', field: 'name', datatype: 'string', type: 'text' },
             { name: '电厂配置', field: 'config', datatype: 'string', type: 'text' },
             { name: '机组', field: 'unit', datatype: 'string', type: 'text' },
-            { name: '机组状态(运行工况)', field: 'unit_states', datatype: 'string', type: 'text' },
+            { name: '机组状态(运行工况)', field: 'unit_states', datatype: 'string', type: 'text', labelWarp: true },
             { name: '电功率水平', field: 'power_level', datatype: 'string', type: 'text' },
             { name: '工作地点', field: 'workplace', datatype: 'string', type: 'text' },
-            { name: '日期', field: 'dt', datatype: 'string', type: 'datepicker', defaultValue: parseInt(Date.now() / 1000), disabled: true },
-            { name: '填写人', field: 'filler', datatype: 'string', type: 'text', defaultValue: util.getUserName(), disabled: true },
+            { name: '日期', field: 'dt', datatype: 'string', type: 'label', defaultValue: util.dateFormat('yyyy-MM-dd hh:mm', new Date()), disabled: true },
+            { name: '填写人', field: 'filler', datatype: 'string', type: 'label', defaultValue: util.getUserName(), disabled: true },
             { name: '工作岗位', field: 'job', datatype: 'string', type: 'text' }
         ]
     }

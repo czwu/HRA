@@ -38,7 +38,7 @@ class PersonService extends BaseService {
             { name: '工作年限', field: 'work_seniority', datatype: 'number', type: 'selector', values },
             { name: '岗位工作年限', field: 'job_seniority', datatype: 'number', type: 'selector', values },
             { name: '职责', field: 'duty', datatype: 'string', type: 'text', css: 'long-col' },
-            { name: '备注', field: 'reamrk', datatype: 'string', type: 'text-media', css: 'long-col' }
+            { name: '备注', field: 'remark', datatype: 'string', type: 'text-media', css: 'long-col' }
         ]
     }
 

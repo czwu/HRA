@@ -58,7 +58,7 @@ class TypeACService extends BaseService {
             { name: '原值', field: 'value', datatype: 'string', type: 'label' },
             { name: '修正值', field: 'correction_value', datatype: 'string', type: 'label' },
             { name: '联合人误概率', field: 'he_probability', datatype: 'string', type: 'label', _mode: 'group' },
-            { name: '联合人误概率修正值', field: 'he_probability_correction', datatype: 'string', type: 'label', _mode: 'group' },
+            { name: '联合人误概率修正值', field: 'he_probability_correction', datatype: 'string', type: 'label', _mode: 'group', labelWarp: true },
             // { name: '人误编码修正', field: 'he_correction', datatype: 'string', type: 'label' },
             { name: '版本', field: 'version', datatype: 'string', type: 'label', _mode: 'group' },
             { name: '状态', field: 'status', datatype: 'string', type: 'label', _mode: 'group' },

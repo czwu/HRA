@@ -63,7 +63,7 @@
           <view
             class="link-btn"
             style=""
-             v-if="data.stage_index > 1 && mode=='update'"
+            v-if="data.stage_index > 1 && mode == 'update'"
             @click.stop="toCorrelation(data)"
             >{{ data.correlation || "选择相关性" }}</view
           >
@@ -106,9 +106,9 @@ export default {
     };
   },
   computed: {},
-  onShow(){
-    if(this.group_id){
-      this.loadData()
+  onShow() {
+    if (this.group_id) {
+      this.loadData();
     }
   },
   onLoad(options) {
@@ -186,6 +186,14 @@ export default {
               stage_index: d.stage_index,
             });
           });
+          if (!datas.length) {
+            uni.showToast({
+              title: "请先添加人误事件!",
+              duration: 2000,
+              icon: "none",
+            });
+            return
+          }
           typeCCService.insertList(datas, "multi").then(() => {
             uni.showToast({
               title: "保存成功!",
@@ -213,7 +221,7 @@ export default {
       return new Promise((resolve, reject) => {
         if (this.type == "A类相关性") {
           typeCCService
-            .query({ group_name: name, stage_index: 1 })
+            .query({ group_name: name, stage_index: 1, task_id: this.task_id })
             .then((datas) => {
               if (datas.length && datas[0].guid != this.guid) {
                 uni.showToast({
@@ -245,7 +253,11 @@ export default {
     viewData(data) {
       if (this.mode == "update") {
         uni.navigateTo({
-          url: "/pages/hra/viewTypeAC?type=CC&guid=" + data.guid + "&name=" + data.human_error_code,
+          url:
+            "/pages/hra/viewTypeAC?type=CC&guid=" +
+            data.guid +
+            "&name=" +
+            data.human_error_code,
         });
       }
     },

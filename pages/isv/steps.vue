@@ -68,10 +68,10 @@
                   <text class="step-name">{{ data.step_name }}</text>
                   <view class="uni-grow"></view>
                   <text
-                    class="icon iconfont iconpingfen"
-                    style="font-size: 16px; margin-right: 20px"
+                    style="color: #007aff; margin-right: 20px"
                     @click="goPerformance(data)"
-                  ></text>
+                    >评价</text
+                  >
                   <text
                     class="icon iconfont iconshousuo"
                     style="font-size: 12px; margin-right: 15px"
@@ -209,7 +209,7 @@ export default {
       parentName: "",
       showTab: false,
       breadData: [],
-      defaultRole: uni.getStorageSync("defaultRole") || "副值长"
+      defaultRole: uni.getStorageSync("defaultRole") || "副值长",
     };
   },
   onLoad(options) {
@@ -382,10 +382,29 @@ export default {
     },
     setEnd(item) {
       item.end_time = util.dateFormat("hh:mm:ss", new Date());
+      var duration = "";
+      if (item.start_time && item.end_time) {
+        duration = this.computeDif(item.start_time, item.end_time);
+      }
       moduleService.update({
         guid: item.guid,
         end_time: item.end_time,
+        duration
       });
+    },
+    computeDif(start_time, end_time) {
+      let arr = start_time.split(":"),
+        arr2 = end_time.split(":");
+      let time1 = arr[0] * 3600 + arr[1] * 60 + arr[2] * 1;
+      let time2 = arr2[0] * 3600 + arr2[1] * 60 + arr2[2] * 1;
+      let dif = time2 - time1;
+      let s = dif % 60,
+        min = Math.floor(dif / 60) % 60,
+        hour = Math.floor(dif / 3600);
+      s = s < 10 ? "0" + s : s;
+      min = min < 10 ? "0" + min : min;
+      hour = hour < 10 ? "0" + hour : hour;
+      return `${hour}:${min}:${s}`;
     },
     // selectAction(data, field) {
     //   data[field] = data[field] ? 0 : 1;

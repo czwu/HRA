@@ -81,7 +81,7 @@
       <view class="tab-content" style="padding: 20px 20px 20px 20px">
         <comp-page
           ref="compPage"
-          v-if="data2.guid"
+          v-if="data2.guid && loadParam"
           :service="service"
           title=""
           :param="loadParam"
@@ -125,7 +125,7 @@ export default {
       tabIndex: 0,
       addTitle: "",
       service: null,
-      loadParam: {},
+      loadParam: null,
       fixRight: "40px",
       tabs: [
         {
@@ -153,6 +153,7 @@ export default {
           fixRight: "0px",
         },
       ],
+      newSparHId: sparHService.genGuid(),
       //子页面配置项
       //子页面加载数据 的参数
       scrollHeight: 500,
@@ -167,7 +168,7 @@ export default {
         if (val.data) {
           this.data1 = val.data[0];
           this.data2 = val.data[1];
-          this.loadParam = { guid: this.newSparHId };
+
           sparHService.query({ foreign_id: this.data2.guid }).then((data) => {
             if (data.length) {
               this.sparHData = data[0];
@@ -175,6 +176,8 @@ export default {
                 this.value = this.sparHData.related_value * 1;
               }
               this.loadParam = { guid: this.sparHData.guid };
+            } else {
+              this.loadParam = { guid: this.tabs[0].newGuid };
             }
           });
           therpService.query({ foreign_id: this.data2.guid }).then((data) => {

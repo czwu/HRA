@@ -1,6 +1,6 @@
 <template>
   <view class="container">
-    <comp-page :service="service" :title="title"></comp-page>
+    <comp-page :service="service" :title="title" ref="compPage"></comp-page>
   </view>
 </template>
 <script>
@@ -16,16 +16,18 @@ export default {
   },
   onLoad(option) {
     this.foreign_id = option.guid;
-    if(option.code){
-      this.title='编辑情境问题'
+    if (option.code) {
+      this.title = "编辑情境问题";
     }
- 
   },
   methods: {
     beforeSave(data, fields) {
       data.foreign_id = this.foreign_id;
       return true;
     },
+    onSelectFile({ field, path, guid }) {
+      this.$refs.compPage.setFilePath(field, path, guid);
+    }, 
   },
 };
 </script>

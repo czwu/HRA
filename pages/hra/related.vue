@@ -81,7 +81,7 @@
       <view class="tab-content" style="padding: 20px 20px 20px 20px">
         <comp-page
           ref="compPage"
-          v-if="data2.guid"
+          v-if="data2.guid && loadParam"
           :service="service"
           title=""
           :param="loadParam"
@@ -123,7 +123,7 @@ export default {
       tabIndex: 0,
       addTitle: "",
       service: null,
-      loadParam: {},
+      loadParam: null,
       fixRight: "10px",
       tabs: [
         {
@@ -146,6 +146,7 @@ export default {
     };
   },
   onLoad() {
+    this.loadParam = null;
     this.service = asepService;
     uni.getStorage({
       key: "related_datas",

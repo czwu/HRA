@@ -31,7 +31,7 @@ let config = {
 class Service extends BaseService {
     getFormItems() {
         return [
-            { name: "类型", field: "pressure_type", datatype: 'string', type: 'item-select', defaultValue: '低压力事件树', values: ['低压力事件树', '中压力事件树', '高压力事件树'], css: 'long-col' },
+            { name: "类型", field: "pressure_type", datatype: 'string', type: 'item-select', defaultValue: '', values: ['低压力事件树', '中压力事件树', '高压力事件树'], css: 'long-col' },
             // { name: '复杂性是否复杂', field: 'complexity', datatype: 'string', type: 'switch', defaultValue: '复杂', values: ['简单', '复杂'] },
             { name: '备注', field: 'remark', datatype: 'string', type: 'text-media', css: 'long-col' }
         ]
@@ -169,7 +169,7 @@ class Service extends BaseService {
                 ]
             }, {
                 field: 'time_window',
-                value: '30 > 60min',
+                value: 'Tm > 60min',
                 branches: [{
                         field: 'time_space',
                         value: 'Td ≥ 30min',

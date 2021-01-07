@@ -214,7 +214,7 @@ export default {
       return new Promise((resolve, reject) => {
         if (this.type == "A类相关性") {
           typeACService
-            .query({ group_name: name, stage_index: 1 })
+            .query({ group_name: name, stage_index: 1,task_id:this.task_id })
             .then((datas) => {
               if (datas.length && datas[0].guid != this.guid) {
                 uni.showToast({

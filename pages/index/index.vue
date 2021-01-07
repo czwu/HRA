@@ -60,6 +60,7 @@
 import projectService from "../../service/project";
 import datasync from "../../common/datasync";
 import util from "../../common/util";
+import * as obj from '../../common/serviceList'
 import { mapState, mapActions } from "vuex";
 export default {
   data() {
@@ -105,6 +106,7 @@ export default {
     select(project) {
       if (!project.init) {
         util.setProjectId(project.guid);
+        util.setProjectCode(project.code);
         datasync.initProject(project.guid).then(() => {
           projectService.update({ guid: project.guid, init: 1 });
           uni.switchTab({
@@ -113,6 +115,7 @@ export default {
         });
       } else {
         util.setProjectId(project.guid);
+        util.setProjectCode(project.code);
         uni.switchTab({
           url: "/pages/filesys/index",
         });

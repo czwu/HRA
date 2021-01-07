@@ -359,10 +359,10 @@ export default {
     previewImg(photo) {
       let list = [];
       this.photos.forEach((pic) => {
-        list.push(pic.path);
+        list.push(this.filePrePath + pic.path);
       });
       uni.previewImage({
-        current: photo.path, //  传 Number H5端出现不兼容
+        current: this.filePrePath + photo.path, //  传 Number H5端出现不兼容
         urls: list,
       });
     },

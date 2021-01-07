@@ -81,6 +81,7 @@
               >
 
               <picker
+                class="uni-grow uni-row"
                 mode="selector"
                 :range="dicts[item.dicttype]"
                 range-key="name"
@@ -101,6 +102,7 @@
               </picker>
 
               <picker
+                class="uni-grow uni-row"
                 mode="selector"
                 :range="item.values"
                 :value="item.values.indexOf(formdata[item.field])"

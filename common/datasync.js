@@ -20,12 +20,15 @@ const Datasync = {
     },
 
     initApp() {
+        //获取到global.json中的数据,
         this.readGlobalJson((jsontext) => {
             let appData = JSON.parse(jsontext);
             let projects = appData.projects;
             let users = appData.users;
+            // 该处需要跟PC端对接, 从appData中获取数据,并插入到相关表中
             projectService.insertList(projects, 'multi');
             userService.insertList(users, 'multi');
+            // 还需要将其他基础数据插入到数据字典表 tdict中, 需要调用dict.js去实现
         })
     },
 
@@ -44,7 +47,6 @@ const Datasync = {
             return
         }
         var reader = null;
-        console.error('start')
         plus.io.resolveLocalFileSystemURL(path, (entry) => {
             entry.file(function(file) {
                 reader = new plus.io.FileReader();

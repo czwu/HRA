@@ -106,7 +106,7 @@ export default {
   onLoad(options) {
     this.field = options.field;
     this.fnName = options.fnName ||'onSelectFile'
-    console.error("selectFile.vue -> options.field:", this.field);
+    // console.error("selectFile.vue -> options.field:", this.field);
   },
   onShow() {},
   computed: {

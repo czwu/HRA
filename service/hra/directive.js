@@ -30,8 +30,9 @@ class DirectiveService extends BaseService {
             { name: '扩展码', field: 'ext_code', datatype: 'string', type: 'text' },
             { name: '指示描述', field: 'descrip', datatype: 'string', type: 'text', css: 'long-col' },
             { name: '位置', field: 'position', datatype: 'string', type: 'text' },
-            { name: '相关设备编码', field: 'device_code', datatype: 'string', type: 'text', required: true },
-            { name: '指示级别', field: 'level', datatype: 'string', type: 'selector', values: ['W', 'P', 'R', 'Y', 'G'] }
+            { name: '相关设备编码', field: 'device_code', datatype: 'string', type: 'text', required: true }
+            // ,
+            // { name: '指示级别', field: 'level', datatype: 'string', type: 'selector', values: ['W', 'P', 'R', 'Y', 'G'] }
         ]
     }
 
@@ -41,8 +42,9 @@ class DirectiveService extends BaseService {
             { name: '扩展码', field: 'ext_code', width: '10%' },
             { name: '指示描述', field: 'descrip', width: '30%' },
             { name: '位置', field: 'position', width: '10%' },
-            { name: '相关设备编码', field: 'device_code', width: '15%' },
-            { name: '指示级别', field: 'level', width: '10%', css: "center", values: ['W', 'P', 'R', 'Y', 'G'], bgcolor: ['#EEE', '#FE55A8', '#FF4242', '#FFE742', '#25CA9D'] }
+            { name: '相关设备编码', field: 'device_code', width: '15%' }
+            // ,
+            // { name: '指示级别', field: 'level', width: '10%', css: "center", values: ['W', 'P', 'R', 'Y', 'G'], bgcolor: ['#EEE', '#FE55A8', '#FF4242', '#FFE742', '#25CA9D'] }
         ]
     }
 

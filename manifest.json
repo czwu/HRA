@@ -13,7 +13,8 @@
         "compilerVersion" : 3,
         "modules" : {
             "Speech" : {},
-            "SQLite" : {}
+            "SQLite" : {},
+            "VideoPlayer" : {}
         },
         "distribute" : {
             "android" : {
