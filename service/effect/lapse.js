@@ -178,8 +178,6 @@ class Service extends BaseService {
                         name: '领导能力失效：未能保证清晰的指令',
                         options: [
                             { name: '指令沟通：班组设置或沟通指令不充分', code: 'T5-02-01' },
-
-                            { name: '指令沟通：班组设置或沟通指令不充分', code: 'T5-02-01' },
                             {
                                 name: '团队功能：未形成/保持有效的团队合作',
                                 code: 'T5-02-02',

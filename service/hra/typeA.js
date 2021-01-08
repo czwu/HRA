@@ -18,7 +18,7 @@ let config = {
         { name: "normal_text", type: "VARCHAR(100)", ext: "" }, //正常状态文本
         { name: "normal_status", type: "VARCHAR(10)", ext: "" }, //正常状态
         { name: "demand_status", type: "VARCHAR(10)", ext: "" }, //需求状态
-        { name: "manual_valve_switch", type: "VARCHAR(10)", ext: "" }, //手动阀开关状态
+        { name: "manual_valve_switch", type: "VARCHAR(10)", ext: "" }, //手动阀开关状态 (田工沟通,需废除, 已在表单中删除)
         { name: "human_error_factor", type: "VARCHAR(50)", ext: "" }, //可能的人误点
         { name: "human_error_pattern", type: "VARCHAR(50)", ext: "" }, //人误失误模式
         { name: "human_error_desc", type: "VARCHAR(200)", ext: "" }, //人误描述
@@ -58,9 +58,9 @@ class TypeAService extends BaseService {
             { name: '人误编码', field: 'human_error_code', datatype: 'string', type: 'text', required: true },
             { name: '设备类型', field: 'device_type', datatype: 'string', type: 'text', required: true },
             { name: '设备功能', field: 'device_funciton', datatype: 'string', type: 'text', css: 'long-col' },
-            { name: '正常状态', field: 'normal_status', datatype: 'string', type: 'switch', defaultValue: '是', values: ['否', '是'], css: 'long-col', inputField: 'normal_text' },
-            { name: '需求状态', field: 'demand_status', datatype: 'string', type: 'switch', defaultValue: '否', values: ['否', '是'] },
-            { name: '手动阀开关状态', field: 'manual_valve_switch', datatype: 'string', type: 'switch', defaultValue: '开', values: ['关', '开'] },
+            { name: '正常状态', field: 'normal_status', datatype: 'string', type: 'switch', defaultValue: '开', values: ['关', '开'], css: 'long-col', inputField: 'normal_text' },
+            { name: '需求状态', field: 'demand_status', datatype: 'string', type: 'switch', defaultValue: '关', values: ['关', '开'] },
+            // { name: '手动阀开关状态', field: 'manual_valve_switch', datatype: 'string', type: 'switch', defaultValue: '开', values: ['关', '开'] },
             { name: '可能的人误点', field: 'human_error_factor', datatype: 'string', type: 'text', css: 'long-col' },
             { name: '人误失误模式', field: 'human_error_pattern', datatype: 'string', type: 'text', css: 'long-col' },
             { name: '人误描述', field: 'human_error_desc', datatype: 'string', type: 'text', css: 'long-col' },
