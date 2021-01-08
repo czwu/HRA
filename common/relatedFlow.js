@@ -79,7 +79,7 @@ export default class RelatedFlow {
                     isResult: true,
                     id: data.id,
                     related: data.related,
-                    parentId: parentObj.id
+                    parentId: parentObj.id,
                 })
             }
             let endRowIndex = this.related_values.length;
@@ -144,7 +144,7 @@ export default class RelatedFlow {
         this.related_options.forEach(option => {
             option.selected = idsMap[option.id] ? true : false
         })
-
+        selOptions = this.related_options.filter(item => item.selected);
         if (data.isResult) {
             this.related_values.forEach(item => {
                 item.selected = item == data
@@ -162,7 +162,10 @@ export default class RelatedFlow {
     }
     setData(selOptions) {
         selOptions.forEach(option => {
-            this.data[option.field] = option.value
+            if (option.field) {
+                this.data[option.field] = option.value
+            }
+
         })
         let value = this.related_values.filter(d => d.selected)[0];
         this.data['related_text'] = '';
