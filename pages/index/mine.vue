@@ -70,6 +70,9 @@ export default {
     backupDB() {
       projectService.closeDataBase(() => {
         fileManage.backupDB();
+        setTimeout(()=>{
+          projectService.openDataBase()
+        },1000)
       });
     },
 
